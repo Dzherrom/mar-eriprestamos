@@ -1,0 +1,15 @@
+#virtual env
+.env/
+
+#cache files
+meprestamos/__pycache__
+core/migrations/__pycache__/
+
+#media files
+media/
+
+#staticfiles
+staticfiles/
+
+#gunicorn-log
+logs/
