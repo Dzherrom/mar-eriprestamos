@@ -3,7 +3,8 @@
 
 #cache files
 meprestamos/__pycache__
-core/migrations/__pycache__/
+core/migrations/
+core/__pycache__
 
 #media files
 media/

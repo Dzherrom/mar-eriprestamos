@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Préstamos Sin Pagar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Préstamos Sin Pagar</h2>
+        {{ mensaje }}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha de Préstamo</th>
+                    <th>Monto de Préstamo</th>
+                    <th>Tasa de Interés</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prestamo in prestamos %}
+                <tr>
+                    <td>{{ prestamo.id }}</td>
+                    <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
+                    <td>{{ prestamo.fecha_prestamo }}</td>
+                    <td>${{ prestamo.monto_prestamo }}</td>
+                    <td>{{ prestamo.tasa_interes }}%</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay préstamos sin pagar.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+{% endblock content %}
