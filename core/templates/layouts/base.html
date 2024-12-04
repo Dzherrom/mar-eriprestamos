@@ -23,9 +23,6 @@
                 {% if user_is_authenticated %}
                 <li><a href="{% url 'prestamos' %}">Préstamos</a></li>
                 <li><a href="#">Clientes</a></li>
-                {% else %}
-                <li><a class="custon-login" onclick="location.href="{% url 'login' %}">Iniciar Sesión</a></li>
-                {% endif %}
             </ul>
             <ul class="logout-container">
                 <li>
@@ -35,6 +32,11 @@
                     </form>
                 </li>
             </ul>
+            {% else %}
+            <ul class="logout-container">
+                <li><a class="custon-login" onclick="location.href="{% url 'login' %}">Iniciar Sesión</a></li>
+            </ul>
+                {% endif %}
         </nav>=
     </header>
 
