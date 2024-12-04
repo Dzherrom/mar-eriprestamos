@@ -5,8 +5,13 @@ class Clientes(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     numero_telefono = models.CharField(max_length=11)
+    numero_local = models.CharField(max_length=11, default=None)
     cedula = models.CharField(max_length=12)
-    ciudad = models.CharField(max_length=150)
+    rif = models.CharField(max_length=13, default='V1234567890')
+    direccion_1 = models.CharField(max_length=255, default='direccion')  # Mandatory field
+    direccion_2 = models.CharField(max_length=255, null=True, blank=True)  # Optional field
+    email_1 = models.EmailField(default=None)  # Mandatory field
+    email_2 = models.EmailField(null=True, blank=True)  # Optional field
     
     def __str__(self):
         return self.nombre

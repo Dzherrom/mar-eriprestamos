@@ -1,0 +1,222 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Hacemos el body un flex container */
+    flex-direction: column; /* Ordenamos los elementos de arriba hacia abajo */
+    min-height: 100vh; /* Asegura que la altura del body sea al menos la altura de la viewport */
+}
+
+header {
+    background-color: #696969;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2em;
+}
+
+footer {
+    margin-top: auto;
+    background-color: #444;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    clear: both;
+}
+
+.logo img {
+    width: 5vh;
+}
+/* menu */
+
+.menu {
+    position: relative;
+}
+
+nav ul {
+    display: flex; /* Use flexbox for layout */
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+}
+
+nav ul li {
+    margin-right: 20px; /* Space between items */
+}
+
+nav ul li a {
+    text-decoration: none; /* Remove underline from links */
+    color: white; /* Link color */
+}
+
+header nav ul li a.custom-login-link {
+    color: yourColor; /* Replace with your desired color */
+}
+
+nav ul li a:hover {
+    color: white;
+    text-decoration: underline; /* Underline on hover */
+}
+
+.show {
+    display:grid;
+}
+.main-card {
+    background-color: #ffffff;
+    padding: 4vmin;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 70vh;
+    max-width: 80vw; /* Ancho máximo de la tarjeta */
+    overflow-y: auto;
+    display: auto;
+}
+/* main card */
+.container-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh; /* Centrar verticalmente */
+    /* overflow-y: auto; /* Add this to enable vertical scrolling */
+    max-width: 100%; /* Add this to prevent horizontal overflow */
+    /*box-sizing: border-box; /* Add this to include padding and border in width calculation */
+    /*overflow-x: auto;
+}
+
+/* login card */
+.login-card {
+    display: block;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Centrar verticalmente */
+    /*overflow-y: auto;  /*Add this to enable vertical scrolling */
+    max-width: 100%; /* Add this to prevent horizontal overflow */
+    box-sizing: border-box; /* Add this to include padding and border in width calculation */
+
+}
+
+.login-card h2 {
+    margin-bottom: 20px; /* Add some space between the h2 and the form */
+}
+
+.login-card form {
+    display: block;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-card th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-right: 21px;
+}
+
+.login-card label {
+    margin-bottom: 10px;
+}
+
+.form-group p {
+    align-items: left;
+    margin-bottom: 5vh;
+    text-align: left;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-group input {
+    width: 94%; /* Hacer que los campos ocupen todo el ancho */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* boostrap buttons */
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #0062cc;
+}
+
+.btn-secondary {
+    background-color: #949ca2;
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+.btn-success:hover {
+    background-color: #208038;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-warning {
+    background-color: #ffc107;  
+
+    color: black;
+}
+.btn-warning:hover {
+    background-color: #d39e00;
+}
+
+.btn-info {
+    background-color: #b7d5d4;
+    color: white;
+}
+.btn-info:hover {
+    background-color: #117a8b;
+}
+
+/* sort table or list */
+
+th.sort-asc {
+    background-image: url(/static/img/sort_up.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+th.sort-desc {
+    background-image: url(/static/img/sort_down.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+th.sort-both {
+    background-image: url(/static/img/sort_both.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+}

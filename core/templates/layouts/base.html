@@ -5,37 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Almacen de Compras</title>
+    <link  rel="stylesheet" type="text/css" href="https://bootswatch.com/5/zephyr/bootstrap.min.css"/>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
     <header>
         <div class="logo">
             <a href="#">
-                <img src="{% static 'img/logo.png' %}" alt="FUNDASALUD CCS">
+                <img src="{% static 'img/logo.png' %}" alt="MAR-ERIPRESTAMOS">
             </a>
         </div>
         {% comment %} <div class="mode-toggle">
             <img src="{% static 'img/moon.svg' %}" alt="Modo oscuro" id="mode-toggle-btn">
         </div> {% endcomment %}
-        <div class="menu">
-            <img src="{% static 'img/menu.svg' %}" alt="Menú">
-            <div class="menu-items">
+        <nav>
+            <ul>
                 {% if user_is_authenticated %}
-                
-                <form method="POST" action="#">
+                <li><a href="prestamos">Préstamos</a></li>
+                <li><a href="clientes">Clientes</a></li>
+                <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="btn btn-danger" type="submit">Cerrar Sesión</button>
+                    <li><a class="custon-login" type="submit">Cerrar Sesión</a></li>
                 </form>
-
-                <button class="btn btn-info" onclick="location.href='#';">Inventario</button>
-                <button class="btn btn-info" onclick="location.href='#';">Facturas</button>
-                <button class="btn btn-info" onclick="location.href='#';">Proveedores</button>    
                 {% else %}
-                    <button class="btn btn-primary" onclick="location.href='#';">Iniciar Sesión</button>
+                <li><a class="custon-login" onclick="location.href='login';">Iniciar Sesión</a></li>
                 {% endif %}
-
-            </div>
-        </div>
+            </ul>
+        </nav>=
     </header>
 
     <main>
@@ -49,7 +45,7 @@
                 <img src="{% static 'img/logo.png' %}" alt="FUNDASALUD CCS">
             </a>
         </div>
-        <p>&copy; 2024 FUNDASALUD CCS. Todos los derechos reservados.</p>
+        <p>&copy; 2024 MAR-ERIPRESTAMOS. Todos los derechos reservados.</p>
     </footer>
 
 </body>
