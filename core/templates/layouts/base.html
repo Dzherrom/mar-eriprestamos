@@ -21,15 +21,19 @@
         <nav>
             <ul>
                 {% if user_is_authenticated %}
-                <li><a href="prestamos">Préstamos</a></li>
-                <li><a href="clientes">Clientes</a></li>
-                <form method="POST" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <li><a class="custon-login" type="submit">Cerrar Sesión</a></li>
-                </form>
+                <li><a href="{% url 'prestamos' %}">Préstamos</a></li>
+                <li><a href="#">Clientes</a></li>
                 {% else %}
-                <li><a class="custon-login" onclick="location.href='login';">Iniciar Sesión</a></li>
+                <li><a class="custon-login" onclick="location.href="{% url 'login' %}">Iniciar Sesión</a></li>
                 {% endif %}
+            </ul>
+            <ul class="logout-container">
+                <li>
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit">Cerrar Sesión</button>
+                    </form>
+                </li>
             </ul>
         </nav>=
     </header>
