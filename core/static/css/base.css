@@ -94,17 +94,15 @@ nav ul li a:hover {
     color: white;
     text-decoration: underline; /* Underline on hover */
 }
-.table-bordered {
-    border: none; /* Remove Bootstrap's border */
-}
+
 table {
-    border: 2px solid black; /* Your custom border color */
+    border: 2px solid #dee2e6(0, 0, 0, 0); /* Your custom border color */
     border-collapse: collapse; /* Ensures borders are collapsed into a single border */
     border-radius: 10px; /* Adjust the value for more or less rounding */
     overflow: hidden; /* Ensures the rounded corners are visible */
 }
 th, td {
-    border: 1px solid black; /* Your custom border color for cells */
+    border: 1px solid #dee2e6; /* Your custom border color for cells */
     padding: 8px; /* Optional: adds padding inside cells */
 }
 .main-card th,
