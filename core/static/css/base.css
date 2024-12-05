@@ -67,6 +67,20 @@ nav ul li {
     margin-left: auto; /* Push the logout button to the right */
 }
 
+.container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between items */
+    align-items: flex-start; /* Align items to the top */
+}
+.table-container {
+    flex: 1; /* Allow the table to take available space */
+    margin-right: 20px; /* Space between table and graph */
+}
+.graph-container {
+    flex: 1; /* Allow the graph to take available space */
+    /* You can set a specific width or height if needed */
+}
+
 nav ul li a {
     text-decoration: none; /* Remove underline from links */
     color: white; /* Link color */
@@ -80,7 +94,44 @@ nav ul li a:hover {
     color: white;
     text-decoration: underline; /* Underline on hover */
 }
+.table-bordered {
+    border: none; /* Remove Bootstrap's border */
+}
+table {
+    border: 2px solid black; /* Your custom border color */
+    border-collapse: collapse; /* Ensures borders are collapsed into a single border */
+    border-radius: 10px; /* Adjust the value for more or less rounding */
+    overflow: hidden; /* Ensures the rounded corners are visible */
+}
+th, td {
+    border: 1px solid black; /* Your custom border color for cells */
+    padding: 8px; /* Optional: adds padding inside cells */
+}
+.main-card th,
+.login-card th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-right: 21px;
+}
 
+th.sort-asc {
+    background-image: url(/static/img/sort_up.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+th.sort-desc {
+    background-image: url(/static/img/sort_down.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+th.sort-both {
+    background-image: url(/static/img/sort_both.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
 .show {
     display:grid;
 }
@@ -151,6 +202,7 @@ nav ul li a:hover {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+
 
 .form-group input {
     width: 94%; /* Hacer que los campos ocupen todo el ancho */
