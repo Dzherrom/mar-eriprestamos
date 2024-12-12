@@ -76,6 +76,10 @@ nav ul li {
     flex: 1; /* Allow the table to take available space */
     margin-right: 20px; /* Space between table and graph */
 }
+.table-container_monto {
+    flex: 1; /* Allow the table to take available space */
+    margin-right: 20px; /* Space between table and graph */
+}
 .graph-container {
     flex: 1; /* Allow the graph to take available space */
     /* You can set a specific width or height if needed */

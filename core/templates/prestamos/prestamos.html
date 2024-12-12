@@ -32,15 +32,24 @@
             </tbody>
         </table>
     </div>
-
+</div>
+<div class="container">
     <div class="graph-container">
         <h2>Préstamos Pagados por Día</h2>
         <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-        <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+            <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="graph-container_monto">
+        <h2>Montos Pagados por Día</h2>
+        <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+            <canvas id="montosPorDia" width="400" height="200"></canvas>
         </div>
     </div>
 </div>
 
+<div class="table-container">
     <div class="prestamos_pagados">
         <h2>Préstamos Pagados</h2>
         {{ mensaje }}
@@ -75,7 +84,7 @@
             </tbody>
         </table>
     </div>
-
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
     const tables = document.querySelectorAll('table.table'); // Selecciona todas las tablas
@@ -128,16 +137,43 @@
         }
     });
 });
+// grafico de pagos por dia
 document.addEventListener('DOMContentLoaded', () => {
-        var data = {{ data_json|safe }};  // Asegúrate de que data_json esté en el contexto
-        const ctx = document.getElementById('prestamosPorDia').getContext('2d');
-        
-        const chart = new Chart(ctx, {
+        var data = {{ data_json_dia|safe }};  // Asegúrate de que data_json esté en el contexto
+        const ctx = document.getElementById('prestamosPorDia').getContext('2d');    
+        const chart1 = new Chart(ctx, {
             type: 'bar',  // Cambia el tipo de gráfico si es necesario
             data: {
                 labels: data.fechas,  // Asegúrate de que esto sea un array
                 datasets: [{
                     label: 'Préstamos Pagados',
+                    data: data.totales,  // Asegúrate de que esto sea un array
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// grafico de montos por dia
+document.addEventListener('DOMContentLoaded', () => {
+        var data = {{ data_json|safe }};  // Asegúrate de que data_json esté en el contexto
+        const ctx = document.getElementById('montosPorDia').getContext('2d');
+        
+        const chart = new Chart(ctx, {
+            type: 'line',  // Cambia el tipo de gráfico si es necesario
+            data: {
+                labels: data.fechas,  // Asegúrate de que esto sea un array
+                datasets: [{
+                    label: 'Montos Pagados',
                     data: data.totales,  // Asegúrate de que esto sea un array
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
