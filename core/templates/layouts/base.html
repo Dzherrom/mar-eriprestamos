@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacen de Compras</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link  rel="stylesheet" type="text/css" href="https://bootswatch.com/5/zephyr/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">
+                <img src="{% static 'img/logo.png' %}" alt="MAR-ERIPRESTAMOS">
+            </a>
+        </div>
+        {% comment %} <div class="mode-toggle">
+            <img src="{% static 'img/moon.svg' %}" alt="Modo oscuro" id="mode-toggle-btn">
+        </div> {% endcomment %}
+        <nav>
+            <ul>
+                {% if user_is_authenticated %}
+                <li><a href="{% url 'prestamos' %}">Préstamos</a></li>
+                <li><a href="#">Clientes</a></li>
+            </ul>
+            <ul class="logout-container">
+                <li>
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit">Cerrar Sesión</button>
+                    </form>
+                </li>
+            </ul>
+            {% else %}
+            <ul class="logout-container">
+                <li><a class="custon-login" onclick="location.href="{% url 'login' %}">Iniciar Sesión</a></li>
+            </ul>
+                {% endif %}
+        </nav>=
+    </header>
+
+    <main>
+        <p> pepito </p>
+        
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="logo">
+            <a href="#">
+                <img src="{% static 'img/logo.png' %}" alt="FUNDASALUD CCS">
+            </a>
+        </div>
+        <p>&copy; 2024 MAR-ERIPRESTAMOS. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>

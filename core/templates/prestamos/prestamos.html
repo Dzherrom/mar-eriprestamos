@@ -1,0 +1,235 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="table-container">
+        <h2>Préstamos Sin Pagar</h2>
+        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+            <div></div>
+        <input type="text" id="searchInput" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="th sort-both">ID</th>
+                    <th class="th sort-both">Cliente</th>
+                    <th class="th sort-both">Fecha de Préstamo</th>
+                    <th class="th sort-both">Monto de Préstamo</th>
+                    <th class="th sort-both">Tasa de Interés</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prestamo in prestamos_sin_pagar %}
+                <tr>
+                    <td>{{ prestamo.id }}</td>
+                    <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
+                    <td>{{ prestamo.fecha_prestamo }}</td>
+                    <td>${{ prestamo.monto_prestamo }}</td>
+                    <td>{{ prestamo.tasa_interes }}%</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay préstamos sin pagar.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container">
+    <div class="graph-container">
+        <h2>Préstamos Pagados por Día</h2>
+        <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+            <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="graph-container_monto">
+        <h2>Montos Pagados por Día</h2>
+        <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+            <canvas id="montosPorDia" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="prestamos_pagados">
+        <h2>Préstamos Pagados</h2>
+        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+            <div></div>
+        <input type="text" id="searchInput" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="th sort-both">ID</th>
+                    <th class="th sort-both">Cliente</th>
+                    <th class="th sort-both">Fecha de Préstamo</th>
+                    <th class="th sort-both">Fecha de Pago</th>
+                    <th class="th sort-both">Monto de Préstamo</th>
+                    <th class="th sort-both">Monto de Pago</th>
+                    <th class="th sort-both">Tasa de Interés</th>
+                </tr>
+            </thead>
+            <tbody id="prestamosTableBody">
+                {% for prestamo in prestamos_pagados %}
+                <tr>
+                    <td>{{ prestamo.id }}</td>
+                    <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
+                    <td>{{ prestamo.fecha_prestamo }}</td>
+                    <td>{{ prestamo.fecha_pago }}</td>
+                    <td>${{ prestamo.monto_prestamo }}</td>
+                    <td>{{ prestamo.monto_pago }}</td>
+                    <td>{{ prestamo.tasa_interes }}%</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay préstamos sin pagar.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const tables = document.querySelectorAll('table.table'); // Selecciona todas las tablas
+
+    tables.forEach(table => {
+        let sortOrder = {};
+        const thElements = table.querySelectorAll('th');
+
+        thElements.forEach((th) => {
+            th.addEventListener('click', (event) => {
+                event.preventDefault();
+                const columnIndex = Array.prototype.indexOf.call(th.parentNode.children, th);
+                const columnName = th.textContent.trim();
+                // Toggle sort order
+                if (!sortOrder[columnName]) {
+                    sortOrder[columnName] = 'asc';
+                } else if (sortOrder[columnName] === 'asc') {
+                    sortOrder[columnName] = 'desc';
+                } else {
+                    sortOrder[columnName] = 'asc';
+                }
+                // Update class
+                th.className = th.className.replace(/sort-asc|sort-desc/, `sort-${sortOrder[columnName]}`);
+
+                // Call sortTable function
+                sortTable(table, columnIndex, sortOrder[columnName]);
+            });
+        });
+
+        function sortTable(table, columnIndex, sortOrder) {
+            var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+            rows.sort(function(rowA, rowB) {
+                var cellA = rowA.cells[columnIndex].textContent;
+                var cellB = rowB.cells[columnIndex].textContent;
+                // Handle numerical values
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return cellA - cellB;
+                }
+                // Default to string comparison
+                return cellA.localeCompare(cellB);
+            });
+            // Sort order
+            if (sortOrder === 'desc') {
+                rows.reverse();
+            }
+            // Update the table
+            rows.forEach(function(row) {
+                table.querySelector('tbody').appendChild(row);
+            });
+        }
+    });
+});
+// grafico de pagos por dia
+document.addEventListener('DOMContentLoaded', () => {
+        var data_dia = {{ data_json_dia|safe }};  // Asegúrate de que data_json esté en el contexto
+        const ctx1 = document.getElementById('prestamosPorDia').getContext('2d');    
+        const chart1 = new Chart(ctx1, {
+            type: 'bar',  // Cambia el tipo de gráfico si es necesario
+            data: {
+                labels: data_dia.fechas,  // Asegúrate de que esto sea un array
+  
+                datasets: [{
+                    label: 'Préstamos Pagados',
+                    data: data_dia.totales,  // Asegúrate de que esto sea un array
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// grafico de montos por dia
+document.addEventListener('DOMContentLoaded', () => {
+        var data_montos = {{ data_json|safe }};  // Asegúrate de que data_json esté en el contexto
+        console.log(data_montos.fechas, data_montos.totales)
+        const ctx2 = document.getElementById('montosPorDia').getContext('2d');
+        const chart2 = new Chart(ctx2, {
+            type: 'line',  // Cambia el tipo de gráfico si es necesario
+            data: {
+                labels: data_montos.fechas,  // Asegúrate de que esto sea un array
+                datasets: [{
+                    label: 'Montos Pagados',
+                    data: data_montos.totales,  // Asegúrate de que esto sea un array
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// campo de busqueda
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('prestamosTableBody');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = ""; // Muestra la fila
+            } else {
+                rows[i].style.display = "none"; // Oculta la fila
+            }
+        }
+    });
+});
+
+</script>
+
+{% endblock content %}
