@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
 import json
-from .models import Prestamos
+from .models import Prestamos, Clientes
 from datetime import timedelta, datetime
 #from .forms import
 
@@ -18,7 +18,14 @@ def home(request):
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'home.html', context)
 
-
+#clientes
+@login_required
+def clientes(request):
+    clientes = Clientes.objects.all()
+    context = {'clientes': clientes,
+               'user_is_authenticated': request.user.is_authenticated}
+    return render(request, 'clientes/clientes.html', context)
+# prestamos
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
     prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)

@@ -23,7 +23,7 @@
             <ul>
                 {% if user_is_authenticated %}
                 <li><a href="{% url 'prestamos' %}">Préstamos</a></li>
-                <li><a href="#">Clientes</a></li>
+                <li><a href="{% url 'clientes' %}">Clientes</a></li>
             </ul>
             <ul class="logout-container">
                 <li>
