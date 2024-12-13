@@ -4,7 +4,10 @@
 <div class="container">
     <div class="table-container">
         <h2>Préstamos Sin Pagar</h2>
-        {{ mensaje }}
+        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+            <div></div>
+        <input type="text" id="searchInput" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+        </div>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -52,7 +55,10 @@
 <div class="table-container">
     <div class="prestamos_pagados">
         <h2>Préstamos Pagados</h2>
-        {{ mensaje }}
+        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+            <div></div>
+        <input type="text" id="searchInput" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+        </div>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -65,7 +71,7 @@
                     <th class="th sort-both">Tasa de Interés</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="prestamosTableBody">
                 {% for prestamo in prestamos_pagados %}
                 <tr>
                     <td>{{ prestamo.id }}</td>
@@ -139,15 +145,16 @@
 });
 // grafico de pagos por dia
 document.addEventListener('DOMContentLoaded', () => {
-        var data = {{ data_json_dia|safe }};  // Asegúrate de que data_json esté en el contexto
-        const ctx = document.getElementById('prestamosPorDia').getContext('2d');    
-        const chart1 = new Chart(ctx, {
+        var data_dia = {{ data_json_dia|safe }};  // Asegúrate de que data_json esté en el contexto
+        const ctx1 = document.getElementById('prestamosPorDia').getContext('2d');    
+        const chart1 = new Chart(ctx1, {
             type: 'bar',  // Cambia el tipo de gráfico si es necesario
             data: {
-                labels: data.fechas,  // Asegúrate de que esto sea un array
+                labels: data_dia.fechas,  // Asegúrate de que esto sea un array
+  
                 datasets: [{
                     label: 'Préstamos Pagados',
-                    data: data.totales,  // Asegúrate de que esto sea un array
+                    data: data_dia.totales,  // Asegúrate de que esto sea un array
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
@@ -165,16 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // grafico de montos por dia
 document.addEventListener('DOMContentLoaded', () => {
-        var data = {{ data_json|safe }};  // Asegúrate de que data_json esté en el contexto
-        const ctx = document.getElementById('montosPorDia').getContext('2d');
-        
-        const chart = new Chart(ctx, {
+        var data_montos = {{ data_json|safe }};  // Asegúrate de que data_json esté en el contexto
+        console.log(data_montos.fechas, data_montos.totales)
+        const ctx2 = document.getElementById('montosPorDia').getContext('2d');
+        const chart2 = new Chart(ctx2, {
             type: 'line',  // Cambia el tipo de gráfico si es necesario
             data: {
-                labels: data.fechas,  // Asegúrate de que esto sea un array
+                labels: data_montos.fechas,  // Asegúrate de que esto sea un array
                 datasets: [{
                     label: 'Montos Pagados',
-                    data: data.totales,  // Asegúrate de que esto sea un array
+                    data: data_montos.totales,  // Asegúrate de que esto sea un array
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
@@ -189,6 +196,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+// campo de busqueda
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('prestamosTableBody');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = ""; // Muestra la fila
+            } else {
+                rows[i].style.display = "none"; // Oculta la fila
+            }
+        }
+    });
+});
+
 </script>
 
 {% endblock content %}

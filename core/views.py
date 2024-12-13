@@ -18,6 +18,7 @@ def home(request):
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'home.html', context)
 
+
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
     prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
@@ -27,8 +28,6 @@ def obtener_prestamos_pagados_por_dia():
     fechas = [prestamo['fecha_pago'].strftime('%Y-%m-%d') for prestamo in prestamos_por_dia]
     totales = [prestamo['total'] for prestamo in prestamos_por_dia]
 
-    
-    print(fechas)
     return {
         'fechas': fechas,
         'totales': totales,
@@ -37,8 +36,10 @@ def obtener_prestamos_pagados_por_dia():
 def obtener_montos_pagados_por_dia():
     # Obtener montos pagados agrupados por fecha
     montos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
-    montos_por_dia = montos_pagados.values('fecha_pago').annotate(total=Sum('monto_pago')).order_by('fecha_pago')
+    montos_por_dia = montos_pagados.values('fecha_pago').annotate(total=Sum('monto_pago')).distinct().order_by('fecha_pago')
 
+    #ordenar fechas
+    montos_por_dia = sorted(montos_por_dia, key=lambda x: x['fecha_pago'])
     # Preparar datos para el gráfico
     fechas = [monto['fecha_pago'].strftime('%Y-%m-%d') for monto in montos_por_dia]
     totales = [float(monto['total']) for monto in montos_por_dia]
@@ -71,7 +72,6 @@ def prestamos(request):
         # Convertir los datos a JSON
         data_json_dia = json.dumps(data_prestamos_pagados)
         data_json_montos = json.dumps(data_montos_pagados)
-
         data_json = json.dumps({'fechas': fechas, 'totales': totales})
         
         context = {'mensaje':'mensaje', 

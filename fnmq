@@ -1,0 +1,53 @@
+* [33mcommit ddbf0759147dc2440adbce91e05be969ebfee8fd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mhome[m[33m)[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Thu Dec 12 18:25:24 2024 -0400
+[31m|[m 
+[31m|[m     montos por dia graph
+[31m|[m 
+* [33mcommit c724493085bb3acbc6660b7d382caccaa3e6f07c[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Thu Dec 5 18:16:55 2024 -0400
+[31m|[m 
+[31m|[m     table color
+[31m|[m 
+* [33mcommit 0b952f4ee61b42bf644520798dd5584769e59259[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Thu Dec 5 18:10:15 2024 -0400
+[31m|[m 
+[31m|[m     prestamos table sort and graphs
+[31m|[m 
+* [33mcommit dc8787c6550d67b702aa79cca542f992c9c49087[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Wed Dec 4 18:18:39 2024 -0400
+[31m|[m 
+[31m|[m     home css hotfix
+[31m|[m 
+* [33mcommit d3e3bb728f40f0285a6929a6c159a5771b77e868[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Wed Dec 4 18:13:41 2024 -0400
+[31m|[m 
+[31m|[m     home css
+[31m|[m 
+* [33mcommit 452a2a73158d49fdaedc6db057dc15a3d47409fd[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Wed Dec 4 17:20:22 2024 -0400
+[31m|[m 
+[31m|[m     base css and header
+[31m|[m 
+* [33mcommit 2d2a65c440d1d8303fe4d53f61702d1d2d7ba3fc[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Mon Dec 2 20:40:04 2024 -0400
+[31m|[m 
+[31m|[m     prestamos site
+[31m|[m 
+* [33mcommit 26ef7ae5fd5a0950dd40489265f39fc488542721[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+[31m|[m Author: Jerome Rojas <skreamlight@gmail.com>
+[31m|[m Date:   Mon Dec 2 16:28:39 2024 -0400
+[31m|[m 
+[31m|[m     base project structure
+[31m|[m 
+* [33mcommit c6d9540fb7cb844cb9e333b719d48411786f70e0[m
+  Author: Jerome Rojas <45909037+Dzherrom@users.noreply.github.com>
+  Date:   Mon Dec 2 14:07:08 2024 -0400
+  
+      Initial commit
