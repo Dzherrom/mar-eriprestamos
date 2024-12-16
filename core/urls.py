@@ -8,7 +8,7 @@ urlpatterns = [
     
     #clientes
     path('clientes/', views.clientes, name='clientes'),
-    #path('clientes/<int:cliente_id>', views.cliente_detalles, name='cliente_detalles'),
+    path('clientes/<int:cliente_id>', views.cliente_detalles, name='cliente_detalles'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

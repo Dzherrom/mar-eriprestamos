@@ -28,9 +28,9 @@ def clientes(request):
                 'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'clientes/clientes.html', context)
 
-#def cliente_detalles(request, cliente_id):
+def cliente_detalles(request, cliente_id):
     if request.method == 'GET':
-        clientes = Clientes.get_object_or_404(Clientes, pk=cliente_id)
+        clientes = get_object_or_404(Clientes, pk=cliente_id)
         form = ClienteForm(instance=clientes)
         context = {'clientes': clientes,
                 'form': form,
@@ -39,7 +39,7 @@ def clientes(request):
     
     else:
         try:
-            clientes = Clientes.get_object_or_404(Clientes, pk=cliente_id)
+            clientes = get_object_or_404(Clientes, pk=cliente_id)
             form = ClienteForm(instance=clientes)
             if form.is_valid():
                 form.save()
