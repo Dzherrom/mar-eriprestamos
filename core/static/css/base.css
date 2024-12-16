@@ -62,13 +62,46 @@ nav ul li {
     align-content: center; /* Space between items */
 }
 
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Espacio entre la sección principal y la información de contacto */
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    width: 48%; /* Ajusta el ancho según sea necesario */
+}
+
+.card-left {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    max-width: 200%;
+    padding: 15px;
+    margin-bottom: 20px; /* Espacio entre tarjetas */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-right {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px; /* Espacio entre tarjetas */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card:last-child {
+    margin-bottom: 0; /* Elimina el margen inferior de la última tarjeta */
+}
+
 .logout-container {
     justify-content: right;
     margin-left: auto; /* Push the logout button to the right */
 }
 
 .container {
-    display: flex; /* Use flexbox for layout */
+     /* Use flexbox for layout */
     justify-content: space-between; /* Space between items */
     align-items: flex-start; /* Align items to the top */
 }

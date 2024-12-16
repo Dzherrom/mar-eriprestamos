@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from collections import defaultdict
 import json
 from .models import Prestamos, Clientes
-from datetime import timedelta, datetime
-#from .forms import
+from .forms import ClienteForm
 
 
 # Create your views here.
@@ -21,10 +20,39 @@ def home(request):
 #clientes
 @login_required
 def clientes(request):
-    clientes = Clientes.objects.all()
-    context = {'clientes': clientes,
-               'user_is_authenticated': request.user.is_authenticated}
-    return render(request, 'clientes/clientes.html', context)
+    if request.method == 'GET':
+        clientes = Clientes.objects.all()
+        form = ClienteForm()
+        context = {'clientes': clientes,
+                'form': form,
+                'user_is_authenticated': request.user.is_authenticated}
+        return render(request, 'clientes/clientes.html', context)
+
+#def cliente_detalles(request, cliente_id):
+    if request.method == 'GET':
+        clientes = Clientes.get_object_or_404(Clientes, pk=cliente_id)
+        form = ClienteForm(instance=clientes)
+        context = {'clientes': clientes,
+                'form': form,
+                'user_is_authenticated': request.user.is_authenticated}
+        return render(request, 'clientes/clientes.html', context)
+    
+    else:
+        try:
+            clientes = Clientes.get_object_or_404(Clientes, pk=cliente_id)
+            form = ClienteForm(instance=clientes)
+            if form.is_valid():
+                form.save()
+                print('form guarado correctamente')
+                return redirect('home')
+            
+            else:
+                print('error en try')
+                return redirect('home')
+        except:
+            return render(request, 'cliente/clientes.html', context)
+        
+            
 # prestamos
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
