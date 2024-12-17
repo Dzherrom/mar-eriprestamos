@@ -4,10 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse
 from collections import defaultdict
-import json
 from .models import Prestamos, Clientes
 from .forms import ClienteForm
-
+import json
 
 # Create your views here.
 @login_required
@@ -33,9 +32,10 @@ def cliente_detalles(request, cliente_id):
         clientes = get_object_or_404(Clientes, pk=cliente_id)
         form = ClienteForm(instance=clientes)
         context = {'clientes': clientes,
+                'clientes_lista': clientes,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
-        return render(request, 'clientes/clientes.html', context)
+        return render(request, 'clientes/clientes_detalles.html', context)
     
     else:
         try:
@@ -50,7 +50,7 @@ def cliente_detalles(request, cliente_id):
                 print('error en try')
                 return redirect('home')
         except:
-            return render(request, 'cliente/clientes.html', context)
+            return render(request, 'cliente/clientes_detalles.html', context)
         
             
 # prestamos

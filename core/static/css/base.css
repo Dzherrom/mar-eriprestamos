@@ -61,13 +61,31 @@ nav ul li {
     margin-right: 20px;
     align-content: center; /* Space between items */
 }
+/* Estilos generales para el contenedor */
+.container {
+    max-width: 1200px; /* Ancho máximo del contenedor */
+    margin: 0 auto; /* Centrar el contenedor */
+    padding: 20px; /* Espaciado interno */
+}
+
+.container-graficos{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+}
+
 
 .main-container {
+    display: block;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Espacio entre la sección principal y la información de contacto */
+}
+.detalles-container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px; /* Espacio entre la sección principal y la información de contacto */
 }
-
 .left-column, .right-column {
     display: flex;
     flex-direction: column;
@@ -100,24 +118,65 @@ nav ul li {
     margin-left: auto; /* Push the logout button to the right */
 }
 
-.container {
-     /* Use flexbox for layout */
-    justify-content: space-between; /* Space between items */
-    align-items: flex-start; /* Align items to the top */
-}
-.table-container {
+.table-container, .table-container_monto  {
+    max-width: 100%;
+    margin-left: auto;
     flex: 1; /* Allow the table to take available space */
     margin-right: 20px; /* Space between table and graph */
-}
-.table-container_monto {
-    flex: 1; /* Allow the table to take available space */
-    margin-right: 20px; /* Space between table and graph */
-}
-.graph-container {
-    flex: 1; /* Allow the graph to take available space */
-    /* You can set a specific width or height if needed */
 }
 
+/* Estilo para la tarjeta de Información General */
+.card-general {
+    width: 100%; /* Ancho del 80% */
+    margin: 20px auto; /* Centrar la tarjeta y agregar margen superior e inferior */
+    padding: 20px; /* Espaciado interno */
+    background-color: #f8f9fa; /* Color de fondo */
+    border: 1px solid #dee2e6; /* Borde */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+.card-general-info {
+    display: flex;
+    margin-right: 20px;
+    justify-content: flex-start; /* Alinear a la izquierda */
+    gap: 20vh; /* Espacio entre los elementos */
+}
+/* Estilo para las tarjetas en la fila */
+.row {
+    display: flex; /* Usar flexbox para alinear las tarjetas en fila */
+    justify-content: space-between; /* Espacio entre las tarjetas */
+    margin-top: 20px; /* Margen superior */
+}
+
+/* Estilo para cada tarjeta */
+.card-transacciones, .card-total-pagado, .card-pagos-totales {
+    flex: 1; /* Cada tarjeta ocupará el mismo espacio */
+    margin: 0 10px; /* Margen lateral entre tarjetas */
+    padding: 20px; /* Espaciado interno */
+    background-color: #f8f9fa; /* Color de fondo */
+    border: 1px solid #dee2e6; /* Borde */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+.graph-container {    flex: 1; /* Cada tarjeta ocupará el mismo espacio */
+    padding: 20px; /* Espaciado interno */
+    background-color: #f8f9fa; /* Color de fondo */
+    border: 1px solid #dee2e6; /* Borde */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */flex: 1; /* Allow the graph to take available space */
+    margin: 20px;/* You can set a specific width or height if needed */
+}
+/* Asegurarse de que las tarjetas no se reduzcan demasiado en pantallas pequeñas */
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+    }
+    .card-transacciones,
+    .card-total-pagado,
+    .card-pagos-totales {
+        margin: 10px 0; /* Margen vertical entre tarjetas */
+    }
+}
 nav ul li a {
     text-decoration: none; /* Remove underline from links */
     color: white; /* Link color */
