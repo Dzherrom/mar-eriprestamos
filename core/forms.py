@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.files.base import File
 from django.db.models.base import Model
-from .models import Clientes, Prestamos
+from .models import Clientes, Prestamos, Pagos
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -21,3 +21,13 @@ class ClienteForm(forms.ModelForm):
         if not re.match(pattern, rif):
             raise forms.ValidationError('El RIF debe tener el formato J1234567890')
         return rif
+    
+class PagosForm(forms.ModelForm):
+    class Meta:
+        model = Pagos
+        fields = '__all__'  # O especifica los campos que deseas incluir
+
+class PrestamosForm(forms.ModelForm):
+    class Meta:
+        model = Prestamos
+        fields = '__all__' 

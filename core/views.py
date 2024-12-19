@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse
 from collections import defaultdict
-from .models import Prestamos, Clientes
+from .models import Prestamos, Clientes, Pagos
 from .forms import ClienteForm
 import json
 
@@ -20,19 +20,35 @@ def home(request):
 @login_required
 def clientes(request):
     if request.method == 'GET':
-        clientes = Clientes.objects.all()
+        cliente = Clientes.objects.all()
+        pagos = Pagos.objects.filter(cliente=1)
+        prestamos_activos = Prestamos.objects.filter(cliente=1, fecha_pago__isnull=True)
         form = ClienteForm()
-        context = {'clientes': clientes,
+        print(pagos)
+        print(prestamos_activos)
+        context = {'cliente': cliente,
+                'clientes_lista': cliente,
+                'pagos': pagos,
+                'prestamos_activos': prestamos_activos,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
-        return render(request, 'clientes/clientes.html', context)
+        return render(request, 'clientes/clientes_detalles.html', context)
 
 def cliente_detalles(request, cliente_id):
     if request.method == 'GET':
-        clientes = get_object_or_404(Clientes, pk=cliente_id)
-        form = ClienteForm(instance=clientes)
-        context = {'clientes': clientes,
-                'clientes_lista': clientes,
+        cliente = get_object_or_404(Clientes, pk=cliente_id)
+        prestamos = cliente.prestamos_set.all()
+        pagos = Pagos.objects.filter(cliente=cliente)
+        prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
+        prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
+        balance = Prestamos.calcular_balance(cliente)
+        form = ClienteForm(instance=cliente)
+        context = {'cliente': cliente,
+                'prestamos':prestamos,
+                'pagos': pagos,
+                'balance': balance,
+                'prestamos_activos': prestamos_activos,
+                'prestamos_pagados': prestamos_pagados,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'clientes/clientes_detalles.html', context)
