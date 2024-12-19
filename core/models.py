@@ -54,28 +54,16 @@ class TipodePago(models.Model):
     def __str__(self):
         return self.tipo_pago
     
-class Pagos(models.Model):
-    cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
-    fecha_pago = models.DateField()
-    moneda = models.ForeignKey(Moneda, on_delete=models.CASCADE)
-    tipo_pago = models.ForeignKey(TipodePago, on_delete=models.CASCADE)  # Inicialmente vacío
-    referencia = models.CharField(max_length=100)
-    monto = models.DecimalField(max_digits=10, decimal_places=2)
-        
-    def __str__(self):
-        return f"Pago de {self.monto} en {self.moneda} el {self.fecha_pago}"
-                
 class Prestamos(models.Model):
     cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
     fecha_prestamo = models.DateField()
     fecha_pago = models.DateField(null=True, blank=True)
     monto_prestamo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    monto_pago = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    monto_pago = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Monto total pagado
     tasa_interes = models.DecimalField(max_digits=5, decimal_places=2)
-    
+
     def __str__(self):
         return f"Préstamo de {self.cliente} - Monto: {self.monto_prestamo}"
-    
     @classmethod
     def contar_prestamos_activos(cls, cliente):
         return cls.objects.filter(cliente=cliente, fecha_pago__isnull=False).count()
@@ -96,10 +84,24 @@ class Prestamos(models.Model):
         cliente.balance = balance
         cliente.save()
         
-    
+
+class Pagos(models.Model):
+    cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
+    fecha_pago = models.DateField()
+    moneda = models.ForeignKey(Moneda, on_delete=models.CASCADE)
+    tipo_pago = models.ForeignKey(TipodePago, on_delete=models.CASCADE)  # Inicialmente vacío
+    referencia = models.CharField(max_length=100)
+    monto = models.DecimalField(max_digits=10, decimal_places=2)
+    prestamo = models.ForeignKey(Prestamos, on_delete=models.CASCADE, null=True, blank=True)  # Relación con Prestamos
+
+    def __str__(self):
+        return f"Pago de {self.monto} en {self.moneda} el {self.fecha_pago}"
+
     def save(self, *args, **kwargs):
+        # Llamar al método save del modelo base
         super().save(*args, **kwargs)
-        self.cliente.actualizar_prestamos_activos()
-        self.cliente.actualizar_prestamos_pagados()
-        self.cliente.calcular_balance()
         
+        # Actualizar el monto pagado del préstamo asociado
+        if self.prestamo:
+            self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto
+            self.prestamo.save()
