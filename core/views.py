@@ -42,11 +42,13 @@ def cliente_detalles(request, cliente_id):
         prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
         prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
         balance = Prestamos.calcular_balance(cliente)
+        balance_total = Prestamos.calcular_balance_total(cliente)
         form = ClienteForm(instance=cliente)
         context = {'cliente': cliente,
                 'prestamos':prestamos,
                 'pagos': pagos,
                 'balance': balance,
+                'balance_total': balance_total,
                 'prestamos_activos': prestamos_activos,
                 'prestamos_pagados': prestamos_pagados,
                 'form': form,

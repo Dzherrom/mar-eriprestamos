@@ -84,6 +84,11 @@ class Prestamos(models.Model):
         cliente.balance = balance
         cliente.save()
         
+    @classmethod    
+    def calcular_balance_total(cls, cliente):
+        total_prestamos = Prestamos.objects.filter(cliente=cliente).aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
+        cliente.total_prestamos = total_prestamos
+        cliente.save()
 
 class Pagos(models.Model):
     cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
