@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Almacen de Compras</title>
+    <title>Mar-Eri prestamos</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link  rel="stylesheet" type="text/css" href="https://bootswatch.com/5/zephyr/bootstrap.min.css"/>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -23,7 +23,7 @@
             <ul>
                 {% if user_is_authenticated %}
                 <li><a href="{% url 'prestamos' %}">Préstamos</a></li>
-                <li><a href="#">Clientes</a></li>
+                <li><a href="{% url 'clientes' %}">Clientes</a></li>
             </ul>
             <ul class="logout-container">
                 <li>
@@ -41,9 +41,7 @@
         </nav>=
     </header>
 
-    <main>
-        <p> pepito </p>
-        
+    <main>     
         {% block content %}
         {% endblock %}
     </main>

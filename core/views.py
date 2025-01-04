@@ -1,14 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from collections import defaultdict
+from .models import Prestamos, Clientes, Pagos
+from .forms import ClienteForm
 import json
-from .models import Prestamos
-from datetime import timedelta, datetime
-#from .forms import
-
 
 # Create your views here.
 @login_required
@@ -18,7 +16,76 @@ def home(request):
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'home.html', context)
 
+#clientes
+@login_required
+def clientes(request):
+    if request.method == 'GET':
+        cliente = Clientes.objects.all()
+        pagos = Pagos.objects.filter(cliente=1)
+        prestamos_activos = Prestamos.objects.filter(cliente=1, fecha_pago__isnull=True)
+        form = ClienteForm()
+        context = {'cliente': cliente,
+                'clientes_lista': cliente,
+                'pagos': pagos,
+                'prestamos_activos': prestamos_activos,
+                'form': form,
+                'user_is_authenticated': request.user.is_authenticated}
+        return render(request, 'clientes/clientes_detalles.html', context)
 
+def cliente_detalles(request, cliente_id):
+    if request.method == 'GET':
+        clientes = Clientes.objects.all()
+        cliente = get_object_or_404(Clientes, pk=cliente_id)
+        prestamos = cliente.prestamos_set.all()
+        pagos = Pagos.objects.filter(cliente=cliente)
+        ultimo_pago = pagos.first()
+        fecha_ultimo_pago = ultimo_pago.fecha_pago if ultimo_pago else None
+        prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
+        prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
+        balance = Prestamos.calcular_balance_total(cliente)
+        balance_total = Prestamos.suma_total_prestamos(cliente)
+        form = ClienteForm(instance=cliente)
+        
+        for prestamo in prestamos:
+            Prestamos.calcular_balance_prestamo(prestamo)
+
+        total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
+        context = {'cliente': cliente,
+                   'clientes': clientes,
+                'prestamos':prestamos,
+                'pagos': pagos,
+                'balance': balance,
+                'balance_total': balance_total,
+                'fecha_ultimo_pago': fecha_ultimo_pago,
+                'prestamos_activos': prestamos_activos,
+                'prestamos_pagados': prestamos_pagados,
+                'total_monto_a_pagar': total_monto_a_pagar,
+                'form': form,
+                'user_is_authenticated': request.user.is_authenticated}
+        return render(request, 'clientes/clientes_detalles.html', context)
+    
+    else:
+        try:
+            clientes = get_object_or_404(Clientes, pk=cliente_id)
+            form = ClienteForm(instance=clientes)
+            if form.is_valid():
+                form.save()
+                print('form guarado correctamente')
+                return redirect('home')
+            
+            else:
+                print('error en try')
+                return redirect('home')
+        except:
+            return render(request, 'cliente/clientes_detalles.html', context)
+        
+            
+'''
+        agregar al CRUD
+        cliente.ultimo_usuario_modificacion = request.user 
+        cliente.save
+'''
+# prestamos
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
     prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
