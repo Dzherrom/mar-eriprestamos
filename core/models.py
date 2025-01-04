@@ -60,35 +60,89 @@ class Prestamos(models.Model):
     fecha_pago = models.DateField(null=True, blank=True)
     monto_prestamo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     monto_pago = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Monto total pagado
+    monto_a_pagar = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     tasa_interes = models.DecimalField(max_digits=5, decimal_places=2)
-
+    pagado = models.BooleanField(default=False)
+    
     def __str__(self):
         return f"Préstamo de {self.cliente} - Monto: {self.monto_prestamo}"
+    
+    def save(self, *args, **kwargs):
+
+        # Llamar al método save del modelo base
+        super().save(*args, **kwargs)
+
+        
+    @classmethod
+    def calcular_balance_total(cls, cliente):
+        """
+        Calcula el balance de un cliente como el total a pagar menos los pagos realizados.
+        """
+        # Obtener todos los préstamos activos del cliente
+        prestamos_activos = cls.objects.filter(cliente=cliente, pagado=False)
+
+        # Calcular el total a pagar y los pagos realizados
+        total_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos_activos)
+        print(total_a_pagar)
+        pagos_realizados = sum(prestamo.monto_pago for prestamo in prestamos_activos)
+        print(pagos_realizados)
+        # Calcular el balance
+        balance_activo = total_a_pagar - pagos_realizados
+        return balance_activo
+
+
+    @classmethod
+    def calcular_balance_prestamo(cls, prestamo):
+        """
+        Calcula el balance de un cliente en un préstamo específico.
+        Es decir, cuánto falta por pagar en ese préstamo.
+        """
+        # Verificar que el objeto prestamo sea válido
+        if not isinstance(prestamo, cls):
+            raise ValueError("Se esperaba un objeto de tipo Prestamos.")
+
+        # Calcular el balance (total a pagar menos los pagos realizados)
+        balance = prestamo.monto_a_pagar - prestamo.monto_pago
+        return max(balance, 0)   # Asegurar que el balance no sea negativo
+         
+    @classmethod
+    def total_a_pagar(cls, prestamo):
+        """Calcula el total a pagar de un préstamo según la tasa de interés."""
+        if prestamo.monto_prestamo and prestamo.tasa_interes:
+            interes = (prestamo.monto_prestamo * prestamo.tasa_interes) / 100
+            return prestamo.monto_prestamo + interes
+        return 0
+    
+    @classmethod
+    def suma_prestamos_activos(cls, cliente):
+        """Calcula la suma total de los préstamos activos de un cliente."""
+        return cls.objects.filter(cliente=cliente, fecha_pago__isnull=True).aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
+
+    @classmethod
+    def suma_total_prestamos(cls, cliente):
+        """Calcula la suma total de todos los préstamos de un cliente,
+        independientemente de si están activos o pagados."""
+        return cls.objects.filter(cliente=cliente).aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
+    
+    @classmethod
+    def suma_pagos_cliente(cls, cliente):
+        """Calcula la suma total de los pagos de un cliente en sus préstamos activos."""
+        return Pagos.objects.filter(cliente=cliente).aggregate(Sum('monto'))['monto__sum'] or 0
+
+    @classmethod
+    def tasa_interes_total(cls, cliente):
+        """Calcula la suma total de la tasa de interés de los préstamos de un cliente."""
+        return cls.objects.filter(cliente=cliente).aggregate(Sum('tasa_interes'))['tasa_interes__sum'] or 0
+
+    @classmethod
+    def contar_prestamos_pagados(cls, cliente):
+        """Cuenta los préstamos que han sido pagados por un cliente."""
+        return cls.objects.filter(cliente=cliente, pagado=True).count()
+
     @classmethod
     def contar_prestamos_activos(cls, cliente):
-        return cls.objects.filter(cliente=cliente, fecha_pago__isnull=False).count()
-    
-    @classmethod    
-    def contar_prestamos_pagados(cls, cliente):
-        return cls.objects.filter(cliente=cliente, fecha_pago__isnull=True).count()
-    
-    @classmethod    
-    def calcular_balance(cls, cliente):
-        # Sumar el monto de los préstamos activos
-        total_prestamos_activos = cls.objects.filter(cliente=cliente, fecha_pago__isnull=True).aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
-        # Sumar el monto de los pagos realizados
-        total_pagos_realizados = cls.objects.filter(cliente=cliente, fecha_pago__isnull=False).aggregate(Sum('monto_pago'))['monto_pago__sum'] or 0
-        # Calcular el balance
-        balance = total_prestamos_activos - total_pagos_realizados
-
-        cliente.balance = balance
-        cliente.save()
-        
-    @classmethod    
-    def calcular_balance_total(cls, cliente):
-        total_prestamos = Prestamos.objects.filter(cliente=cliente).aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
-        cliente.total_prestamos = total_prestamos
-        cliente.save()
+        """Cuenta los préstamos activos de un cliente."""
+        return cls.objects.filter(cliente=cliente, pagado=False).count()
 
 class Pagos(models.Model):
     cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)

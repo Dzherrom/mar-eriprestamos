@@ -24,8 +24,6 @@ def clientes(request):
         pagos = Pagos.objects.filter(cliente=1)
         prestamos_activos = Prestamos.objects.filter(cliente=1, fecha_pago__isnull=True)
         form = ClienteForm()
-        print(pagos)
-        print(prestamos_activos)
         context = {'cliente': cliente,
                 'clientes_lista': cliente,
                 'pagos': pagos,
@@ -41,9 +39,14 @@ def cliente_detalles(request, cliente_id):
         pagos = Pagos.objects.filter(cliente=cliente)
         prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
         prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
-        balance = Prestamos.calcular_balance(cliente)
-        balance_total = Prestamos.calcular_balance_total(cliente)
+        balance = Prestamos.calcular_balance_total(cliente)
+        balance_total = Prestamos.suma_total_prestamos(cliente)
         form = ClienteForm(instance=cliente)
+        
+        for prestamo in prestamos:
+            Prestamos.calcular_balance_prestamo(prestamo)
+
+        total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
         context = {'cliente': cliente,
                 'prestamos':prestamos,
                 'pagos': pagos,
@@ -51,6 +54,7 @@ def cliente_detalles(request, cliente_id):
                 'balance_total': balance_total,
                 'prestamos_activos': prestamos_activos,
                 'prestamos_pagados': prestamos_pagados,
+                'total_monto_a_pagar': total_monto_a_pagar,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'clientes/clientes_detalles.html', context)
