@@ -37,6 +37,8 @@ def cliente_detalles(request, cliente_id):
         cliente = get_object_or_404(Clientes, pk=cliente_id)
         prestamos = cliente.prestamos_set.all()
         pagos = Pagos.objects.filter(cliente=cliente)
+        ultimo_pago = pagos.first()
+        fecha_ultimo_pago = ultimo_pago.fecha_pago if ultimo_pago else None
         prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
         prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
         balance = Prestamos.calcular_balance_total(cliente)
@@ -52,6 +54,7 @@ def cliente_detalles(request, cliente_id):
                 'pagos': pagos,
                 'balance': balance,
                 'balance_total': balance_total,
+                'fecha_ultimo_pago': fecha_ultimo_pago,
                 'prestamos_activos': prestamos_activos,
                 'prestamos_pagados': prestamos_pagados,
                 'total_monto_a_pagar': total_monto_a_pagar,
@@ -75,6 +78,11 @@ def cliente_detalles(request, cliente_id):
             return render(request, 'cliente/clientes_detalles.html', context)
         
             
+'''
+        agregar al CRUD
+        cliente.ultimo_usuario_modificacion = request.user 
+        cliente.save
+'''
 # prestamos
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha

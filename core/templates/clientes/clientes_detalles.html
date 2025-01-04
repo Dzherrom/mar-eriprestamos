@@ -77,8 +77,50 @@
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="detalles-container">
+                <div class="left-column">
+                    <div class="card-left">
+                        <h5>Información Básica</h5>
+                        <p>Tipo de persona: {{ cliente.tipo_persona }}</p>
+                        <p>Nombre: {{ cliente.nombre }}</p>
+                        <p>Apellido: {{ cliente.apellido }}</p>
+                        <p>Genero: {{ cliente.nombre }}</p>
+                        <p>Fecha de Nacimiento: {{ cliente.fecha_nacimiento }}</p>
+                    </div>
+                    <div class="card-left">
+                        <h5>Información Adicional</h5>
+                        <p>Modificado Por: </p>
+                        <p>Ultimo pago:  {{ fecha_ultimo_pago }} </p>
+                        <p>Prestamos activos: {{ prestamos_activos }} </p>
+                        <p>Prestamos pagados: {{ prestamos_pagados }} </p>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="card-right">
+                        <h5>Direcciones</h5>
+                        <p>Direccion 1: {{ cliente.direccion_1 }}</p>
+                        <p>Direccion 2: {{ cliente.direccion_2 }}</p>
+        
+                    </div>
+                    <div class="card-right">
+                        <h5>Documento de Identidad</h5>
+                        <p>Cedula de identidad: {{ cliente.cedula }}</p>
+                        <p>RIF: {{ cliente.rif }}</p>
+                    </div>
+                    <div class="card-right">
+                        <h5>Información de Contacto</h5>
+                        <p>Correo 1: {{ cliente.email_1 }}</p>
+                        <p>Correo 2: {{ cliente.email_2 }}</p>
+                        <p>Numero de telefono: {{ cliente.numero_telefono }}</p>
+                        <p>Numero local: {{ cliente.numero_local }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="table-container">
-            <div class="prestamos_pagados">
+            <div class="clientes">
                 <h2>Clientes</h2>
                 <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
                     <div></div>

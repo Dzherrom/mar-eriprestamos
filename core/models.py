@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 # Create your models here.
 class Clientes(models.Model):
@@ -31,6 +32,8 @@ class Clientes(models.Model):
     prestamos_activos = models.IntegerField(default=0)
     prestamos_pagados = models.IntegerField(default=0)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    ultimo_usuario_modificacion = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='clientes_modificados')
+    fecha_ultima_modificacion = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.nombre
