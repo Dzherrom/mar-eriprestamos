@@ -34,6 +34,7 @@ def clientes(request):
 
 def cliente_detalles(request, cliente_id):
     if request.method == 'GET':
+        clientes = Clientes.objects.all()
         cliente = get_object_or_404(Clientes, pk=cliente_id)
         prestamos = cliente.prestamos_set.all()
         pagos = Pagos.objects.filter(cliente=cliente)
@@ -50,6 +51,7 @@ def cliente_detalles(request, cliente_id):
 
         total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
         context = {'cliente': cliente,
+                   'clientes': clientes,
                 'prestamos':prestamos,
                 'pagos': pagos,
                 'balance': balance,

@@ -119,9 +119,9 @@
             </div>
         </div>
 
-        <div class="table-container">
+        <div class="card-general">
             <div class="clientes">
-                <h2>Clientes</h2>
+                <h5>Clientes</h5>
                 <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
                     <div></div>
                 <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
@@ -141,12 +141,13 @@
                     <tbody id="pagadosTableBody">
                         {% for clientes in clientes %}
                         <tr>
-                            <td>{{ cliente.id }}</td>
-                            <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
-                            <td>{{ cliente.cedula }}</td>
-                            <td>{{ cliente.prestamos_activos }}</td>
-                            <td>{{ cliente.prestamos_pagados }}</td>
-                            <td>${{ cliente.balance }}</td>
+                            <td><a href="{% url 'cliente_detalles' clientes.id %}">{{ clientes.id }}</a></td>
+                            <td>{{ clientes.nombre }}</td>
+                            <td>{{ clientes.apellido }}</td>
+                            <td>{{ clientes.cedula }}</td>
+                            <td>{{ clientes.prestamos_activos }}</td>
+                            <td>{{ clientes.prestamos_pagados }}</td>
+                            <td>${{ clientes.balance }}</td>
                         </tr>
                         {% empty %}
                         <tr>
