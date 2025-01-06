@@ -34,6 +34,7 @@
                             <th>Tipo de Pago</th>
                             <th>Referencia</th>
                             <th>Monto</th>
+                            <th>Monto a pagar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,8 +43,9 @@
                             <td>{{ pago.fecha_pago }}</td>
                             <td>{{ pago.moneda }}</td>
                             <td>{{ pago.tipo_pago }}</td>
-                            <td>{{ pago.referencia }}</td>
+                            <td><a href="#">{{ pago.referencia }}</a></td>
                             <td>${{ pago.monto }}</td>
+                            <td>{{ pago.prestamo.monto_a_pagar }}</td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -56,15 +58,16 @@
 
             <!-- Tarjeta de Total Pagado -->
             <div class="card-total-pagado col">
-                <h5>Total Pagado</h5>
-                <p>Seleccione un cliente:</p>
-                <select id="cliente-select">
-                    <!-- Aquí se llenará con los clientes disponibles -->
-                    
-                        <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
-                    
+                <h5>Prestamos</h5>
+                <p>Seleccione un préstamo:</p>
+                <select id="prestamo-select">
+                    {% for prestamo in prestamos %}
+                        <option value="{{ prestamo.id }}">Préstamo {{ prestamo.id }} - Monto: ${{ prestamo.monto }}</option>
+                    {% empty %}
+                        <option value="">No hay préstamos disponibles</option>
+                    {% endfor %}
                 </select>
-                <div id="grafico-total-pagado">
+                <div id="grafico-total-pagado" style="width: 300px; height: 300px;">
                     <!-- Aquí se mostrará el gráfico en círculo -->
                 </div>
             </div>
@@ -159,4 +162,78 @@
             </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const prestamoSelect = document.getElementById('prestamo-select');
+    const graficoTotalPagado = document.getElementById('grafico-total-pagado');
+    let chart = null; // Variable para almacenar la instancia del gráfico
+
+    prestamoSelect.addEventListener('change', function () {
+        const prestamoId = this.value;
+
+        // Verificar si se seleccionó un préstamo válido
+        if (!prestamoId) {
+            graficoTotalPagado.innerHTML = '<p>No hay préstamos disponibles.</p>';
+            return;
+        }
+
+        // Hacer una solicitud AJAX a la API
+        fetch(`/api/prestamos/${prestamoId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al obtener los datos del préstamo');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Destruir el gráfico anterior si existe
+                if (chart) {
+                    chart.destroy();
+                }
+
+                // Crear un canvas para el gráfico
+                const ctx = document.createElement('canvas');
+                graficoTotalPagado.innerHTML = ''; // Limpiar el contenido anterior
+                graficoTotalPagado.appendChild(ctx); // Agregar el canvas al div
+
+                // Crear el gráfico circular con Chart.js
+                chart = new Chart(ctx, {
+                    type: 'pie',  // Tipo de gráfico circular
+                    data: {
+                        labels: ['Monto Pagado', 'Monto Pendiente'],  // Etiquetas
+                        datasets: [{
+                            label: 'Monto',
+                            data: [data.monto_pago, data.monto_a_pagar],  // Datos
+                            backgroundColor: ['#36A2EB', '#FF6384'],  // Colores
+                            borderColor: ['#36A2EB', '#FF6384'],  // Bordes
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,  // Evita que el gráfico se ajuste automáticamente
+                        plugins: {
+                            legend: {
+                                position: 'top',  // Posición de la leyenda
+                            },
+                            title: {
+                                display: true,
+                                text: `Préstamo ${prestamoId} - Monto Total: $${data.monto_prestamo}`  // Título del gráfico
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                graficoTotalPagado.innerHTML = '<p>Error al cargar los datos del préstamo.</p>';
+            });
+    });
+
+    // Cargar datos iniciales para el primer préstamo (opcional)
+    if (prestamoSelect.value) {
+        prestamoSelect.dispatchEvent(new Event('change'));
+    }
+});
+    </script>
 {% endblock content %}

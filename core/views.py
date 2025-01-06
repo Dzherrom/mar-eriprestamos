@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
 from .models import Prestamos, Clientes, Pagos
 from .forms import ClienteForm
@@ -32,6 +32,15 @@ def clientes(request):
                 'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'clientes/clientes_detalles.html', context)
 
+def prestamo_detalles_api(request, id):
+    prestamo = get_object_or_404(Prestamos, id=id)
+    data = {
+        'monto_prestamo': prestamo.monto_prestamo,
+        'monto_pago': prestamo.monto_pago,
+        'monto_a_pagar': prestamo.monto_pago - prestamo.monto_a_pagar,
+    }
+    return JsonResponse(data)
+
 def cliente_detalles(request, cliente_id):
     if request.method == 'GET':
         clientes = Clientes.objects.all()
@@ -51,7 +60,7 @@ def cliente_detalles(request, cliente_id):
         
         for prestamo in prestamos:
             Prestamos.calcular_balance_prestamo(prestamo)
-
+        
         total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
         context = {'cliente': cliente,
                    'clientes': clientes,

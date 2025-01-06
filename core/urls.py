@@ -1,11 +1,13 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from .views import prestamo_detalles_api
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('prestamos/', views.prestamos, name='prestamos'),
-    
+    path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
+        
     #clientes
     path('clientes/', views.clientes, name='clientes'),
     path('cliente/<int:cliente_id>', views.cliente_detalles, name='cliente_detalles'),
