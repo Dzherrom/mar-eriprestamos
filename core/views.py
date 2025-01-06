@@ -46,6 +46,9 @@ def cliente_detalles(request, cliente_id):
         balance_total = Prestamos.suma_total_prestamos(cliente)
         form = ClienteForm(instance=cliente)
         
+        for cliente in clientes:
+            cliente.actualizar_balance()
+        
         for prestamo in prestamos:
             Prestamos.calcular_balance_prestamo(prestamo)
 

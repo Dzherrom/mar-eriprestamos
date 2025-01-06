@@ -37,7 +37,19 @@ class Clientes(models.Model):
     
     def __str__(self):
         return self.nombre
-
+    
+    def actualizar_balance(self):
+        """
+        Actualiza el campo balance del cliente utilizando la función calcular_balance_total.
+        """
+        # Calcular el balance total del cliente
+        balance_activo = Prestamos.calcular_balance_total(self)
+        
+        # Actualizar el campo balance del cliente
+        self.balance = balance_activo
+        
+        # Guardar los cambios en la base de datos
+        self.save()
  
 class Moneda(models.Model):
     MONEDA_CHOICES = [
@@ -71,9 +83,9 @@ class Prestamos(models.Model):
         return f"Préstamo de {self.cliente} - Monto: {self.monto_prestamo}"
     
     def save(self, *args, **kwargs):
-
         # Llamar al método save del modelo base
         super().save(*args, **kwargs)
+        self.cliente.actualizar_balance()
 
         
     @classmethod
@@ -86,9 +98,7 @@ class Prestamos(models.Model):
 
         # Calcular el total a pagar y los pagos realizados
         total_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos_activos)
-        print(total_a_pagar)
         pagos_realizados = sum(prestamo.monto_pago for prestamo in prestamos_activos)
-        print(pagos_realizados)
         # Calcular el balance
         balance_activo = total_a_pagar - pagos_realizados
         return balance_activo
@@ -162,6 +172,7 @@ class Pagos(models.Model):
     def save(self, *args, **kwargs):
         # Llamar al método save del modelo base
         super().save(*args, **kwargs)
+        self.cliente.actualizar_balance()
         
         # Actualizar el monto pagado del préstamo asociado
         if self.prestamo:
