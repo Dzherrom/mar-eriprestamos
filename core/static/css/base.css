@@ -159,6 +159,27 @@ nav ul li {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
+.paginacion {
+    display: flex;                /* Activa Flexbox */
+    justify-content: center;      /* Centra los elementos horizontalmente */
+    gap: 10px;                    /* Espacio entre los botones */
+    margin-top: 10px;             /* Margen superior */
+}
+
+.paginacion a {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.paginacion a:hover {
+    background-color: #0056b3;
+}
+
 .card-transacciones {
     width: 100%;                  /* Ancho de la tarjeta */
     height: 400px;                /* Altura fija de la tarjeta */

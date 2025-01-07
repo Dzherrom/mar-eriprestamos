@@ -27,38 +27,39 @@
             <!-- Tarjeta de Transacciones -->
             <div class="card-transacciones col">
                 <h5>Transacciones</h5>
-                <table>
+                <table class="tabla-pago">
                     <thead>
                         <tr>
                             <th>Fecha de Pago</th>
                             <th>Moneda</th>
-                            <th>Tipo de Pago</th>
                             <th>Referencia</th>
                             <th>Monto</th>
                             <th>Monto a pagar</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="pago-tbody">
                         {% for pago in pagos %}
                         <tr>
                             <td>{{ pago.fecha_pago }}</td>
                             <td>{{ pago.moneda }}</td>
-                            <td>{{ pago.tipo_pago }}</td>
                             <td><a href="#">{{ pago.referencia }}</a></td>
                             <td>${{ pago.monto }}</td>
                             <td>{{ pago.prestamo.monto_a_pagar }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center">No hay pagos registrados.</td>
+                            <td colspan="3" class="text-center">No hay pagos registrados.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                <div class="paginacion" id="paginacion">
+                    <!-- Los botones de paginación se generan dinámicamente con JavaScript -->
+                </div>
             </div>
             <div class="card-transacciones col">
                 <h5>Prestamos</h5>
-                <table>
+                <table class="tabla-prestamos">
                     <thead>
                         <tr>
                             <th>id</th>
@@ -69,7 +70,7 @@
                             <th>Pagado</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="prestamos-tbody">
                         {% for prestamo in prestamos %}
                         <tr>
                             <td>{{ prestamo.id }}</td>
@@ -87,11 +88,12 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center">No hay pagos registrados.</td>
+                            <td colspan="3" class="text-center">No hay prestamos registrados.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     </table>
+                    <div class="paginacion" id="prestamos-paginacion"></div>
             </div>
 
         </div>
@@ -290,12 +292,13 @@ const ctx = document.getElementById('volumenChart').getContext('2d');
 
 // Datos para el gráfico
 const volumenData = {
-    labels: ['Volumen de Préstamos', 'Monto a Pagar'],
+    labels: ['Volumen de Préstamos', 'Monto a Pagar', 'Interes'],
     datasets: [{
         label: 'Distribución del Volumen',
         data: [
             {{ balance_total }},          // Volumen de préstamos
-            {{ total_monto_a_pagar }}     // Monto a pagar
+            {{ total_monto_a_pagar }},
+            {{ tasa_interes_total }}     // Monto a pagar
         ],
         backgroundColor: [
             '#36A2EB',  // Color para Volumen de Préstamos
@@ -333,6 +336,111 @@ const volumenChart = new Chart(ctx, {
             }
         }
     }
+});
+
+// paginacion de las tablas
+// tabla-pago
+document.addEventListener('DOMContentLoaded', () => {
+    const filasPorPagina = 6; // Número de filas por página
+    const tablaBody = document.getElementById('pago-tbody');
+    const filas = tablaBody.getElementsByTagName('tr');
+    const paginacion = document.getElementById('paginacion');
+
+    // Función para mostrar una página específica
+    function mostrarPagina(pagina) {
+        // Ocultar todas las filas
+        for (let i = 0; i < filas.length; i++) {
+            filas[i].style.display = 'none';
+        }
+
+        // Mostrar solo las filas de la página actual
+        const inicio = (pagina - 1) * filasPorPagina;
+        const fin = inicio + filasPorPagina;
+        for (let i = inicio; i < fin && i < filas.length; i++) {
+            if (filas[i].cells.length === 5) { // Actualizar la condición para ignorar la fila "No hay pagos registrados."
+                filas[i].style.display = '';
+            }
+        }
+    }
+
+    // Función para generar los botones de paginación
+    function generarBotonesPaginacion() {
+        // Ignorar la fila "No hay pagos registrados."
+        const filasReales = filas.length - 1;
+        const totalPaginas = Math.ceil(filasReales / filasPorPagina); // Calcular el número de páginas
+        paginacion.innerHTML = ''; // Limpiar los botones anteriores
+
+        for (let i = 1; i <= totalPaginas; i++) {
+            const enlace = document.createElement('a');
+            enlace.textContent = i;
+            enlace.href = '#'; // Establecer el atributo href para que se comporte como un enlace
+            enlace.addEventListener('click', (e) => {
+                e.preventDefault(); // Evitar que el enlace recargue la página
+                cambiarPagina(i);
+            });
+            paginacion.appendChild(enlace);
+        }
+    }
+
+    // Función para cambiar de página
+    function cambiarPagina(pagina) {
+        mostrarPagina(pagina);
+    }
+
+    // Generar los botones de paginación y mostrar la primera página
+    generarBotonesPaginacion();
+    mostrarPagina(1);
+});
+
+// tabla prestamos
+document.addEventListener('DOMContentLoaded', () => {
+    const filasPorPagina = 6; // Número de filas por página
+    const tablaBody = document.getElementById('prestamos-tbody');
+    const filas = tablaBody.getElementsByTagName('tr');
+    const paginacion = document.getElementById('prestamos-paginacion');
+
+    // Función para mostrar una página específica
+    function mostrarPagina(pagina) {
+        // Ocultar todas las filas
+        for (let i = 0; i < filas.length; i++) {
+            filas[i].style.display = 'none';
+        }
+
+        // Mostrar solo las filas de la página actual
+        const inicio = (pagina - 1) * filasPorPagina;
+        const fin = inicio + filasPorPagina;
+        for (let i = inicio; i < fin && i < filas.length; i++) {
+            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+                filas[i].style.display = '';
+            }
+        }
+    }
+
+    // Función para generar los botones de paginación
+    function generarBotonesPaginacion() {
+        const totalPaginas = Math.ceil(filas.length / filasPorPagina); // Calcular el número de páginas
+        paginacion.innerHTML = ''; // Limpiar los botones anteriores
+
+        for (let i = 1; i <= totalPaginas; i++) {
+            const enlace = document.createElement('a');
+            enlace.textContent = i;
+            enlace.href = '#'; // Establecer el atributo href para que se comporte como un enlace
+            enlace.addEventListener('click', (e) => {
+                e.preventDefault(); // Evitar que el enlace recargue la página
+                cambiarPagina(i);
+            });
+            paginacion.appendChild(enlace);
+        }
+    }
+
+    // Función para cambiar de página
+    function cambiarPagina(pagina) {
+        mostrarPagina(pagina);
+    }
+
+    // Generar los botones de paginación y mostrar la primera página
+    generarBotonesPaginacion();
+    mostrarPagina(1);
 });
     </script>
 {% endblock content %}

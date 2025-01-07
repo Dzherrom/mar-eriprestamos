@@ -53,6 +53,7 @@ def cliente_detalles(request, cliente_id):
         prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
         balance = Prestamos.calcular_balance_total(cliente)
         balance_total = Prestamos.suma_total_prestamos(cliente)
+        tasa_interes_total = Prestamos.tasa_interes_total(cliente)
         form = ClienteForm(instance=cliente)
         
         for cliente in clientes:
@@ -63,7 +64,7 @@ def cliente_detalles(request, cliente_id):
         
         total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
         context = {'cliente': cliente,
-                   'clientes': clientes,
+                'clientes': clientes,
                 'prestamos':prestamos,
                 'pagos': pagos,
                 'balance': balance,
@@ -72,6 +73,7 @@ def cliente_detalles(request, cliente_id):
                 'prestamos_activos': prestamos_activos,
                 'prestamos_pagados': prestamos_pagados,
                 'total_monto_a_pagar': total_monto_a_pagar,
+                'tasa_interes_total': tasa_interes_total,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'clientes/clientes_detalles.html', context)
