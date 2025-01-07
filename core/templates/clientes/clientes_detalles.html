@@ -12,12 +12,13 @@
                     <p>Cedula: {{ cliente.cedula }}</p>
                 </div>
                 <div>
-                    <p>Prestamos Activos: {{ prestamos_activos }}</p>
-                    <p>Prestamos Pagados: {{ prestamos_pagados }}</p>
-                </div>
-                <div>
                     <p>Balance General: {{ balance }}</p>
                     <p>Balance Prestado: {{ balance_total }}</p>
+                </div>
+                <div>
+                    <p>Ultimo pago: {{ fecha_ultimo_pago }} </p>
+                    <p>Ultima modificacion: {{ cliente.ultimo_usuario_modificacion }}</p>
+                
                 </div>
             </div>
         </div>
@@ -55,31 +56,77 @@
                     </tbody>
                 </table>
             </div>
+            <div class="card-transacciones col">
+                <h5>Prestamos</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Monto a pagar</th>
+                            <th>Interes</th>
+                            <th>Pagado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prestamo in prestamos %}
+                        <tr>
+                            <td>{{ prestamo.id }}</td>
+                            <td>{{ prestamo.fecha_prestamo }}</td>
+                            <td>${{ prestamo.monto_prestamo }}</td>
+                            <td>${{ prestamo.monto_a_pagar }}</td>
+                            <td>{{ prestamo.tasa_interes }}%</td>
+                            <td>
+                                {% if prestamo.pagado %}
+                                    Sí
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No hay pagos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+            </div>
 
+        </div>
+        <div class="row">
             <!-- Tarjeta de Total Pagado -->
-            <div class="card-total-pagado col">
+            <div class="card-volumen col">
                 <h5>Prestamos</h5>
                 <p>Seleccione un préstamo:</p>
                 <select id="prestamo-select">
                     {% for prestamo in prestamos %}
-                        <option value="{{ prestamo.id }}">Préstamo {{ prestamo.id }} - Monto: ${{ prestamo.monto }}</option>
+                        
+                        <option value="{{ prestamo.id }}">
+                            Préstamo  {{ prestamo.fecha_prestamo }} 
+                            {% if prestamo.pagado %}
+                            (pagado)
+                            {% endif %}
+                    </option>
                     {% empty %}
                         <option value="">No hay préstamos disponibles</option>
                     {% endfor %}
                 </select>
                 <div id="grafico-total-pagado" style="width: 300px; height: 300px;">
-                    <!-- Aquí se mostrará el gráfico en círculo -->
                 </div>
             </div>
-
+            
             <!-- Tarjeta de Pagos Totales -->
-            <div class="card-pagos-totales col">
-                <h5>Pagos Totales</h5>
-                <div id="grafico-pagos-totales">
-                    <!-- Aquí se mostrará el gráfico en círculo con el monto total de todos los préstamos activos -->
+            <div class="card-volumen col">
+                <h5>Volumen</h5>
+                <div id="grafico-volumen" style="width: 300px; height: 300px;">
+                    <canvas id="volumenChart"></canvas>
                 </div>
             </div>
         </div>
+
+        <!---  detalles del cliente --->
         <div class="container">
             <div class="detalles-container">
                 <div class="left-column">
@@ -163,6 +210,7 @@
     </div>
 </div>
 <script>
+// grafico de prestmaos del cliente
 document.addEventListener('DOMContentLoaded', () => {
     const prestamoSelect = document.getElementById('prestamo-select');
     const graficoTotalPagado = document.getElementById('grafico-total-pagado');
@@ -233,6 +281,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cargar datos iniciales para el primer préstamo (opcional)
     if (prestamoSelect.value) {
         prestamoSelect.dispatchEvent(new Event('change'));
+    }
+});
+
+// Grafico de Volumen del cliente
+// Obtener el contexto del canvas
+const ctx = document.getElementById('volumenChart').getContext('2d');
+
+// Datos para el gráfico
+const volumenData = {
+    labels: ['Volumen de Préstamos', 'Monto a Pagar'],
+    datasets: [{
+        label: 'Distribución del Volumen',
+        data: [
+            {{ balance_total }},          // Volumen de préstamos
+            {{ total_monto_a_pagar }}     // Monto a pagar
+        ],
+        backgroundColor: [
+            '#36A2EB',  // Color para Volumen de Préstamos
+            '#FF6384'   // Color para Monto a Pagar
+        ],
+        hoverOffset: 4
+    }]
+};
+
+// Crear el gráfico circular
+const volumenChart = new Chart(ctx, {
+    type: 'pie',  // Tipo de gráfico circular
+    data: volumenData,
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Distribución del Volumen de Préstamos'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += '$' + context.raw.toLocaleString();  // Formato de moneda
+                        return label;
+                    }
+                }
+            }
+        }
     }
 });
     </script>

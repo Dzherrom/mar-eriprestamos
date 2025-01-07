@@ -75,7 +75,6 @@ nav ul li {
     display: flex;
 }
 
-
 .main-container {
     display: block;
     justify-content: space-between;
@@ -149,7 +148,8 @@ nav ul li {
 }
 
 /* Estilo para cada tarjeta */
-.card-transacciones, .card-total-pagado, .card-pagos-totales {
+.card-transacciones, .card-volumen, .card-prestamos {
+    align-items: center;
     flex: 1; /* Cada tarjeta ocupará el mismo espacio */
     margin: 0 10px; /* Margen lateral entre tarjetas */
     padding: 20px; /* Espaciado interno */
@@ -158,6 +158,25 @@ nav ul li {
     border-radius: 8px; /* Bordes redondeados */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
 }
+
+.card-transacciones {
+    width: 100%;                  /* Ancho de la tarjeta */
+    height: 400px;                /* Altura fija de la tarjeta */
+    overflow: hidden;             /* Oculta el contenido que no quepa */
+    border: 1px solid #ccc;       /* Borde opcional */
+    border-radius: 10px;          /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+    padding: 20px;                /* Espaciado interno */
+}
+
+.card-volumen {
+    display: flex;                /* Activa Flexbox */
+    flex-direction: column;       /* Organiza los elementos en columna */
+    justify-content: center;      /* Centra verticalmente */
+    align-items: center;          /* Centra horizontalmente */
+    text-align: center;           /* Centra el texto */                /* Asegura que la tarjeta tenga altura */
+}
+
 .graph-container {    flex: 1; /* Cada tarjeta ocupará el mismo espacio */
     padding: 20px; /* Espaciado interno */
     background-color: #f8f9fa; /* Color de fondo */
