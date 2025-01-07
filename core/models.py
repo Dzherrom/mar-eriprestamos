@@ -99,6 +99,7 @@ class Prestamos(models.Model):
         # Calcular el total a pagar y los pagos realizados
         total_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos_activos)
         pagos_realizados = sum(prestamo.monto_pago for prestamo in prestamos_activos)
+
         # Calcular el balance
         balance_activo = total_a_pagar - pagos_realizados
         return balance_activo
@@ -142,11 +143,25 @@ class Prestamos(models.Model):
         """Calcula la suma total de los pagos de un cliente en sus préstamos activos."""
         return Pagos.objects.filter(cliente=cliente).aggregate(Sum('monto'))['monto__sum'] or 0
 
+    def calcular_interes(self):
+        """Calcula el interés de un préstamo."""
+        if self.monto_prestamo and self.tasa_interes:
+            return (self.monto_prestamo * self.tasa_interes) / 100
+        return 0
+
     @classmethod
     def tasa_interes_total(cls, cliente):
-        """Calcula la suma total de la tasa de interés de los préstamos de un cliente."""
-        return cls.objects.filter(cliente=cliente).aggregate(Sum('tasa_interes'))['tasa_interes__sum'] or 0
-
+        """
+        Calcula el monto total de intereses de los préstamos de un cliente específico.
+        """
+        # Obtener todos los préstamos del cliente
+        prestamos_cliente = cls.objects.filter(cliente=cliente)
+        
+        # Calcular el interés total sumando el interés de cada préstamo
+        total_interes = sum(prestamo.calcular_interes() for prestamo in prestamos_cliente)
+        
+        return total_interes
+    
     @classmethod
     def contar_prestamos_pagados(cls, cliente):
         """Cuenta los préstamos que han sido pagados por un cliente."""
