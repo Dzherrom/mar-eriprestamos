@@ -21,13 +21,16 @@ def home(request):
 def clientes(request):
     if request.method == 'GET':
         clientes = Clientes.objects.all()
-        pagos = Pagos.objects.filter(cliente=1)
-        prestamos_activos = Prestamos.objects.filter(cliente=1, fecha_pago__isnull=True)
         form = ClienteForm()
+
+        # Agregar atributos dinámicos a cada cliente
+        for cliente in clientes:
+            cliente.prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
+            cliente.prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
+        
+        
         context = {'clientes': clientes,
-                'clientes_lista': clientes,
                 'pagos': pagos,
-                'prestamos_activos': prestamos_activos,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'clientes/clientes.html', context)
