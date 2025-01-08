@@ -15,13 +15,14 @@ class ClienteForm(forms.ModelForm):
                   'direccion_2','email_1','email_2']
         
     #funcion para validar el rif
+    '''
     def clean_rif(self):
         rif = self.cleaned_data['rif']
         pattern = r'^[J|V|G|E]\d{10}$'
         if not re.match(pattern, rif):
             raise forms.ValidationError('El RIF debe tener el formato J1234567890')
         return rif
-    
+    '''
 class PagosForm(forms.ModelForm):
     class Meta:
         model = Pagos

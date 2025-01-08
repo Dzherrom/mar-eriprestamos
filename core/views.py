@@ -20,18 +20,41 @@ def home(request):
 @login_required
 def clientes(request):
     if request.method == 'GET':
-        cliente = Clientes.objects.all()
+        clientes = Clientes.objects.all()
         pagos = Pagos.objects.filter(cliente=1)
         prestamos_activos = Prestamos.objects.filter(cliente=1, fecha_pago__isnull=True)
         form = ClienteForm()
-        context = {'cliente': cliente,
-                'clientes_lista': cliente,
+        context = {'clientes': clientes,
+                'clientes_lista': clientes,
                 'pagos': pagos,
                 'prestamos_activos': prestamos_activos,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
-        return render(request, 'clientes/clientes_detalles.html', context)
+        return render(request, 'clientes/clientes.html', context)
 
+@login_required
+def cliente_crear(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()  # Guarda el cliente en la base de datos
+            return redirect('clientes')  # Redirige a la lista de clientes
+        else:
+            # Si el formulario no es válido, se pasa el formulario con errores al contexto
+            context = {
+                'form': form,
+                'errors': form.errors,  # Incluye los errores del formulario
+            }
+            return render(request, 'clientes/cliente_crear.html', context)
+    else:
+        form = ClienteForm()
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'clientes/cliente_crear.html', context)
+    
+        
 def prestamo_detalles_api(request, id):
     prestamo = get_object_or_404(Prestamos, id=id)
     data = {
@@ -44,7 +67,8 @@ def prestamo_detalles_api(request, id):
 def cliente_detalles(request, cliente_id):
     if request.method == 'GET':
         clientes = Clientes.objects.all()
-        cliente = get_object_or_404(Clientes, pk=cliente_id)
+        cliente = Clientes.objects.get(id=cliente_id)
+        print(cliente.nombre, cliente.apellido, cliente.cedula)
         prestamos = cliente.prestamos_set.all()
         pagos = Pagos.objects.filter(cliente=cliente)
         ultimo_pago = pagos.first()
@@ -163,6 +187,10 @@ def prestamos(request):
                     'data_json_montos' : data_json_montos,
                     'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'prestamos/prestamos.html', context)
+
+@login_required
+def pagos(request):
+    return render(request, 'Pagos/pagos.html')
 
 def login(request):
     return render(request, 'signin.html')
