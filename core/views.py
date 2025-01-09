@@ -193,7 +193,8 @@ def prestamos(request):
 
 @login_required
 def pagos(request):
-    return render(request, 'Pagos/pagos.html')
+    if request.method == 'GET':
+        return render(request, 'Pagos/pagos.html')
 
 def login(request):
     return render(request, 'signin.html')

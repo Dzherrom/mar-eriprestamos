@@ -5,6 +5,12 @@ from .views import prestamo_detalles_api
 
 urlpatterns = [
     path('', views.home, name='home'),
+    
+    #auth
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    #prestamos
     path('prestamos/', views.prestamos, name='prestamos'),
     path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
         
@@ -13,9 +19,6 @@ urlpatterns = [
     path('cliente/<int:cliente_id>', views.cliente_detalles, name='cliente_detalles'),
     path('cliente/crear', views.cliente_crear, name='cliente_crear'),
     
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-
     #pagos
     path('pagos/', views.pagos, name='pagos'),
 ]

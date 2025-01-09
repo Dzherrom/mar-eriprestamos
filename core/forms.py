@@ -17,7 +17,7 @@ class ClienteForm(forms.ModelForm):
     #funcion para validar el rif
     def clean_rif(self):
         rif = self.cleaned_data['rif']
-        pattern = r'^[J|V|G|E]\d{10}$'
+        pattern = r'^[J|V|G|E]\d{9}$'
         if not re.match(pattern, rif):
             raise forms.ValidationError('El RIF debe tener el formato J1234567890')
         return rif
