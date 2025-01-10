@@ -14,6 +14,7 @@
                     <th class="th sort-both">ID</th>
                     <th class="th sort-both">Cliente</th>
                     <th class="th sort-both">Fecha de Préstamo</th>
+                    <th class="th sort-both">Fecha de Pago</th>
                     <th class="th sort-both">Monto de Préstamo</th>
                     <th class="th sort-both">Tasa de Interés</th>
                 </tr>
@@ -24,6 +25,7 @@
                     <td>{{ prestamo.id }}</td>
                     <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
                     <td>{{ prestamo.fecha_prestamo }}</td>
+                    <td>{{ prestamo.fecha_pago }}</td>
                     <td>${{ prestamo.monto_prestamo }}</td>
                     <td>{{ prestamo.tasa_interes }}%</td>
                 </tr>
@@ -35,59 +37,60 @@
             </tbody>
         </table>
     </div>
-</div>
-<div class="container-graficos">
-    <div class="graph-container">
-        <h2>Préstamos Pagados por Día</h2>
-        <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-            <canvas id="prestamosPorDia" width="400" height="200"></canvas>
-        </div>
-    </div>
 
-    <div class="graph-container">
-        <h2>Montos Pagados por Día</h2>
-        <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-            <canvas id="montosPorDia" width="400" height="200"></canvas>
+    <div class="container-graficos">
+        <div class="graph-container">
+            <h2>Préstamos Pagados por Día</h2>
+            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="graph-container">
+            <h2>Montos Pagados por Día</h2>
+            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                <canvas id="montosPorDia" width="400" height="200"></canvas>
+            </div>
         </div>
     </div>
-</div>
-<div class="table-container">
-    <div class="prestamos_pagados">
-        <h2>Préstamos Pagados</h2>
-        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
-            <div></div>
-        <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+    <div class="table-container" style="max-width: 100%;">
+        <div class="prestamos_pagados">
+            <h2>Préstamos Pagados</h2>
+            <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+                <div></div>
+            <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="th sort-both">ID</th>
+                        <th class="th sort-both">Cliente</th>
+                        <th class="th sort-both">Fecha de Préstamo</th>
+                        <th class="th sort-both">Fecha de Pago</th>
+                        <th class="th sort-both">Monto de Préstamo</th>
+                        <th class="th sort-both">Monto de Pago</th>
+                        <th class="th sort-both">Tasa de Interés</th>
+                    </tr>
+                </thead>
+                <tbody id="pagadosTableBody">
+                    {% for prestamo in prestamos_pagados %}
+                    <tr>
+                        <td>{{ prestamo.id }}</td>
+                        <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
+                        <td>{{ prestamo.fecha_prestamo }}</td>
+                        <td>{{ prestamo.fecha_pago }}</td>
+                        <td>${{ prestamo.monto_prestamo }}</td>
+                        <td>{{ prestamo.monto_pago }}</td>
+                        <td>{{ prestamo.tasa_interes }}%</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay préstamos pagados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th class="th sort-both">ID</th>
-                    <th class="th sort-both">Cliente</th>
-                    <th class="th sort-both">Fecha de Préstamo</th>
-                    <th class="th sort-both">Fecha de Pago</th>
-                    <th class="th sort-both">Monto de Préstamo</th>
-                    <th class="th sort-both">Monto de Pago</th>
-                    <th class="th sort-both">Tasa de Interés</th>
-                </tr>
-            </thead>
-            <tbody id="pagadosTableBody">
-                {% for prestamo in prestamos_pagados %}
-                <tr>
-                    <td>{{ prestamo.id }}</td>
-                    <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
-                    <td>{{ prestamo.fecha_prestamo }}</td>
-                    <td>{{ prestamo.fecha_pago }}</td>
-                    <td>${{ prestamo.monto_prestamo }}</td>
-                    <td>{{ prestamo.monto_pago }}</td>
-                    <td>{{ prestamo.tasa_interes }}%</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center">No hay préstamos pagados.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 <script>
@@ -229,6 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// funcion para campo de busqueda
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInputSinPagar');
     const tableBody = document.getElementById('sinpagarTableBody');

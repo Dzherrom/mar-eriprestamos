@@ -129,9 +129,10 @@
         </div>
 
         <!---  detalles del cliente --->
-        <div class="container">
+        <div class="card-general">
             <div class="detalles-container">
                 <div class="left-column">
+                    <h5>Detalles del cliente</h5>
                     <div class="card-left">
                         <h5>Información Básica</h5>
                         <p>Tipo de persona: {{ cliente.tipo_persona }}</p>
@@ -176,7 +177,7 @@
                 <h5>Clientes</h5>
                 <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
                     <div></div>
-                <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+                <input type="text" id="searchInput" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
                 </div>
                 <table class="table table-bordered">
                     <thead>
@@ -190,7 +191,7 @@
                             <th class="th sort-both">Balance</th>
                         </tr>
                     </thead>
-                    <tbody id="pagadosTableBody">
+                    <tbody id="TableBody">
                         {% for clientes in clientes %}
                         <tr>
                             <td><a href="{% url 'cliente_detalles' clientes.id %}">{{ clientes.id }}</a></td>
@@ -209,6 +210,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="button-container">
+            
+        </div>
     </div>
 </div>
 <script>
@@ -442,5 +447,39 @@ document.addEventListener('DOMContentLoaded', () => {
     generarBotonesPaginacion();
     mostrarPagina(1);
 });
+
+// funcion para campo de busqueda
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('TableBody');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = ""; // Muestra la fila
+            } else {
+                rows[i].style.display = "none"; // Oculta la fila
+            }
+        }
+    });
+});
+
 </script>
 {% endblock content %}

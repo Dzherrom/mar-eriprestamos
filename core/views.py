@@ -128,7 +128,7 @@ def cliente_detalles(request, cliente_id):
         cliente.ultimo_usuario_modificacion = request.user 
         cliente.save
 '''
-# prestamos
+# prestamos 
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
     prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
