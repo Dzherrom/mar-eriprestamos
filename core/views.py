@@ -47,6 +47,7 @@ def cliente_crear(request):
             context = {
                 'form': form,
                 'errors': form.errors,  # Incluye los errores del formulario
+                 'user_is_authenticated': request.user.is_authenticated,
             }
             return render(request, 'clientes/cliente_crear.html', context)
     else:
@@ -54,6 +55,7 @@ def cliente_crear(request):
     
     context = {
         'form': form,
+         'user_is_authenticated': request.user.is_authenticated
     }
     return render(request, 'clientes/cliente_crear.html', context)
     

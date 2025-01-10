@@ -17,108 +17,116 @@
         </div>
         {% endif %}
         <div class="card-body">
-            <form method="post" action="{% url 'cliente_crear' %}">
-                {% csrf_token %}  <!-- Token de seguridad para proteger el formulario -->
-                
-                <!-- Campo: Nombre -->
-                <div class="form-group">
-                    <label for="id_nombre">Nombre:</label>
-                    <input type="text" name="nombre" id="id_nombre" class="form-control" required>
-                </div>
-    
-                <!-- Campo: Apellido -->
-                <div class="form-group">
-                    <label for="id_apellido">Apellido:</label>
-                    <input type="text" name="apellido" id="id_apellido" class="form-control" required>
-                </div>
-    
-                <!-- Campo: Género -->
-                <div class="form-group">
-                    <label for="id_genero">Género:</label>
-                    <select name="genero" id="id_genero" class="form-control" required>
-                        <option value="masculino">Masculino</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-    
-                <!-- Campo: Número de Teléfono -->
-                <div class="form-group">
-                    <label for="id_numero_telefono">Número de Teléfono:</label>
-                    <input type="text" name="numero_telefono" id="id_numero_telefono" class="form-control" required>
-                </div>
-    
-                <!-- Campo: Número Local -->
-                <div class="form-group">
-                    <label for="id_numero_local">Número Local:</label>
-                    <input type="text" name="numero_local" id="id_numero_local" class="form-control">
-                </div>
-    
-                <!-- Campo: Cédula -->
-                <div class="form-group">
-                    <label for="id_cedula">Cédula:</label>
-                    <input type="text" name="cedula" id="id_cedula" class="form-control" required>
-                </div>
-    
-                <!-- Campo: RIF -->
-                <div class="form-group">
-                    <label for="id_rif">RIF:</label>
-                    <input type="text" name="rif" id="id_rif" class="form-control">
-                </div>
-    
-                <!-- Campo: Tipo de Persona -->
-                <div class="form-group">
-                    <label for="id_tipo_persona">Tipo de Persona:</label>
-                    <select name="tipo_persona" id="id_tipo_persona" class="form-control" required>
-                        <option value="natural">Persona Natural</option>
-                        <option value="juridico">Persona Jurídica</option>\
-                        <option value="extranjero">Extranjero</option>
-                    </select>
-                </div>
-    
-                <!-- Campo: Fecha de Nacimiento -->
-                <div class="form-group">
-                    <label for="id_fecha_nacimiento">Fecha de Nacimiento:</label>
-                    <input type="date" name="fecha_nacimiento" id="id_fecha_nacimiento" class="form-control" required>
-                </div>
-    
-                <!-- Campo: Dirección 1 -->
-                <div class="form-group">
-                    <label for="id_direccion_1">Dirección 1:</label>
-                    <textarea name="direccion_1" id="id_direccion_1" class="form-control" rows="3" required></textarea>
-                </div>
-    
-                <!-- Campo: Dirección 2 -->
-                <div class="form-group">
-                    <label for="id_direccion_2">Dirección 2:</label>
-                    <textarea name="direccion_2" id="id_direccion_2" class="form-control" rows="3"></textarea>
-                </div>
-    
-            <!-- Campo: Email 1 -->
-            <div class="form-group">
-                <label for="id_email_1">Email 1:</label>
-                <input type="email" name="email_1" id="id_email_1" class="form-control" required>
-            </div>
+            <div class="cliente-form-container">
+                <form method="post" action="{% url 'cliente_crear' %}">
+                    {% csrf_token %}  <!-- Token de seguridad para proteger el formulario -->
+                    <!-- Campo: Nombre y apellido -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_nombre">Nombre:</label>
+                            <input type="text" name="nombre" id="id_nombre" class="form-control" required>
+                        </div>
+                        <div>
+                            <label for="id_apellido">Apellido:</label>
+                            <input type="text" name="apellido" id="id_apellido" class="form-control" required>
+                        </div>
+                   </div>
+        
+                    <!-- Campo: Género y fecha de nacimiento -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_genero">Género:</label>
+                            <select name="genero" id="id_genero" class="form-control" required>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="id_fecha_nacimiento">Fecha de Nacimiento:</label>
+                            <input type="date" name="fecha_nacimiento" id="id_fecha_nacimiento" class="form-control" required>    
+                        </div>
+                      </div>
+        
+                    <!-- Campo: Número de Teléfono Número Local -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_numero_telefono">Número de Teléfono:</label>
+                            <input type="text" name="numero_telefono" id="id_numero_telefono" class="form-control" required>
+                        </div> 
+                        <div> 
+                            <label for="id_numero_local">Número Local:</label>
+                            <input type="text" name="numero_local" id="id_numero_local" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <!-- Campo: Tipo de Persona -->
+                    <div class="form-group">
+                        <div>
+                            <div>
+                                <label for="id_tipo_persona">Tipo de Persona:</label>
+                                <select name="tipo_persona" id="id_tipo_persona" class="form-control" required>
+                                    <option value="natural">Persona Natural</option>
+                                    <option value="juridico">Persona Jurídica</option>\
+                                    <option value="extranjero">Extranjero</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Campo: Email 2 -->
-            <div class="form-group">
-                <label for="id_email_2">Email 2:</label>
-                <input type="email" name="email_2" id="id_email_2" class="form-control">
-            </div>
+                    <!-- Campo: Cédula y rif -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_cedula">Cédula:</label>
+                            <input type="text" name="cedula" id="id_cedula" class="form-control" required>    
+                        </div>
+                        <div>
+                            <label for="id_rif">RIF:</label>
+                            <input type="text" name="rif" id="id_rif" class="form-control">    
+                        </div>
+                    </div>
+        
+                    <!-- Campo: Dirección 1 y 2 -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_direccion_1">Dirección 1:</label>
+                            <textarea name="direccion_1" id="id_direccion_1" style="height: 150px;" class="form-control" rows="3" required></textarea>    
+                        </div>
+                        <div >
+                            <label for="id_direccion_2">Dirección 2:</label>
+                            <textarea name="direccion_2" id="id_direccion_2" style="height: 150px;" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+            
+                    <!-- Campo: Email 1 y 2-->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_email_1">Email 1:</label>
+                            <input type="email" name="email_1" id="id_email_1" class="form-control" required>    
+                        </div>
+                        <div>
+                            <label for="id_email_2">Email 2:</label>
+                            <input type="email" name="email_2" id="id_email_2" class="form-control">    
+                        </div>
+                    </div>
 
-            <!-- Botones de Acción -->
-            <div class="form-group text-center">
-                <!-- Botón de Guardar -->
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Guardar
-                </button>
-
-                <!-- Botón de Limpiar Campos -->
-                <button type="reset" class="btn btn-secondary">
-                    <i class="fas fa-eraser"></i> Limpiar Campos
-                </button>
+                    <!-- Botones de Acción -->
+                     <div class="button-group">
+                        <div class="form-group text-center">
+                            <!-- Botón de Guardar -->
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+    
+                            <!-- Botón de Limpiar Campos -->
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i> Limpiar Campos
+                            </button>
+                        </div>
+                     </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock content %}

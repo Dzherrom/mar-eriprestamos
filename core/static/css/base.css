@@ -32,7 +32,6 @@ footer {
 }
 
 
-
 .logo img {
     width: 5vh;
 }
@@ -91,10 +90,68 @@ nav ul li {
     width: 48%; /* Ajusta el ancho según sea necesario */
 }
 
+/* crear cliente site */
+.tarjeta-body {
+
+    gap: 20px; /* Espacio entre card-left y card-right */
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+form{
+    justify-items: left;
+}
+
+.form-group {
+    display: flex;
+    margin-right: 30px;
+    gap: 15px;
+    justify-content: center; 
+    max-width:100%;
+    margin-bottom: 20px;
+}
+
+.form-group p {
+    align-items: left;
+    margin-bottom: 5vh;
+    text-align: left;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    font-size: 15px;
+    width: 400px; 
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.cliente-tarjeta-left,
+.cliente-tarjeta-right {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 0; /* Cambia esto */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Ambos elementos ocupan el mismo espacio */
+}
+
+.card-body{
+    justify-items: center;
+}
+
 .card-left {
     border: 1px solid #ccc;
     border-radius: 15px;
-    max-width: 200%;
+    max-width: 100%;
     padding: 15px;
     margin-bottom: 20px; /* Espacio entre tarjetas */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -217,6 +274,7 @@ nav ul li {
         margin: 10px 0; /* Margen vertical entre tarjetas */
     }
 }
+
 nav ul li a {
     text-decoration: none; /* Remove underline from links */
     color: white; /* Link color */
@@ -241,6 +299,7 @@ th, td {
     border: 1px solid #dee2e6; /* Your custom border color for cells */
     padding: 8px; /* Optional: adds padding inside cells */
 }
+
 .main-card th,
 .login-card th {
     background-color: #f2f2f2;
@@ -266,9 +325,11 @@ th.sort-both {
     background-image: url(/static/img/sort_both.svg);
     background-repeat: no-repeat;
     background-position: center right;
-.show {
-    display:grid;
+    .show {
+        display:grid;
+    }
 }
+
 .main-card {
     background-color: #ffffff;
     padding: 4vmin;
@@ -325,24 +386,6 @@ th.sort-both {
 
 .login-card label {
     margin-bottom: 10px;
-}
-
-.form-group p {
-    align-items: left;
-    margin-bottom: 5vh;
-    text-align: left;
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-
-.form-group input {
-    width: 94%; /* Hacer que los campos ocupen todo el ancho */
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
 }
 
 /* boostrap buttons */
