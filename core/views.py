@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
 from .models import Prestamos, Clientes, Pagos
-from .forms import ClienteForm
+from .forms import ClienteForm, PasswordVerificationForm
 import json
 
 # Create your views here.
@@ -58,8 +58,26 @@ def cliente_crear(request):
          'user_is_authenticated': request.user.is_authenticated
     }
     return render(request, 'clientes/cliente_crear.html', context)
-    
-        
+
+@login_required
+def cliente_borrar(request, cliente_id):
+    cliente = Clientes.objects.get(id=cliente_id)
+    if request.method == "POST":
+        form = PasswordVerificationForm(request.user, request.POST)
+        if form.is_valid():
+            cliente.delete()
+            return redirect('clientes')
+        else:
+            form = PasswordVerificationForm(request.user)
+            
+    form = PasswordVerificationForm(request.user)
+    context = {
+            'form': form, 
+            'cliente': cliente,
+            'error': 'Contraseña incorrecta',
+            'user_is_authenticated': request.user.is_authenticated}
+    return render(request, 'clientes/cliente_borrar.html', context)
+
 def prestamo_detalles_api(request, id):
     prestamo = get_object_or_404(Prestamos, id=id)
     data = {
