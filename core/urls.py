@@ -12,6 +12,7 @@ urlpatterns = [
 
     #prestamos
     path('prestamos/', views.prestamos, name='prestamos'),
+    path('prestamo_detalles/<int:prestamo_id>', views.prestamo_detalles, name='prestamo_detalles'),
     path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
         
     #clientes

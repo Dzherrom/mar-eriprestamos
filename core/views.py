@@ -8,7 +8,6 @@ from .models import Prestamos, Clientes, Pagos
 from .forms import ClienteForm, PasswordVerificationForm
 import json
 
-# Create your views here.
 @login_required
 def home(request):
     context = {'mensaje':'error', 
@@ -16,7 +15,7 @@ def home(request):
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'home.html', context)
 
-#clientes
+# ---------- Clientes ----------
 @login_required
 def clientes(request):
     if request.method == 'GET':
@@ -140,13 +139,6 @@ def cliente_detalles(request, cliente_id):
         except:
             return render(request, 'cliente/clientes_detalles.html', context)
         
-            
-'''
-        agregar al CRUD
-        cliente.ultimo_usuario_modificacion = request.user 
-        cliente.save
-'''
-# prestamos 
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
     prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
@@ -177,6 +169,7 @@ def obtener_montos_pagados_por_dia():
         'totales': totales,
     }
     
+# ---------- Prestamos ----------
 @login_required
 def prestamos(request):
     if request.method == 'GET':
@@ -211,11 +204,21 @@ def prestamos(request):
                     'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'prestamos/prestamos.html', context)
 
+def prestamo_detalles(request, prestamo_id):
+    prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+    context = {
+        'prestamo': prestamo,
+    }
+    return render(request, 'prestamos/prestamo_detalles.html', context)
+
+# ---------- Pagos ----------
 @login_required
 def pagos(request):
     if request.method == 'GET':
         return render(request, 'Pagos/pagos.html')
 
+
+# ---------- Auth ----------
 def login(request):
     return render(request, 'signin.html')
 
