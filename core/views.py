@@ -40,7 +40,9 @@ def cliente_crear(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
-            form.save()  # Guarda el cliente en la base de datos
+            cliente = form.save(commit=False)  # No guardar aún para asignar el usuario
+            cliente.ultimo_usuario_modificacion = request.user  # Asignar el usuario actual
+            cliente.save()  # Guardar el cliente con el usuario asignado
             return redirect('clientes')  # Redirige a la lista de clientes
         else:
             # Si el formulario no es válido, se pasa el formulario con errores al contexto
@@ -123,7 +125,7 @@ def cliente_detalles(request, cliente_id):
                 'tasa_interes_total': tasa_interes_total,
                 'form': form,
                 'user_is_authenticated': request.user.is_authenticated}
-        return render(request, 'clientes/clientes_detalles.html', context)
+        return render(request, 'clientes/cliente_detalles.html', context)
     
     else:
         try:
@@ -138,14 +140,25 @@ def cliente_detalles(request, cliente_id):
                 print('error en try')
                 return redirect('home')
         except:
-            return render(request, 'cliente/clientes_detalles.html', context)
+            return render(request, 'cliente/cliente_detalles.html', context)
         
-            
-'''
-        agregar al CRUD
-        cliente.ultimo_usuario_modificacion = request.user 
-        cliente.save
-'''
+@login_required
+def cliente_editar(request, cliente_id):
+    cliente = get_object_or_404(Clientes, id=cliente_id)
+    
+    if request.method == "POST":
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            #guarda el ultimo usuario que modifico al cliente al guardar cambios
+            cliente.ultimo_usuario_modificacion = request.user 
+            cliente.save
+            return redirect('cliente_detalles', cliente_id=cliente.id)  # Redirigir a la página de detalles del cliente
+    else:
+        form = ClienteForm(instance=cliente)
+    
+    return render(request, 'clientes/cliente_editar.html', {'form': form, 'cliente': cliente, 'user_is_authenticated': request.user.is_authenticated})
+
 # prestamos 
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha

@@ -1,0 +1,97 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="card-general" style="justify-items: center;">
+    <div class="detalles-container" style="display: flex; justify-items: center; flex-wrap: nowrap; flex-direction: column;">
+        <div>
+            <h2>Editar Cliente: {{ cliente.nombre }} {{ cliente.apellido }}</h2>
+        </div>
+        <div>
+
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Mostrar errores del formulario -->
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                {{ error }}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <!-- Información Básica -->
+                <div class="card-left" style="display: flex; flex-direction: column; align-items: flex-start; max-width: 100%;">
+                    <h5>Información Básica</h5>
+                    <div class="form-group">
+                        <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+                        {{ form.nombre }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.apellido.id_for_label }}">Apellido:</label>
+                        {{ form.apellido }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.genero.id_for_label }}">Género:</label>
+                        {{ form.genero }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>
+                        {{ form.fecha_nacimiento }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.tipo_persona.id_for_label }}">Tipo de Persona:</label>
+                        {{ form.tipo_persona }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.cedula.id_for_label }}">Cédula:</label>
+                        {{ form.cedula }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.rif.id_for_label }}">RIF:</label>
+                        {{ form.rif }}
+                    </div>
+
+                    <h5>Información de Contacto</h5>
+                    <div class="form-group">
+                        <label for="{{ form.direccion_1.id_for_label }}">Dirección 1:</label>
+                        {{ form.direccion_1 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.direccion_2.id_for_label }}">Dirección 2:</label>
+                        {{ form.direccion_2 }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.email_1.id_for_label }}">Email 1:</label>
+                        {{ form.email_1 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.email_2.id_for_label }}">Email 2:</label>
+                        {{ form.email_2 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.numero_telefono.id_for_label }}">Número de Teléfono:</label>
+                        {{ form.numero_telefono }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.numero_local.id_for_label }}">Número Local:</label>
+                        {{ form.numero_local }}
+                    </div>
+                </div>
+        </div>
+            <!-- Botones -->
+            <div class="button-container" style="justify-content: center; display: flex;">
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a href="{% url 'cliente_detalles' cliente.id %}" class="btn btn-danger">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
