@@ -205,6 +205,7 @@ def prestamos(request):
                     'data_json_montos' : data_json_montos,
                     'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'prestamos/prestamos.html', context)
+    
 @login_required
 def prestamo_detalles(request, prestamo_id):
     prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
@@ -271,6 +272,17 @@ def prestamo_borrar(request, prestamo_id):
             'error': 'Contraseña incorrecta',
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'prestamos/prestamo_borrar.html', context)
+
+@login_required
+def prestamos_sin_pagar(request):
+    if request.method == 'GET':  
+        prestamos_sin_pagar = Prestamos.objects.filter(pagado__isnull=True)
+        context = {
+            'prestamos_sin_pagar': prestamos_sin_pagar,
+            'user_is_authenticated': request.user.is_authenticated
+        }
+        return render(request, 'prestamos/prestamos_sin_pagar.html', context)
+        
 
 # ---------- Pagos ----------
 @login_required
