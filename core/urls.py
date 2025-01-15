@@ -15,6 +15,7 @@ urlpatterns = [
     path('prestamo_detalles/<int:prestamo_id>', views.prestamo_detalles, name='prestamo_detalles'),
     path('prestamo_editar/<int:prestamo_id>/', views.prestamo_editar, name='prestamo_editar'),
     path('prestamo/crear/', views.prestamo_crear, name='prestamo_crear'),
+    path('prestamo_borrar/<int:prestamo_id>', views.prestamo_borrar, name='prestamo_borrar'),
     path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
 
     #clientes

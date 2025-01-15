@@ -253,6 +253,25 @@ def prestamo_crear(request):
     # Renderiza la plantilla con el formulario
     return render(request, 'prestamos/prestamo_crear.html', context)
 
+@login_required
+def prestamo_borrar(request, prestamo_id):
+    prestamo = Prestamos.objects.get(id=prestamo_id)
+    if request.method == "POST":
+        form = PasswordVerificationForm(request.user, request.POST)
+        if form.is_valid():
+            prestamo.delete()
+            return redirect('prestamos')
+        else:
+            form = PasswordVerificationForm(request.user)
+            
+    form = PasswordVerificationForm(request.user)
+    context = {
+            'form': form, 
+            'prestamo': prestamo,
+            'error': 'Contraseña incorrecta',
+            'user_is_authenticated': request.user.is_authenticated}
+    return render(request, 'prestamos/prestamo_borrar.html', context)
+
 # ---------- Pagos ----------
 @login_required
 def pagos(request):
