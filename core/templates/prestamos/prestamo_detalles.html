@@ -10,7 +10,7 @@
                 <!-- Información del Cliente -->
                 <div>
                     <p><strong>Cliente:</strong> {{ prestamo.cliente }} {{ prestamo.cliente.apellido }}</p>
-                    <p><strong>Cédula:</strong> {{ prestamo.cliente }}</p>
+                    <p><strong>Cédula:</strong> {{ cedula_cliente }}</p>
                 </div>
 
                 <!-- Fechas del Préstamo -->
@@ -29,6 +29,12 @@
                 <!-- Tasa de Interés -->
                 <div>
                     <p><strong>Tasa de Interés:</strong> {{ prestamo.tasa_interes }}%</p>
+                    <p><strong>Estado del Préstamo:</strong> 
+                        {% if prestamo.pagado %}
+                            <span class="text-success">Pagado</span>
+                        {% else %}
+                            <span class="text-danger">Sin Pagar</span>
+                        {% endif %}</p
                 </div>
             </div>
         </div>
@@ -37,7 +43,7 @@
         <div class="button-container">
             <a href="#" class="btn btn-primary">Editar</a>
             <a href="#" class="btn btn-danger">Eliminar</a>
-            <a href="#" class="btn btn-secondary">Volver a la Lista</a>
+            <a href="{% url 'prestamos' %}" class="btn btn-secondary">Volver a la Lista</a>
         </div>
     </div>
 </div>

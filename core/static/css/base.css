@@ -123,7 +123,6 @@ form{
     
 }
 
-
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -181,6 +180,59 @@ form{
     margin-right: 20px; /* Space between table and graph */
 }
 
+/* LOGIN */
+.card-login {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* Ajusta el ancho según sea necesario */
+    margin: 0 auto; /* Centra la tarjeta */
+}
+
+.card-login h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card-login form {
+    display: flex;
+    flex-direction: column; /* Los elementos se apilan verticalmente */
+    gap: 15px; /* Espacio entre los elementos */
+}
+
+.card-login .form-group {
+    display: flex;
+    flex-direction: column; /* Etiqueta y campo de entrada en columna */
+    gap: 5px; /* Espacio entre la etiqueta y el campo de entrada */
+}
+
+.card-login label {
+    font-weight: bold;
+}
+
+.card-login input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    max-width: 100%;
+}
+
+.card-login button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.card-login button:hover {
+    background-color: #0056b3;
+}
 /* Estilo para la tarjeta de Información General */
 .card-general {
     width: 100%; /* Ancho del 80% */
@@ -353,9 +405,17 @@ th.sort-both {
     max-width: 100%; /* Add this to prevent horizontal overflow */
 }
 
-/* login card */
+/* login page */
+.group-center{
+    margin-top: 20vh;
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    max-width: 100%;
+}
+
 .login-card {
-    display: block;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
@@ -173,8 +173,8 @@ def obtener_montos_pagados_por_dia():
 @login_required
 def prestamos(request):
     if request.method == 'GET':
-        prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
-        prestamos_sin_pagar = Prestamos.objects.filter(fecha_pago__isnull=True)
+        prestamos_pagados = Prestamos.objects.filter(monto_pago=F('monto_a_pagar'))
+        prestamos_sin_pagar = Prestamos.objects.filter(monto_pago__lt=F('monto_a_pagar'))
         
         #función para obtener los préstamos pagados por día
         data_prestamos_pagados = obtener_prestamos_pagados_por_dia()
@@ -206,8 +206,10 @@ def prestamos(request):
 
 def prestamo_detalles(request, prestamo_id):
     prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+    cedula_cliente = prestamo.cliente.cedula
     context = {
         'prestamo': prestamo,
+        'cedula_cliente': cedula_cliente
     }
     return render(request, 'prestamos/prestamo_detalles.html', context)
 

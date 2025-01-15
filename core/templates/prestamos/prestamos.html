@@ -11,7 +11,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="th sort-both">ID</th>
+                    <th class="th sort-both">Detalles</th>
                     <th class="th sort-both">Cliente</th>
                     <th class="th sort-both">Fecha de Préstamo</th>
                     <th class="th sort-both">Fecha de Pago</th>
@@ -22,7 +22,7 @@
             <tbody id="sinpagarTableBody">
                 {% for prestamo in prestamos_sin_pagar %}
                 <tr>
-                    <td>{{ prestamo.id }}</td>
+                    <td><a href="{% url 'prestamo_detalles' prestamo.id %}"> {{ prestamo.id }}</a></td>
                     <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
                     <td>{{ prestamo.fecha_prestamo }}</td>
                     <td>{{ prestamo.fecha_pago }}</td>
@@ -36,6 +36,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="paginacion" id="sinpagar-paginacion"></div>
     </div>
 
     <div class="container-graficos">
@@ -68,7 +69,8 @@
                         <th class="th sort-both">Fecha de Préstamo</th>
                         <th class="th sort-both">Fecha de Pago</th>
                         <th class="th sort-both">Monto de Préstamo</th>
-                        <th class="th sort-both">Monto de Pago</th>
+                        <th class="th sort-both">Monto Pago</th>
+                        <th class="th sort-both">Monto a Pagar</th>
                         <th class="th sort-both">Tasa de Interés</th>
                     </tr>
                 </thead>
@@ -81,6 +83,7 @@
                         <td>{{ prestamo.fecha_pago }}</td>
                         <td>${{ prestamo.monto_prestamo }}</td>
                         <td>{{ prestamo.monto_pago }}</td>
+                        <td>{{ prestamo.monto_a_pagar }}</td>
                         <td>{{ prestamo.tasa_interes }}%</td>
                     </tr>
                     {% empty %}
@@ -90,6 +93,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="paginacion" id="pagados-paginacion"></div>
         </div>
     </div>
 </div>
@@ -264,6 +268,108 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+});
+
+// paginacion tabla sin pagar
+document.addEventListener('DOMContentLoaded', () => {
+    const filasPorPagina = 10; // Número de filas por página
+    const tablaBody = document.getElementById('sinpagarTableBody');
+    const filas = tablaBody.getElementsByTagName('tr');
+    const paginacion = document.getElementById('sinpagar-paginacion');
+
+    // Función para mostrar una página específica
+    function mostrarPagina(pagina) {
+        // Ocultar todas las filas
+        for (let i = 0; i < filas.length; i++) {
+            filas[i].style.display = 'none';
+        }
+
+        // Mostrar solo las filas de la página actual
+        const inicio = (pagina - 1) * filasPorPagina;
+        const fin = inicio + filasPorPagina;
+        for (let i = inicio; i < fin && i < filas.length; i++) {
+            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+                filas[i].style.display = '';
+            }
+        }
+    }
+
+    // Función para generar los botones de paginación
+    function generarBotonesPaginacion() {
+        const totalPaginas = Math.ceil(filas.length / filasPorPagina); // Calcular el número de páginas
+        paginacion.innerHTML = ''; // Limpiar los botones anteriores
+
+        for (let i = 1; i <= totalPaginas; i++) {
+            const enlace = document.createElement('a');
+            enlace.textContent = i;
+            enlace.href = '#'; // Establecer el atributo href para que se comporte como un enlace
+            enlace.addEventListener('click', (e) => {
+                e.preventDefault(); // Evitar que el enlace recargue la página
+                cambiarPagina(i);
+            });
+            paginacion.appendChild(enlace);
+        }
+    }
+
+    // Función para cambiar de página
+    function cambiarPagina(pagina) {
+        mostrarPagina(pagina);
+    }
+
+    // Generar los botones de paginación y mostrar la primera página
+    generarBotonesPaginacion();
+    mostrarPagina(1);
+});
+
+// paginacion tabla pagados
+document.addEventListener('DOMContentLoaded', () => {
+    const filasPorPagina = 10; // Número de filas por página
+    const tablaBody = document.getElementById('PagadosTableBody');
+    const filas = tablaBody.getElementsByTagName('tr');
+    const paginacion = document.getElementById('pagados-paginacion');
+
+    // Función para mostrar una página específica
+    function mostrarPagina(pagina) {
+        // Ocultar todas las filas
+        for (let i = 0; i < filas.length; i++) {
+            filas[i].style.display = 'none';
+        }
+
+        // Mostrar solo las filas de la página actual
+        const inicio = (pagina - 1) * filasPorPagina;
+        const fin = inicio + filasPorPagina;
+        for (let i = inicio; i < fin && i < filas.length; i++) {
+            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+                filas[i].style.display = '';
+            }
+        }
+    }
+
+    // Función para generar los botones de paginación
+    function generarBotonesPaginacion() {
+        const totalPaginas = Math.ceil(filas.length / filasPorPagina); // Calcular el número de páginas
+        paginacion.innerHTML = ''; // Limpiar los botones anteriores
+
+        for (let i = 1; i <= totalPaginas; i++) {
+            const enlace = document.createElement('a');
+            enlace.textContent = i;
+            enlace.href = '#'; // Establecer el atributo href para que se comporte como un enlace
+            enlace.addEventListener('click', (e) => {
+                e.preventDefault(); // Evitar que el enlace recargue la página
+                cambiarPagina(i);
+            });
+            paginacion.appendChild(enlace);
+        }
+    }
+
+    // Función para cambiar de página
+    function cambiarPagina(pagina) {
+        mostrarPagina(pagina);
+    }
+
+    // Generar los botones de paginación y mostrar la primera página
+    generarBotonesPaginacion();
+    mostrarPagina(1);
 });
 </script>
 
