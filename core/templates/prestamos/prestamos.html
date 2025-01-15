@@ -93,7 +93,9 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="paginacion" id="pagados-paginacion"></div>
+            <div>
+                <div class="paginacion" id="pagados-paginacion"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -324,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // paginacion tabla pagados
 document.addEventListener('DOMContentLoaded', () => {
     const filasPorPagina = 10; // Número de filas por página
-    const tablaBody = document.getElementById('PagadosTableBody');
+    const tablaBody = document.getElementById('pagadosTableBody');
     const filas = tablaBody.getElementsByTagName('tr');
     const paginacion = document.getElementById('pagados-paginacion');
 
@@ -332,14 +334,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function mostrarPagina(pagina) {
         // Ocultar todas las filas
         for (let i = 0; i < filas.length; i++) {
-            filas[i].style.display = 'none';
+            tablaBody.rows[i].style.display = 'none';
         }
 
         // Mostrar solo las filas de la página actual
         const inicio = (pagina - 1) * filasPorPagina;
         const fin = inicio + filasPorPagina;
         for (let i = inicio; i < fin && i < filas.length; i++) {
-            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+            if (filas[i].cells.length === 8) { // Ignorar la fila "No hay pagos registrados."
                 filas[i].style.display = '';
             }
         }
