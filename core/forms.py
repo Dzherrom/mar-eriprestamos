@@ -30,8 +30,15 @@ class PagosForm(forms.ModelForm):
 class PrestamosForm(forms.ModelForm):
     class Meta:
         model = Prestamos
-        fields = '__all__' 
+        fields = [
+            'cliente', 'fecha_prestamo', 'fecha_pago', 'monto_prestamo', 
+            'monto_pago', 'monto_a_pagar', 'tasa_interes', 'pagado'
+        ]
         
+        widgets = {
+                'fecha_prestamo': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+                'fecha_pago': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+            }
 class PasswordVerificationForm(forms.Form):
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 

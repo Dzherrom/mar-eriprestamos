@@ -234,6 +234,24 @@ def prestamo_editar(request, prestamo_id):
                    }
     return render(request, 'prestamos/prestamo_editar.html', context)
 
+@login_required
+def prestamo_crear(request):
+    if request.method == 'POST':
+        # Si el formulario se envía, procesa los datos
+        form = PrestamosForm(request.POST)
+        if form.is_valid():
+            form.save()  # Guarda el nuevo préstamo en la base de datos
+            return redirect('prestamos')  # Redirige a la lista de préstamos
+    else:
+        # Si es una solicitud GET, muestra el formulario vacío
+        clientes = Clientes.objects.all()
+        form = PrestamosForm()
+        
+    context={'form': form,
+             'clientes': clientes,
+             'user_is_authenticated': request.user.is_authenticated}
+    # Renderiza la plantilla con el formulario
+    return render(request, 'prestamos/prestamo_crear.html', context)
 
 # ---------- Pagos ----------
 @login_required
