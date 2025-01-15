@@ -29,7 +29,7 @@
                 <!-- Campo: Fecha de Pago -->
                 <div class="form-group">
                     <label for="fecha_pago">Fecha de Pago:</label>
-                    <input type="date" class="form-control" id="fecha_pago" name="fecha_pago" value="{{ prestamo.fecha_pago|date:'Y-m-d' }}">
+                    <input type="date" class="form-control" id="fecha_pago" name="fecha_pago" value="{{ prestamo.fecha_pago|date:'Y-m-d' }}" required>
                 </div>
 
                 <!-- Campo: Monto del Préstamo -->
@@ -58,10 +58,10 @@
 
                 <!-- Campo: Pagado -->
                 <div class="form-group">
-                    <label for="pagado">Pagado:</label>
-                    <select class="form-control" id="pagado" name="pagado">
-                        <option value="True" {% if prestamo.pagado %}selected{% endif %}>Sí</option>
-                        <option value="False" {% if not prestamo.pagado %}selected{% endif %}>No</option>
+                    <label for="id_pagado">Pagado:</label>
+                    <select class="form-control" id="id_pagado" name="pagado">
+                        <option value="False">No</option>
+                        <option value="True">Sí</option>
                     </select>
                 </div>
 
@@ -73,7 +73,7 @@
     </div>
 </div>
 <script>
-    // Función para calcular el monto a pagar
+// Función para calcular el monto a pagar segun interes
 function calcularMontoAPagar() {
     // Obtener los valores de los campos
     const montoPrestamo = parseFloat(document.getElementById('monto_prestamo').value) || 0;
@@ -89,5 +89,51 @@ function calcularMontoAPagar() {
 // Asignar eventos a los campos para que se ejecute la función cuando cambien
 document.getElementById('monto_prestamo').addEventListener('input', calcularMontoAPagar);
 document.getElementById('tasa_interes').addEventListener('input', calcularMontoAPagar);
+
+// Variables para almacenar los valores originales
+let fechaPagoOriginal = null;
+let montoAPagarOriginal = null;
+let montoPagoOriginal = null;
+
+// funcion para actualizar fecha de pago al marcar como pagado
+function actualizarFechaPago() {
+    const pagado = document.getElementById('id_pagado');  // Campo "pagado"
+    const fechaPago = document.getElementById('fecha_pago');  // Campo "fecha de pago"
+    const montoPago = document.getElementById('monto_pago');  // Campo "monto pagado"
+    const montoAPagar = document.getElementById('monto_a_pagar');  // Campo "monto a pagar"
+
+    // Verificar si el campo "pagado" está marcado como "Sí" o "True"
+    if (pagado.value === "True" || pagado.value === "true") {
+        if (fechaPagoOriginal === null) {
+            fechaPagoOriginal = fechaPago.value;  // Guardar la fecha de pago original
+        }
+        if (montoAPagarOriginal === null) {
+            montoAPagarOriginal = montoAPagar.value;  // Guardar el monto a pagar original
+        }
+        if (montoPagoOriginal === null) {
+            montoPagoOriginal = montoPago.value;  // Guardar el monto pagado
+        }
+        // Obtener la fecha actual en formato YYYY-MM-DD
+        const fechaActual = new Date().toISOString().split('T')[0];
+        // Actualizar el campo "fecha de pago" con la fecha actual
+        fechaPago.value = fechaActual;
+        // Actualizar el campo "monto pagado" con el valor de "monto a pagar"
+        montoPago.value = montoAPagar.value;
+    } else {
+        // Si no está marcado como "Sí", restaurar los valores originales
+        if (fechaPagoOriginal !== null) {
+            fechaPago.value = fechaPagoOriginal;  // Restaurar la fecha de pago original
+        }
+        if (montoAPagarOriginal !== null) {
+            montoAPagar.value = montoAPagarOriginal;  // Restaurar el monto a pagar original
+        }
+        if (montoPagoOriginal !== null) {
+            montoPago.value = montoPagoOriginal;  // Restaurar el monto pag
+        }
+    }
+}
+
+// Asignar el evento al campo "pagado"
+document.getElementById('id_pagado').addEventListener('change', actualizarFechaPago);
 </script>
 {% endblock content %}

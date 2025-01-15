@@ -205,13 +205,14 @@ def prestamos(request):
                     'data_json_montos' : data_json_montos,
                     'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'prestamos/prestamos.html', context)
-
+@login_required
 def prestamo_detalles(request, prestamo_id):
     prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
     cedula_cliente = prestamo.cliente.cedula
     context = {
         'prestamo': prestamo,
-        'cedula_cliente': cedula_cliente
+        'cedula_cliente': cedula_cliente,
+        'user_is_authenticated': request.user.is_authenticated,
     }
     return render(request, 'prestamos/prestamo_detalles.html', context)
 
@@ -224,9 +225,14 @@ def prestamo_editar(request, prestamo_id):
             return redirect('prestamos')
     else:
         prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+        clientes = Clientes.objects.all()
         form = PrestamosForm(instance=prestamo)
-    return render(request, 'prestamos/prestamo_editar.html', 
-                  {'prestamo': prestamo, 'form': form})
+        context = {'prestamo': prestamo, 
+                   'clientes':clientes, 
+                   'form': form, 
+                   'user_is_authenticated': request.user.is_authenticated
+                   }
+    return render(request, 'prestamos/prestamo_editar.html', context)
 
 
 # ---------- Pagos ----------
