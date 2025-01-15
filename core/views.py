@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
 from .models import Prestamos, Clientes, Pagos
-from .forms import ClienteForm, PasswordVerificationForm
+from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm
 import json
 
-# Create your views here.
 @login_required
 def home(request):
     context = {'mensaje':'error', 
@@ -16,7 +15,7 @@ def home(request):
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'home.html', context)
 
-#clientes
+# ---------- Clientes ----------
 @login_required
 def clientes(request):
     if request.method == 'GET':
@@ -190,11 +189,12 @@ def obtener_montos_pagados_por_dia():
         'totales': totales,
     }
     
+# ---------- Prestamos ----------
 @login_required
 def prestamos(request):
     if request.method == 'GET':
-        prestamos_pagados = Prestamos.objects.filter(fecha_pago__isnull=False)
-        prestamos_sin_pagar = Prestamos.objects.filter(fecha_pago__isnull=True)
+        prestamos_pagados = Prestamos.objects.filter(monto_pago=F('monto_a_pagar'))
+        prestamos_sin_pagar = Prestamos.objects.filter(monto_pago__lt=F('monto_a_pagar'))
         
         #función para obtener los préstamos pagados por día
         data_prestamos_pagados = obtener_prestamos_pagados_por_dia()
@@ -223,12 +223,93 @@ def prestamos(request):
                     'data_json_montos' : data_json_montos,
                     'user_is_authenticated': request.user.is_authenticated}
         return render(request, 'prestamos/prestamos.html', context)
+    
+@login_required
+def prestamo_detalles(request, prestamo_id):
+    prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+    cedula_cliente = prestamo.cliente.cedula
+    context = {
+        'prestamo': prestamo,
+        'cedula_cliente': cedula_cliente,
+        'user_is_authenticated': request.user.is_authenticated,
+    }
+    return render(request, 'prestamos/prestamo_detalles.html', context)
 
+def prestamo_editar(request, prestamo_id):
+    if request.method == 'POST':
+        prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+        form = PrestamosForm(request.POST, instance=prestamo)
+        if form.is_valid():
+            form.save()
+            return redirect('prestamos')
+    else:
+        prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+        clientes = Clientes.objects.all()
+        form = PrestamosForm(instance=prestamo)
+        context = {'prestamo': prestamo, 
+                   'clientes':clientes, 
+                   'form': form, 
+                   'user_is_authenticated': request.user.is_authenticated
+                   }
+    return render(request, 'prestamos/prestamo_editar.html', context)
+
+@login_required
+def prestamo_crear(request):
+    if request.method == 'POST':
+        # Si el formulario se envía, procesa los datos
+        form = PrestamosForm(request.POST)
+        if form.is_valid():
+            form.save()  # Guarda el nuevo préstamo en la base de datos
+            return redirect('prestamos')  # Redirige a la lista de préstamos
+    else:
+        # Si es una solicitud GET, muestra el formulario vacío
+        clientes = Clientes.objects.all()
+        form = PrestamosForm()
+        
+    context={'form': form,
+             'clientes': clientes,
+             'user_is_authenticated': request.user.is_authenticated}
+    # Renderiza la plantilla con el formulario
+    return render(request, 'prestamos/prestamo_crear.html', context)
+
+@login_required
+def prestamo_borrar(request, prestamo_id):
+    prestamo = Prestamos.objects.get(id=prestamo_id)
+    if request.method == "POST":
+        form = PasswordVerificationForm(request.user, request.POST)
+        if form.is_valid():
+            prestamo.delete()
+            return redirect('prestamos')
+        else:
+            form = PasswordVerificationForm(request.user)
+            
+    form = PasswordVerificationForm(request.user)
+    context = {
+            'form': form, 
+            'prestamo': prestamo,
+            'error': 'Contraseña incorrecta',
+            'user_is_authenticated': request.user.is_authenticated}
+    return render(request, 'prestamos/prestamo_borrar.html', context)
+
+@login_required
+def prestamos_sin_pagar(request):
+    if request.method == 'GET':  
+        prestamos_sin_pagar = Prestamos.objects.filter(pagado__isnull=True)
+        context = {
+            'prestamos_sin_pagar': prestamos_sin_pagar,
+            'user_is_authenticated': request.user.is_authenticated
+        }
+        return render(request, 'prestamos/prestamos_sin_pagar.html', context)
+        
+
+# ---------- Pagos ----------
 @login_required
 def pagos(request):
     if request.method == 'GET':
         return render(request, 'Pagos/pagos.html')
 
+
+# ---------- Auth ----------
 def login(request):
     return render(request, 'signin.html')
 

@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="main-container">
+        <!-- Tarjeta de Información General del Préstamo -->
+        <div class="card-general">
+            <h5>Información del Préstamo</h5>
+            <div class="card-general-info">
+                <!-- Información del Cliente -->
+                <div>
+                    <p><strong>Cliente:</strong> {{ prestamo.cliente }} {{ prestamo.cliente.apellido }}</p>
+                    <p><strong>Cédula:</strong> {{ cedula_cliente }}</p>
+                </div>
+
+                <!-- Fechas del Préstamo -->
+                <div>
+                    <p><strong>Fecha de Préstamo:</strong> {{ prestamo.fecha_prestamo }}</p>
+                    <p><strong>Fecha de Pago:</strong> {{ prestamo.fecha_pago|default:"No pagado" }}</p>
+                </div>
+
+                <!-- Montos del Préstamo -->
+                <div>
+                    <p><strong>Monto Prestado:</strong> ${{ prestamo.monto_prestamo }}</p>
+                    <p><strong>Monto Pagado:</strong> ${{ prestamo.monto_pago }}</p>
+                    <p><strong>Monto a Pagar:</strong> ${{ prestamo.monto_a_pagar }}</p>
+                </div>
+
+                <!-- Tasa de Interés -->
+                <div>
+                    <p><strong>Tasa de Interés:</strong> {{ prestamo.tasa_interes }}%</p>
+                    <p><strong>Estado del Préstamo:</strong> 
+                        {% if prestamo.pagado %}
+                            <span class="text-success">Pagado</span>
+                        {% else %}
+                            <span class="text-danger">Sin Pagar</span>
+                        {% endif %}</p
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="button-container">
+            <a href="{% url 'prestamo_editar' prestamo.id %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'prestamo_borrar' prestamo.id %}" class="btn btn-danger">Eliminar</a>
+            <a href="{% url 'prestamos' %}" class="btn btn-secondary">Volver a la Lista</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

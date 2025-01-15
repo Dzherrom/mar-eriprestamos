@@ -20,11 +20,28 @@
             <img src="{% static 'img/moon.svg' %}" alt="Modo oscuro" id="mode-toggle-btn">
         </div> {% endcomment %}
         <nav>
-            <ul>
+            <ul class="menu">
                 {% if user_is_authenticated %}
-                <li><a href="{% url 'prestamos' %}">Préstamos</a></li>
-                <li><a href="{% url 'clientes' %}">Clientes</a></li>
-                <li><a href="{% url 'pagos' %}">Pagos</a></li>
+                <li><a href="#">Préstamos</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'prestamos' %}">Prestamos</a></li>
+                        <li><a href="#">Prestamos pagados</a></li>
+                        <li><a href="{% url 'prestamos_sin_pagar' %}">Prestamos sin pagar</a></li>
+                        <li><a href="{% url 'prestamo_crear' %}">Registrar prestamo</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Clientes</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'clientes' %}">Clientes</a></li>
+                        <li><a href="{% url 'cliente_crear' %}">Registrar cliente</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Pagos</a>
+                    <ul class="submenu">
+                        <li><a href="#">Pagos</a></li>
+                        <li><a href="#">Registrar Pago</a></li>
+                    </ul>
+                </li>
             </ul>
             <ul class="logout-container">
                 <li>
@@ -57,4 +74,37 @@
     </footer>
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const menuItems = document.querySelectorAll('.menu > li');
+
+    // Función para cerrar todos los submenús
+    function closeAllSubmenus() {
+        menuItems.forEach(item => {
+            item.classList.remove('active');
+        });
+    }
+
+    // Agregar evento de clic a cada elemento del menú
+    menuItems.forEach(item => {
+        item.addEventListener('click', function (event) {
+            // Evitar que el clic se propague al documento
+            event.stopPropagation();
+
+            // Cerrar todos los submenús antes de abrir el actual
+            if (!item.classList.contains('active')) {
+                closeAllSubmenus();
+            }
+
+            // Alternar la clase "active" en el elemento clicado
+            item.classList.toggle('active');
+        });
+    });
+
+    // Cerrar todos los submenús al hacer clic en cualquier parte del documento
+    document.addEventListener('click', function () {
+        closeAllSubmenus();
+    });
+});
+</script>
 </html>
