@@ -138,6 +138,8 @@ def cliente_detalles(request, cliente_id):
                 return redirect('home')
         except:
             return render(request, 'cliente/clientes_detalles.html', context)
+
+
         
 def obtener_prestamos_pagados_por_dia():
     # Obtener préstamos pagados agrupados por fecha
