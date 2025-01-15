@@ -255,10 +255,6 @@ form{
     justify-content: space-between; /* Espacio entre las tarjetas */
     margin-top: 20px; /* Margen superior */
 }
-/*editar prestamo*/
-.card-prestamos.form-group{
-    
-}
 
 /* Estilo para cada tarjeta */
 .card-transacciones, .card-volumen, .card-prestamos {
@@ -450,6 +446,98 @@ th.sort-both {
 
 .login-card label {
     margin-bottom: 10px;
+}
+
+/* Estilos base para el header */
+header {
+    background-color: #333; /* Color de fondo del header */
+    padding: 10px 20px;
+}
+
+/* Estilos para el menú */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Estilos para los elementos del menú principal */
+.menu > li {
+    position: relative;
+    margin: 0 15px; /* Espacio entre elementos */
+}
+
+/* Línea divisoria solo para elementos del menú principal */
+.menu > li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -15px; /* Ajusta la posición de la línea */
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px; /* Altura de la línea */
+    width: 1px; /* Grosor de la línea */
+    background-color: #666; /* Color de la línea */
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #fff; /* Color del texto */
+    font-size: 16px;
+    padding: 8px 12px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.menu li a:hover {
+    background-color: #444; /* Color de fondo al pasar el mouse */
+    border-radius: 4px;
+}
+
+/* Submenús ocultos por defecto */
+.submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #444;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    z-index: 1000;
+    width: 200px;
+}
+
+/* Mostrar submenú cuando el elemento padre tiene la clase "active" */
+.menu li.active .submenu {
+    display: block;
+}
+
+/* Estilos para los elementos del submenú */
+.submenu li {
+    margin: 0;
+    padding: 0;
+}
+
+.submenu li a {
+    color: #fff; /* Color del texto */
+    padding: 10px 15px; /* Espaciado interno */
+    display: block;
+    border-bottom: 1px solid #666; /* Línea divisoria entre elementos */
+    transition: background-color 0.3s ease;
+}
+
+.submenu li a:hover {
+    background-color: #555; /* Color de fondo al pasar el mouse */
+}
+
+/* Eliminar la línea divisoria del último elemento */
+.submenu li:last-child a {
+    border-bottom: none;
 }
 
 /* boostrap buttons */
