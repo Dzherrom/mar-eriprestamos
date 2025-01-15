@@ -41,7 +41,7 @@
 
         <!-- Botones de Acción -->
         <div class="button-container">
-            <a href="#" class="btn btn-primary">Editar</a>
+            <a href="{% url 'prestamo_editar' prestamo.id %}" class="btn btn-primary">Editar</a>
             <a href="#" class="btn btn-danger">Eliminar</a>
             <a href="{% url 'prestamos' %}" class="btn btn-secondary">Volver a la Lista</a>
         </div>

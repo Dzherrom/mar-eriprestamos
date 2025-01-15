@@ -255,6 +255,10 @@ form{
     justify-content: space-between; /* Espacio entre las tarjetas */
     margin-top: 20px; /* Margen superior */
 }
+/*editar prestamo*/
+.card-prestamos.form-group{
+    
+}
 
 /* Estilo para cada tarjeta */
 .card-transacciones, .card-volumen, .card-prestamos {

@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
 from .models import Prestamos, Clientes, Pagos
-from .forms import ClienteForm, PasswordVerificationForm
+from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm
 import json
 
 @login_required
@@ -214,6 +214,20 @@ def prestamo_detalles(request, prestamo_id):
         'cedula_cliente': cedula_cliente
     }
     return render(request, 'prestamos/prestamo_detalles.html', context)
+
+def prestamo_editar(request, prestamo_id):
+    if request.method == 'POST':
+        prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+        form = PrestamosForm(request.POST, instance=prestamo)
+        if form.is_valid():
+            form.save()
+            return redirect('prestamos')
+    else:
+        prestamo = get_object_or_404(Prestamos, pk=prestamo_id)
+        form = PrestamosForm(instance=prestamo)
+    return render(request, 'prestamos/prestamo_editar.html', 
+                  {'prestamo': prestamo, 'form': form})
+
 
 # ---------- Pagos ----------
 @login_required

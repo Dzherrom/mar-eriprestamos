@@ -13,6 +13,7 @@ urlpatterns = [
     #prestamos
     path('prestamos/', views.prestamos, name='prestamos'),
     path('prestamo_detalles/<int:prestamo_id>', views.prestamo_detalles, name='prestamo_detalles'),
+    path('prestamo_editar/<int:prestamo_id>/', views.prestamo_editar, name='prestamo_editar'),
     path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
         
     #clientes
@@ -20,7 +21,6 @@ urlpatterns = [
     path('cliente/<int:cliente_id>', views.cliente_detalles, name='cliente_detalles'),
     path('cliente/crear', views.cliente_crear, name='cliente_crear'),
     path('cliente_borrar/<int:cliente_id>', views.cliente_borrar, name='cliente_borrar'),
-    path('cliente_editar/<int:cliente_id>', views.cliente_editar, name='cliente_editar'),
     
     #pagos
     path('pagos/', views.pagos, name='pagos'),
