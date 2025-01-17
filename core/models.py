@@ -193,4 +193,4 @@ class Pagos(models.Model):
         # Actualizar el monto pagado del préstamo asociado
         if self.prestamo:
             self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto
-            self.prestamo.save()
+            self.prestamo.save() 

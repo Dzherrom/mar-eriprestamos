@@ -294,14 +294,15 @@ def prestamo_borrar(request, prestamo_id):
 @login_required
 def prestamos_sin_pagar(request):
     if request.method == 'GET':  
-        prestamos_sin_pagar = Prestamos.objects.filter(pagado__isnull=True)
+        prestamos_sin_pagar = Prestamos.objects.filter(monto_pago__lt=F('monto_a_pagar'))
         context = {
             'prestamos_sin_pagar': prestamos_sin_pagar,
             'user_is_authenticated': request.user.is_authenticated
         }
         return render(request, 'prestamos/prestamos_sin_pagar.html', context)
-        
-
+    else:
+        return HttpResponse("No hay préstamos sin pagar")
+    
 # ---------- Pagos ----------
 @login_required
 def pagos(request):
@@ -318,5 +319,5 @@ def signout(request):
     if request.method == 'POST':
         logout(request)
         return redirect('login')
-    else:
+    else: 
         return HttpResponse("Method not allowed", status=405)

@@ -17,17 +17,21 @@
                     <th class="th sort-both">Fecha de Préstamo</th>
                     <th class="th sort-both">Fecha de Pago</th>
                     <th class="th sort-both">Monto de Préstamo</th>
+                    <th class="th sort-both">Monto Pago</th>
+                    <th class="th sort-both">Monto a Pagar</th>
                     <th class="th sort-both">Tasa de Interés</th>
                 </tr>
             </thead>
             <tbody id="sinpagarTableBody">
-                {% for prestamo in prestamos_sin_pagar %}
+                {% for prestamo in prestamos_pagados %}
                 <tr>
                     <td><a href="{% url 'prestamo_detalles' prestamo.id %}"> {{ prestamo.id }}</a></td>
                     <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
                     <td>{{ prestamo.fecha_prestamo }}</td>
                     <td>{{ prestamo.fecha_pago }}</td>
                     <td>${{ prestamo.monto_prestamo }}</td>
+                    <td>{{ prestamo.monto_pago }}</td>
+                    <td>{{ prestamo.monto_a_pagar }}</td>
                     <td>{{ prestamo.tasa_interes }}%</td>
                 </tr>
                 {% empty %}
@@ -42,7 +46,7 @@
 </div>
 <script>
     // funcion para campo de busqueda
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInputSinPagar');
     const tableBody = document.getElementById('sinpagarTableBody');
 
@@ -124,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generarBotonesPaginacion();
     mostrarPagina(1);
 });
+
  // script para ordenar las tablas
  document.addEventListener('DOMContentLoaded', () => {
     const tables = document.querySelectorAll('table.table'); // Selecciona todas las tablas
@@ -176,6 +181,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 </script>
 {% endblock content %}
