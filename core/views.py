@@ -303,6 +303,18 @@ def prestamos_sin_pagar(request):
     else:
         return HttpResponse("No hay préstamos sin pagar")
     
+@login_required
+def prestamos_pagados(request):
+    if request.method == 'GET':  
+        prestamos_pagados = Prestamos.objects.filter(monto_pago=F('monto_a_pagar'))
+        context = {
+            'prestamos_pagados': prestamos_pagados,
+            'user_is_authenticated': request.user.is_authenticated
+        }
+        return render(request, 'prestamos/prestamos_pagados.html', context)
+    else:
+        return HttpResponse("No hay préstamos pagados")
+    
 # ---------- Pagos ----------
 @login_required
 def pagos(request):

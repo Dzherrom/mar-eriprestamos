@@ -4,9 +4,11 @@
 
 <div class="container">
     <div class="table-container">
-        <h2>Préstamos Sin Pagar</h2>
+        <h2>Préstamos Pagados</h2>
         <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
-            <div></div>
+            <div>
+                <a href="{% url 'prestamo_crear'%}" class="btn btn-primary">Registrar un prestamo</a>
+            </div>
         <input type="text" id="searchInputSinPagar" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
         </div>
         <table class="table table-bordered">
@@ -36,7 +38,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No hay préstamos sin pagar.</td>
+                    <td colspan="5" class="text-center">No hay préstamos pagados.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -96,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const inicio = (pagina - 1) * filasPorPagina;
         const fin = inicio + filasPorPagina;
         for (let i = inicio; i < fin && i < filas.length; i++) {
-            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+            if (filas[i].cells.length === 8) { // Ignorar la fila "No hay pagos registrados."
                 filas[i].style.display = '';
             }
         }
@@ -181,5 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
 </script>
 {% endblock content %}

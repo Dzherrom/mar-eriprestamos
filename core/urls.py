@@ -16,7 +16,7 @@ urlpatterns = [
     path('prestamo_editar/<int:prestamo_id>/', views.prestamo_editar, name='prestamo_editar'),
     path('prestamo/crear/', views.prestamo_crear, name='prestamo_crear'),
     path('prestamo_borrar/<int:prestamo_id>', views.prestamo_borrar, name='prestamo_borrar'),
-    #path('prestamos_pagados/', views.prestamos, name='prestamos'),
+    path('prestamos_pagados/', views.prestamos_pagados, name='prestamos_pagados'),
     path('prestamos_sin_pagar/', views.prestamos_sin_pagar, name='prestamos_sin_pagar'),
     
     path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
