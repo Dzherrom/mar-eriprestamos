@@ -38,7 +38,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No hay préstamos sin pagar.</td>
+                    <td colspan="8" class="text-center">No hay préstamos sin pagar.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const inicio = (pagina - 1) * filasPorPagina;
         const fin = inicio + filasPorPagina;
         for (let i = inicio; i < fin && i < filas.length; i++) {
-            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+            if (filas[i].cells.length === 8) { // Ignorar la fila "No hay pagos registrados."
                 filas[i].style.display = '';
             }
         }

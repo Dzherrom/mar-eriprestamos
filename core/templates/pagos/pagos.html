@@ -1,5 +1,195 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 {% block content %}
-pagos
+<div class="container">
+    <div class="table-container">
+        <h2>Ultimos pagos</h2>
+        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+            <div></div>
+        <input type="text" id="searchInputSinPagar" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="th sort-both">Detalles</th>
+                    <th class="th sort-both">Id</th>
+                    <th class="th sort-both">Cliente</th>
+                    <th class="th sort-both">Fecha de pago</th>
+                    <th class="th sort-both">Moneda</th>
+                    <th class="th sort-both">Tipo de pago</th>
+                    <th class="th sort-both">Referencia</th>
+                    <th class="th sort-both">Monto</th>
+                    <th class="th sort-both">Préstamo</th>
+                </tr>
+            </thead>
+            <tbody id="pagosTbody">
+                    {% for pago in pagos %}
+                    <tr>
+                        <td> detalles </td>
+                        <td>{{ pago.id }}</td>
+                        <td>{{ pago.cliente.nombre }} {{ pago.cliente.apellido }}</td>
+                        <td>{{ pago.fecha_pago }}</td>
+                        <td>{{ pago.moneda }}</td>
+                        <td>{{ pago.tipo_pago }}</td>
+                        <td>{{ pago.referencia }}</td>
+                        <td>${{ pago.monto }}</td>
+                        <td>
+                            {% if pago.prestamo %}
+                                {{ pago.prestamo.id }} - {{ pago.prestamo.cliente.nombre }} {{ pago.prestamo.cliente.apellido }}
+                            {% else %}
+                                No tiene préstamo asociado
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center">No hay pagos registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
+        <div class="paginacion" id="sinpagar-paginacion"></div>
+    </div>
+
+    <div class="container-graficos">
+        <div class="graph-container">
+            <h2>Pagos por Día</h2>
+            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="graph-container">
+            <h2>Volumen</h2>
+            <div id="grafico-volumen" style="width: 300px; height: 300px;">
+                <canvas id="volumenChart"></canvas>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="table-container" style="max-width: 100%;">
+        <div class="pagos_de_clientes">
+            <h2>Pagos de clientes</h2>
+            <div>
+                <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+                    <div>                
+                        <div style="margin-bottom: 20px;">
+                        <label for="clienteDropdown">Seleccionar cliente:</label>
+                        <select id="clienteDropdown" class="form-control" style="max-width: fit-content;">
+                            <option value="">-- Seleccione un cliente --</option>
+                            {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}">{{ cliente.nombre }} {{ cliente.apellido }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="th sort-both">Id</th>
+                        <th class="th sort-both">Fecha de pago</th>
+                        <th class="th sort-both">Moneda</th>
+                        <th class="th sort-both">Tipo de pago</th>
+                        <th class="th sort-both">Referencia</th>
+                        <th class="th sort-both">Monto</th>
+                        <th class="th sort-both">Préstamo asociado</th>
+                    </tr>
+                </thead>
+                <tbody id="pagosClienteTbody">
+                    {% for pago in pagos_cliente %}
+                    <tr>
+                        <td>{{ pago.id }}</td>
+                        <td>{{ pago.fecha_pago }}</td>
+                        <td>{{ pago.moneda }}</td>
+                        <td>{{ pago.tipo_pago }}</td>
+                        <td>{{ pago.referencia }}</td>
+                        <td>${{ pago.monto }}</td>
+                        <td>
+                            {% if pago.prestamo %}
+                                {{ pago.prestamo.id }} - {{ pago.prestamo.cliente.nombre }} {{ pago.prestamo.cliente.apellido }}
+                            {% else %}
+                                No tiene préstamo asociado
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay pagos registrados para este cliente.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <div class="paginacion" id="pagados-paginacion"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Manejar el cambio en el dropdown
+        $('#clienteDropdown').change(function() {
+            var clienteId = $(this).val(); // Obtener el ID del cliente seleccionado
+
+            if (clienteId) {
+                // Hacer una solicitud AJAX para obtener los pagos del cliente
+                $.ajax({
+                    url: '/obtener-pagos-cliente/', // URL de la vista que devuelve los pagos
+                    data: {
+                        'cliente_id': clienteId
+                    },
+                    success: function(data) {
+                        // Limpiar la tabla
+                        $('#pagosClienteTbody').empty();
+
+                        // Si hay pagos, mostrarlos en la tabla
+                    if (data.pagos && data.pagos.length > 0) {
+                        data.pagos.forEach(function(pago) {
+                            $('#pagosClienteTbody').append(
+                                `<tr>
+                                    <td>${pago.id}</td>
+                                    <td>${pago.fecha_pago}</td>
+                                    <td>${pago.moneda}</td>
+                                    <td>${pago.tipo_pago}</td>
+                                    <td>${pago.referencia}</td>
+                                    <td>$${pago.monto}</td>
+                                    <td>
+                                        ${pago.prestamo ? pago.prestamo.id + ' - ' + pago.prestamo.cliente.nombre + ' ' + pago.prestamo.cliente.apellido : 'No tiene préstamo asociado'}
+                                    </td>
+                                </tr>`
+                            );
+                        });
+                    } else {
+                        // Si no hay pagos, mostrar un mensaje
+                        $('#pagosClienteTbody').append(
+                            `<tr>
+                                <td colspan="7" class="text-center">No hay pagos registrados para este cliente.</td>
+                            </tr>`
+                        );
+                    }
+                },
+                error: function() {
+                    // Manejar errores
+                    $('#pagosClienteTbody').empty().append(
+                        `<tr>
+                            <td colspan="7" class="text-center">Error al cargar los pagos.</td>
+                        </tr>`
+                    );
+                }
+            });
+        } else {
+            // Si no se selecciona un cliente, limpiar la tabla
+            $('#pagosClienteTbody').empty().append(
+                `<tr>
+                    <td colspan="7" class="text-center">Seleccione un cliente para ver sus pagos.</td>
+                </tr>`
+            );
+        }
+    });
+});
+</script>
 {% endblock content %}

@@ -318,9 +318,56 @@ def prestamos_pagados(request):
 # ---------- Pagos ----------
 @login_required
 def pagos(request):
-    if request.method == 'GET':
-        return render(request, 'Pagos/pagos.html')
+    clientes = Clientes.objects.all()
+    pagos = Pagos.objects.all().order_by('-fecha_pago')
 
+   # Obtener los pagos de un cliente específico (si se proporciona un cliente_id)
+    pagos_cliente = None
+    cliente = None
+    cliente_id = request.GET.get('cliente_id')
+    
+    if cliente_id:
+        cliente = get_object_or_404(Clientes, id=cliente_id)
+        pagos_cliente = Pagos.objects.filter(cliente=cliente).order_by('-fecha_pago')
+
+    # Si es una solicitud AJAX, devolver los pagos en formato JSON
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        cliente_id = request.GET.get('cliente_id')
+        if cliente_id:
+            cliente = get_object_or_404(Clientes, id=cliente_id)
+            pagos_cliente = Pagos.objects.filter(cliente=cliente).order_by('-fecha_pago')
+            
+            # Convertir los pagos a un formato JSON
+            pagos_data = []
+            
+            for pago in pagos_cliente:
+                pagos_data.append({
+                    'id': pago.id,
+                    'fecha_pago': pago.fecha_pago.strftime('%Y-%m-%d'),
+                    'moneda': str(pago.moneda),
+                    'tipo_pago': str(pago.tipo_pago),
+                    'referencia': pago.referencia,
+                    'monto': str(pago.monto),
+                    'prestamo': {
+                        'id': pago.prestamo.id if pago.prestamo else None,
+                        'cliente': {
+                            'nombre': pago.prestamo.cliente.nombre if pago.prestamo else None,
+                            'apellido': pago.prestamo.cliente.apellido if pago.prestamo else None
+                        }
+                    } if pago.prestamo else None
+                })
+            return JsonResponse({'pagos': pagos_data})
+        else:
+            return JsonResponse({'error': 'Cliente no especificado'}, status=400)
+
+    # Si no es una solicitud AJAX, renderizar la página normalmente
+    context = {
+        'pagos': pagos,
+        'pagos_cliente': pagos_cliente,
+        'clientes': clientes,
+        'cliente': cliente
+    }
+    return render(request, 'pagos/pagos.html', context)
 
 # ---------- Auth ----------
 def login(request):

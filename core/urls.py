@@ -30,4 +30,7 @@ urlpatterns = [
     
     #pagos
     path('pagos/', views.pagos, name='pagos'),
+    
+    path('obtener-pagos-cliente/', views.pagos, name='obtener_pagos_cliente'),
+    
 ]
