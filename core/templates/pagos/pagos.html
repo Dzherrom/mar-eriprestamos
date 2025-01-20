@@ -54,8 +54,8 @@
     <div class="container-graficos">
         <div class="graph-container">
             <h2>Pagos por Día</h2>
-            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-                <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+            <div  style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                <canvas id="myGraph" width="400" height="200"></canvas>
             </div>
         </div>
 
@@ -191,5 +191,47 @@
         }
     });
 });
+
+// grafico de pagos por dia
+$(document).ready(function() {
+    $.ajax({
+        url: '/obtener-montos-pagos-por-dia/',
+        method: 'GET',
+        success: function(data) {
+            console.log(data);  // Imprime los datos en la consola del navegador
+
+            // Procesar los datos para un gráfico o tabla
+            const fechas = data.fechas;
+            const montos = data.totales;
+
+            // Ejemplo: Mostrar los datos en un gráfico con Chart.js
+            const ctx = document.getElementById('myGraph').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: fechas,
+                    datasets: [{
+                        label: 'Montos de pagos por día',
+                        data: montos,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        },
+        error: function() {
+            console.error('Error al obtener los montos de pagos por día');
+        }
+    });
+});
+
 </script>
 {% endblock content %}

@@ -316,6 +316,25 @@ def prestamos_pagados(request):
         return HttpResponse("No hay préstamos pagados")
     
 # ---------- Pagos ----------
+def obtener_montos_pagos_por_dia(request):
+    # Obtener todos los pagos
+    pagos = Pagos.objects.all()
+
+    # Agrupar por fecha de pago y sumar los montos pagados
+    montos_por_dia = pagos.values('fecha_pago').annotate(
+        total_monto_pagado=Sum('monto')
+    ).order_by('fecha_pago')
+
+    # Preparar los datos para el JSON
+    fechas = [pago['fecha_pago'].strftime('%Y-%m-%d') for pago in montos_por_dia]
+    totales = [float(pago['total_monto_pagado']) for pago in montos_por_dia]
+
+    # Devolver los datos en formato JSON
+    return JsonResponse({
+        'fechas': fechas,
+        'totales': totales,
+    })
+
 @login_required
 def pagos(request):
     clientes = Clientes.objects.all()
