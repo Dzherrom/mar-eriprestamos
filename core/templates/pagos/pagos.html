@@ -6,7 +6,7 @@
         <h2>Ultimos pagos</h2>
         <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
             <div></div>
-        <input type="text" id="searchInputSinPagar" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+        <input type="text" id="searchInputPagos" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
         </div>
         <table class="table table-bordered">
             <thead>
@@ -58,14 +58,6 @@
                 <canvas id="myGraph" width="400" height="200"></canvas>
             </div>
         </div>
-
-        <div class="graph-container">
-            <h2>Volumen</h2>
-            <div id="grafico-volumen" style="width: 300px; height: 300px;">
-                <canvas id="volumenChart"></canvas>
-            </div>
-        </div>
-        </div>
     </div>
     <div class="table-container" style="max-width: 100%;">
         <div class="pagos_de_clientes">
@@ -83,7 +75,7 @@
                         </select>
                     </div>
                 </div>
-                <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+                <input type="text" id="searchInputClientes" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
                 </div>
             </div>
             <table class="table table-bordered">
@@ -233,5 +225,70 @@ $(document).ready(function() {
     });
 });
 
+// funcion para campo de busqueda
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInputPagos');
+    const tableBody = document.getElementById('pagosTbody');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = ""; // Muestra la fila
+            } else {
+                rows[i].style.display = "none"; // Oculta la fila
+            }
+        }
+    });
+});
+
+// funcion para campo de busqueda
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInputClientes');
+    const tableBody = document.getElementById('pagosClienteTbody');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = ""; // Muestra la fila
+            } else {
+                rows[i].style.display = "none"; // Oculta la fila
+            }
+        }
+    });
+});
 </script>
 {% endblock content %}

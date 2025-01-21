@@ -375,7 +375,7 @@ def pagos(request):
                         }
                     } if pago.prestamo else None
                 })
-            return JsonResponse({'pagos': pagos_data})
+            return JsonResponse({'pagos': pagos_data,})
         else:
             return JsonResponse({'error': 'Cliente no especificado'}, status=400)
 
@@ -384,7 +384,8 @@ def pagos(request):
         'pagos': pagos,
         'pagos_cliente': pagos_cliente,
         'clientes': clientes,
-        'cliente': cliente
+        'cliente': cliente,
+        'user_is_authenticated': request.user.is_authenticated
     }
     return render(request, 'pagos/pagos.html', context)
 
