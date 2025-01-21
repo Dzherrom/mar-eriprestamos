@@ -50,12 +50,13 @@
         </table>
         <div class="paginacion" id="sinpagar-paginacion"></div>
     </div>
-
-    <div class="container-graficos">
-        <div class="graph-container">
-            <h2>Pagos por Día</h2>
-            <div  style="width: 500px; height: 250px; background-color: #f2f2f2;">
-                <canvas id="myGraph" width="400" height="200"></canvas>
+    <div style="display: flex; align-items: center;">
+        <div class="container-graficos">
+            <div class="graph-container">
+                <h2>Pagos por Día</h2>
+                <div  style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                    <canvas id="myGraph" width="400" height="200"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -287,6 +288,58 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 rows[i].style.display = "none"; // Oculta la fila
             }
+        }
+    });
+});
+  // script para ordenar las tablas
+  document.addEventListener('DOMContentLoaded', () => {
+    const tables = document.querySelectorAll('table.table'); // Selecciona todas las tablas
+
+    tables.forEach(table => {
+        let sortOrder = {};
+        const thElements = table.querySelectorAll('th');
+
+        thElements.forEach((th) => {
+            th.addEventListener('click', (event) => {
+                event.preventDefault();
+                const columnIndex = Array.prototype.indexOf.call(th.parentNode.children, th);
+                const columnName = th.textContent.trim();
+                // Toggle sort order
+                if (!sortOrder[columnName]) {
+                    sortOrder[columnName] = 'asc';
+                } else if (sortOrder[columnName] === 'asc') {
+                    sortOrder[columnName] = 'desc';
+                } else {
+                    sortOrder[columnName] = 'asc';
+                }
+                // Update class
+                th.className = th.className.replace(/sort-asc|sort-desc/, `sort-${sortOrder[columnName]}`);
+
+                // Call sortTable function
+                sortTable(table, columnIndex, sortOrder[columnName]);
+            });
+        });
+
+        function sortTable(table, columnIndex, sortOrder) {
+            var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+            rows.sort(function(rowA, rowB) {
+                var cellA = rowA.cells[columnIndex].textContent;
+                var cellB = rowB.cells[columnIndex].textContent;
+                // Handle numerical values
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return cellA - cellB;
+                }
+                // Default to string comparison
+                return cellA.localeCompare(cellB);
+            });
+            // Sort order
+            if (sortOrder === 'desc') {
+                rows.reverse();
+            }
+            // Update the table
+            rows.forEach(function(row) {
+                table.querySelector('tbody').appendChild(row);
+            });
         }
     });
 });
