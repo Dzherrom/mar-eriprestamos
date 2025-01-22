@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from collections import defaultdict
-from .models import Prestamos, Clientes, Pagos
-from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm
+from .models import Prestamos, Clientes, Pagos, TipodePago, Moneda
+from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm, PagosForm
 import json
 
 @login_required
@@ -388,6 +388,30 @@ def pagos(request):
         'user_is_authenticated': request.user.is_authenticated
     }
     return render(request, 'pagos/pagos.html', context)
+
+@login_required
+def pago_crear(request):
+    if request.method == 'POST':
+        form = PagosForm(request.POST)
+        if form.is_valid():
+            pago = form.save(commit=False)
+            pago.save()
+            return redirect('pagos')
+    else:
+        form = PagosForm()
+        clientes = Clientes.objects.all()
+        tipos_pago = TipodePago.objects.all()
+        monedas = Moneda.objects.all()
+        prestamos = Prestamos.objects.all()
+        context = {
+            'form':form,
+            'clientes':clientes,
+            'tipos_pago':tipos_pago,
+            'monedas':monedas, 
+            'prestamos':prestamos,
+            'user_is_authenticated': request.user.is_authenticated
+        }
+        return render(request, 'pagos/pago_crear.html', context)
 
 # ---------- Auth ----------
 def login(request):

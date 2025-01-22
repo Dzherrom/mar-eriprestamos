@@ -30,6 +30,7 @@ urlpatterns = [
     
     #pagos
     path('pagos/', views.pagos, name='pagos'),
+    path('pago_crear/', views.pago_crear, name='pago_crear'),
     
     path('obtener-montos-pagos-por-dia/', views.obtener_montos_pagos_por_dia, name='obtener_montos_pagos_por_dia'),
     path('obtener-pagos-cliente/', views.pagos, name='obtener_pagos_cliente'),

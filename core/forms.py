@@ -25,7 +25,15 @@ class ClienteForm(forms.ModelForm):
 class PagosForm(forms.ModelForm):
     class Meta:
         model = Pagos
-        fields = '__all__'  # O especifica los campos que deseas incluir
+        fields = [
+            'cliente', 'fecha_pago', 'moneda', 'tipo_pago', 'referencia', 
+            'monto', 'prestamo'
+        ]
+        
+        widgets = {
+        'fecha_prestamo': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+        'fecha_pago': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+        }
 
 class PrestamosForm(forms.ModelForm):
     class Meta:
