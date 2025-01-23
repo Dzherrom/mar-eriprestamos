@@ -12,7 +12,6 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="th sort-both">Detalles</th>
                         <th class="th sort-both">Id</th>
                         <th class="th sort-both">Cliente</th>
                         <th class="th sort-both">Fecha de pago</th>
@@ -21,12 +20,12 @@
                         <th class="th sort-both">Referencia</th>
                         <th class="th sort-both">Monto</th>
                         <th class="th sort-both">Préstamo</th>
+                        <th class="th sort-both">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="pagosTbody">
                         {% for pago in pagos %}
                         <tr>
-                            <td> detalles </td>
                             <td>{{ pago.id }}</td>
                             <td>{{ pago.cliente.nombre }} {{ pago.cliente.apellido }}</td>
                             <td>{{ pago.fecha_pago }}</td>
@@ -41,6 +40,15 @@
                                     No tiene préstamo asociado
                                 {% endif %}
                             </td>
+                            <td>
+                                <a href="{% url 'pago_editar' pago.id %}">
+                                    Editar
+                                </a> 
+                                / 
+                                <a href="#">
+                                    Borrar
+                                </a>
+                        </td>
                         </tr>
                         {% empty %}
                         <tr>

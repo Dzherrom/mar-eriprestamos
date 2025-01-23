@@ -413,6 +413,31 @@ def pago_crear(request):
         }
         return render(request, 'pagos/pago_crear.html', context)
 
+def pago_editar(request, pago_id):
+    pago = get_object_or_404(Pagos, pk=pago_id)
+    if request.method == 'POST':
+        form = PagosForm(request.POST, instance=pago)
+        if form.is_valid():
+            pago = form.save(commit=False)
+            pago.save()
+            return redirect('pagos')
+    else:
+        form = PagosForm(instance=pago)
+        clientes = Clientes.objects.all()
+        tipos_pago = TipodePago.objects.all()
+        monedas = Moneda.objects.all()
+        prestamos = Prestamos.objects.all()
+        
+        context = {
+            'form': form,
+            'clientes': clientes,
+            'tipos_pago': tipos_pago,
+            'monedas': monedas,
+            'prestamos': prestamos,
+            'pago': pago,
+            'user_is_authenticated': request.user.is_authenticated
+        }
+        return render(request, 'pagos/pago_editar.html', context) 
 # ---------- Auth ----------
 def login(request):
     return render(request, 'signin.html')

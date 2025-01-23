@@ -31,8 +31,8 @@ class PagosForm(forms.ModelForm):
         ]
         
         widgets = {
-        'fecha_prestamo': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
-        'fecha_pago': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+        'fecha_prestamo': forms.DateInput(format='%Y/%m/%d', attrs={'type': 'date'}),
+        'fecha_pago': forms.DateInput(format='%Y/%m/%d', attrs={'type': 'date'}),
         }
 
 class PrestamosForm(forms.ModelForm):
@@ -44,7 +44,9 @@ class PrestamosForm(forms.ModelForm):
         ]
         
         widgets = {
-                'fecha_prestamo': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+                'fecha_prestamo': forms.DateInput(
+                    format='%Y/%m/%d',
+                    attrs={'type': 'date'}),
                 'fecha_pago': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
             }
 class PasswordVerificationForm(forms.Form):
