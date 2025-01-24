@@ -2,64 +2,12 @@
 {% load static %}
 {% block content %}
 <div class="container">
-    <div class="table-container">
-        <h2>Préstamos Sin Pagar</h2>
-        <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
-            <div></div>
-        <input type="text" id="searchInputSinPagar" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th class="th sort-both">Detalles</th>
-                    <th class="th sort-both">Cliente</th>
-                    <th class="th sort-both">Fecha de Préstamo</th>
-                    <th class="th sort-both">Fecha de Pago</th>
-                    <th class="th sort-both">Monto de Préstamo</th>
-                    <th class="th sort-both">Tasa de Interés</th>
-                </tr>
-            </thead>
-            <tbody id="sinpagarTableBody">
-                {% for prestamo in prestamos_sin_pagar %}
-                <tr>
-                    <td><a href="{% url 'prestamo_detalles' prestamo.id %}"> {{ prestamo.id }}</a></td>
-                    <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
-                    <td>{{ prestamo.fecha_prestamo }}</td>
-                    <td>{{ prestamo.fecha_pago }}</td>
-                    <td>${{ prestamo.monto_prestamo }}</td>
-                    <td>{{ prestamo.tasa_interes }}%</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center">No hay préstamos sin pagar.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="paginacion" id="sinpagar-paginacion"></div>
-    </div>
-
-    <div class="container-graficos">
-        <div class="graph-container">
-            <h2>Préstamos Pagados por Día</h2>
-            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-                <canvas id="prestamosPorDia" width="400" height="200"></canvas>
-            </div>
-        </div>
-
-        <div class="graph-container">
-            <h2>Montos Pagados por Día</h2>
-            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-                <canvas id="montosPorDia" width="400" height="200"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="table-container" style="max-width: 100%;">
-        <div class="prestamos_pagados">
-            <h2>Préstamos Pagados</h2>
+    <div class="card-general">
+        <div class="table-container">
+            <h5>Préstamos Sin Pagar</h5>
             <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
                 <div></div>
-            <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+            <input type="text" id="searchInputSinPagar" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -69,32 +17,108 @@
                         <th class="th sort-both">Fecha de Préstamo</th>
                         <th class="th sort-both">Fecha de Pago</th>
                         <th class="th sort-both">Monto de Préstamo</th>
-                        <th class="th sort-both">Monto Pago</th>
-                        <th class="th sort-both">Monto a Pagar</th>
                         <th class="th sort-both">Tasa de Interés</th>
+                        <th class="th sort-both">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="pagadosTableBody">
-                    {% for prestamo in prestamos_pagados %}
+                <tbody id="sinpagarTableBody">
+                    {% for prestamo in prestamos_sin_pagar %}
                     <tr>
-                        <td><a href="{% url 'prestamo_detalles' prestamo.id %}"> {{ prestamo.id }}</a></td>
+                        <td>{{ prestamo.id }}</td>
                         <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
                         <td>{{ prestamo.fecha_prestamo }}</td>
                         <td>{{ prestamo.fecha_pago }}</td>
                         <td>${{ prestamo.monto_prestamo }}</td>
-                        <td>${{ prestamo.monto_pago }}</td>
-                        <td>${{ prestamo.monto_a_pagar }}</td>
                         <td>{{ prestamo.tasa_interes }}%</td>
+                        <td>
+                            <a href="{% url 'prestamo_editar' prestamo.id %}">
+                                Editar
+                            </a> 
+                            / 
+                            <a href="#">
+                                Borrar
+                            </a>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="8" class="text-center">No hay préstamos pagados.</td>
+                        <td colspan="6" class="text-center">No hay préstamos sin pagar.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <div>
-                <div class="paginacion" id="pagados-paginacion"></div>
+            <div class="paginacion" id="sinpagar-paginacion"></div>
+        </div>
+    </div>
+
+    <div class="container-graficos">
+        <div class="graph-container">
+            <h5>Préstamos Pagados por Día</h5>
+            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="graph-container">
+            <h5>Montos Pagados por Día</h5>
+            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                <canvas id="montosPorDia" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card-general">
+        <div class="table-container" style="max-width: 100%;">
+            <div class="prestamos_pagados">
+                <h5>Préstamos Pagados</h5>
+                <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
+                    <div></div>
+                <input type="text" id="searchInputPagados" placeholder="Buscar por cliente..." class="form-control" style="margin-bottom: 10px; max-width: 100%; ">
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="th sort-both">Detalles</th>
+                            <th class="th sort-both">Cliente</th>
+                            <th class="th sort-both">Fecha de Préstamo</th>
+                            <th class="th sort-both">Fecha de Pago</th>
+                            <th class="th sort-both">Monto de Préstamo</th>
+                            <th class="th sort-both">Monto Pago</th>
+                            <th class="th sort-both">Monto a Pagar</th>
+                            <th class="th sort-both">Tasa de Interés</th>
+                            <th class="th sort-both">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pagadosTableBody">
+                        {% for prestamo in prestamos_pagados %}
+                        <tr>
+                            <td>{{ prestamo.id }}</td>
+                            <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
+                            <td>{{ prestamo.fecha_prestamo }}</td>
+                            <td>{{ prestamo.fecha_pago }}</td>
+                            <td>${{ prestamo.monto_prestamo }}</td>
+                            <td>${{ prestamo.monto_pago }}</td>
+                            <td>${{ prestamo.monto_a_pagar }}</td>
+                            <td>{{ prestamo.tasa_interes }}%</td>
+                            <td>
+                                <a href="{% url 'prestamo_editar' prestamo.id %}">
+                                    Editar
+                                </a> 
+                                / 
+                                <a href="#">
+                                    Borrar
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">No hay préstamos pagados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div>
+                    <div class="paginacion" id="pagados-paginacion"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -290,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const inicio = (pagina - 1) * filasPorPagina;
         const fin = inicio + filasPorPagina;
         for (let i = inicio; i < fin && i < filas.length; i++) {
-            if (filas[i].cells.length === 6) { // Ignorar la fila "No hay pagos registrados."
+            if (filas[i].cells.length === 7) { // Ignorar la fila "No hay pagos registrados."
                 filas[i].style.display = '';
             }
         }
@@ -341,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const inicio = (pagina - 1) * filasPorPagina;
         const fin = inicio + filasPorPagina;
         for (let i = inicio; i < fin && i < filas.length; i++) {
-            if (filas[i].cells.length === 8) { // Ignorar la fila "No hay pagos registrados."
+            if (filas[i].cells.length === 9) { // Ignorar la fila "No hay pagos registrados."
                 filas[i].style.display = '';
             }
         }
