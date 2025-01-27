@@ -68,10 +68,11 @@ nav ul li {
 }
 
 .container-graficos{
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px;
     display: flex;
+    justify-content: center;
 }
 
 .main-container {
@@ -347,6 +348,12 @@ table {
     border-radius: 10px; /* Adjust the value for more or less rounding */
     overflow: hidden; /* Ensures the rounded corners are visible */
 }
+
+.table-centered th, .table-centered td {
+    text-align: center;
+    vertical-align: middle;
+}
+
 th, td {
     border: 1px solid #dee2e6; /* Your custom border color for cells */
     padding: 8px; /* Optional: adds padding inside cells */

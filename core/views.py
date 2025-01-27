@@ -438,6 +438,26 @@ def pago_editar(request, pago_id):
             'user_is_authenticated': request.user.is_authenticated
         }
         return render(request, 'pagos/pago_editar.html', context) 
+    
+@login_required
+def pago_borrar(request, pago_id):
+    pago = Pagos.objects.get(id=pago_id)
+    if request.method == "POST":
+        form = PasswordVerificationForm(request.user, request.POST)
+        if form.is_valid():
+            pago.delete()
+            return redirect('pagos')
+        else:
+            form = PasswordVerificationForm(request.user)
+            
+    form = PasswordVerificationForm(request.user)
+    context = {
+            'form': form, 
+            'pago': pago,
+            'error': 'Contraseña incorrecta',
+            'user_is_authenticated': request.user.is_authenticated}
+    return render(request, 'pagos/pago_borrar.html', context)
+    
 # ---------- Auth ----------
 def login(request):
     return render(request, 'signin.html')

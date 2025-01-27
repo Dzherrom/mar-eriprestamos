@@ -10,28 +10,28 @@
                         <h4 class="modal-title">Confirmacion de borrado</h4>
                     </div>
                 <div class="modal-body">
-                    <p>Esta seguro de querer borrar el pago de {{ cliente.nombre }} {{ cliente.apellido }} {{ pago.fecha_pago }}?</p>
+                    <p>Esta seguro de querer borrar al cliente {{ cliente.nombre }} {{ cliente.apellido }}?</p>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th class="th sort-both">ID</th>
-                                <th class="th sort-both">Nombre</th>
-                                <th class="th sort-both">Apellido</th>
-                                <th class="th sort-both">Cedula</th>
-                                <th class="th sort-both">Prestamos activos</th>
-                                <th class="th sort-both">Prestamos pagados</th>
-                                <th class="th sort-both">Balance</th>
+                                <th class="th sort-both">Id</th>
+                                <th class="th sort-both">Fecha de pago</th>
+                                <th class="th sort-both">Moneda</th>
+                                <th class="th sort-both">Tipo de pago</th>
+                                <th class="th sort-both">Referencia</th>
+                                <th class="th sort-both">Monto</th>
+                                <th class="th sort-both">Préstamo asociado</th>
                             </tr>
                         </thead>
                         <tbody id="TableBody">
                             <tr>
                                 <td>{{ pago.id }}</td>
-                                <td>{{ pago.nombre }}</td>
-                                <td>{{ pago.apellido }}</td>
-                                <td>{{ pago.cedula }}</td>
-                                <td>{{ pago.prestamos_activos }}</td>
-                                <td>{{ pago.prestamos_pagados }}</td>
-                                <td>${{ pago.balance }}</td>
+                                <td>{{ pago.fecha_pago }}</td>
+                                <td>{{ pago.moneda }}</td>
+                                <td>{{ pago.tipo_pago }}</td>
+                                <td>{{ pago.referencia }}</td>
+                                <td>${{ pago.monto }}</td>
+                                <td>{{ pago.prestamo }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -49,11 +49,11 @@
 
                         <div style="justify-items: center; display: flex;">
                             <div>
-                                <button type="submit" class="btn btn-danger" data-id="{{ pago_id }}" name="confirm_delete" value="yes">Borrar</button>
+                                <button type="submit" class="btn btn-danger" data-id="{{ cliente_id }}" name="confirm_delete" value="yes">Borrar</button>
                             </div>
                     </form>
                         <div>
-                            <a href="{% url 'pago_detalles' pago.id %}" class="btn btn-secondary">Cancel</a>
+                            <a href="{% url 'pagos' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
                 </div>

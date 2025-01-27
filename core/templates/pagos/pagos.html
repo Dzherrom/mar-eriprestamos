@@ -45,7 +45,7 @@
                                     Editar
                                 </a> 
                                 / 
-                                <a href="#">
+                                <a href="{% url 'pago_borrar' pago.id %}">
                                     Borrar
                                 </a>
                             </td>
@@ -92,6 +92,7 @@
                             <th class="th sort-both">Referencia</th>
                             <th class="th sort-both">Monto</th>
                             <th class="th sort-both">Préstamo asociado</th>
+                            <th class="th sort-both">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="pagosClienteTbody">
@@ -104,6 +105,15 @@
                             <td>{{ pago.referencia }}</td>
                             <td>${{ pago.monto }}</td>
                             <td>
+                                <a href="{% url 'pago_editar' pago.id %}">
+                                    Editar
+                                </a> 
+                                / 
+                                <a href="{% url 'pago_borrar' pago.id %}">
+                                    Borrar
+                                </a>
+                            </td>
+                            <td>
                                 {% if pago.prestamo %}
                                     {{ pago.prestamo.id }} - {{ pago.prestamo.cliente.nombre }} {{ pago.prestamo.cliente.apellido }}
                                 {% else %}
@@ -113,7 +123,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="text-center">No hay pagos registrados para este cliente.</td>
+                            <td colspan="8" class="text-center">No hay pagos registrados para este cliente.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
