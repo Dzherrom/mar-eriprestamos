@@ -68,7 +68,7 @@
                     <!-- Campo: Referencia -->
                     <div class="form-group">
                         <div>
-                            <label for="id_referencia">Referencia:</label>
+                            <label for="id_referencia">Referencia del pago:</label>
                             <input type="text" name="referencia" id="id_referencia" class="form-control" required>
                         </div>
                     </div>
@@ -76,8 +76,16 @@
                     <!-- Campo: Monto -->
                     <div class="form-group">
                         <div>
-                            <label for="id_monto">Monto:</label>
-                            <input type="number" name="monto" id="id_monto" class="form-control" required>
+                            <label for="id_monto_dolares">Monto:</label>
+                            <input type="number" name="monto" id="id_monto_dolares" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Valor de referencia en dólares -->
+                    <div class="form-group" id="valor_ref_container" style="display: none;">
+                        <div>
+                            <label for="id_valor_ref">Valor en dólares:</label>
+                            <input type="text" id="id_valor_ref" class="form-control" readonly>
                         </div>
                     </div>
 
@@ -164,5 +172,42 @@ clienteSelect.addEventListener('change', filtrarPrestamos);
 
 // Llama a la función para filtrar los prestamos al cargar la página
 filtrarPrestamos();
+
+// funcion para calcular el valor de referencia en dólares
+document.addEventListener('DOMContentLoaded', function() {
+    const monedaSelect = document.getElementById('id_moneda');
+    const montoInput = document.getElementById('id_monto_dolares');
+    const valorRefContainer = document.getElementById('valor_ref_container');
+    const valorRefInput = document.getElementById('id_valor_ref');
+
+    //segun la seleccion de moneda 
+    monedaSelect.addEventListener('change', function() {
+        if (monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase() === 'bolivares') {
+            valorRefContainer.style.display = 'block';
+            calcularValorRef();
+        } else {
+            valorRefContainer.style.display = 'none';
+            valorRefInput.value = '';
+        }
+    });
+
+    montoInput.addEventListener('input', function() {
+        if (monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase() === 'bolivares') {
+            calcularValorRef();
+        }
+    });
+
+    // funcion para calcular el valor
+    function calcularValorRef() {
+        const monto = parseFloat(montoInput.value);
+        const tasaCambio = {{ tasa_cambio }}; // Asegúrate de pasar la tasa de cambio desde el backend
+        if (!isNaN(monto) && tasaCambio) {
+            valorRefInput.value = (monto / tasaCambio).toFixed(2);
+        } else {
+            valorRefInput.value = '';
+        }
+    }
+});
+
 </script>
 {% endblock content %}

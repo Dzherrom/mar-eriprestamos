@@ -3,8 +3,10 @@ from django.db.models import Count, Sum, F
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
+from django.urls import reverse
 from collections import defaultdict
-from .models import Prestamos, Clientes, Pagos, TipodePago, Moneda
+from datetime import date
+from .models import Prestamos, Clientes, Pagos, TipodePago, Moneda, TasaCambio
 from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm, PagosForm
 import json
 
@@ -373,7 +375,9 @@ def pagos(request):
                             'nombre': pago.prestamo.cliente.nombre if pago.prestamo else None,
                             'apellido': pago.prestamo.cliente.apellido if pago.prestamo else None
                         }
-                    } if pago.prestamo else None
+                    } if pago.prestamo else None,
+                    'url_editar': reverse('pago_editar', args=[pago.id]),
+                    'url_borrar': reverse('pago_borrar', args=[pago.id])
                 })
             return JsonResponse({'pagos': pagos_data,})
         else:
@@ -403,12 +407,14 @@ def pago_crear(request):
         tipos_pago = TipodePago.objects.all()
         monedas = Moneda.objects.all()
         prestamos = Prestamos.objects.all()
+        tasa_cambio = TasaCambio.objects.filter(fecha=date.today()).order_by('-fecha').first().tasa_dia
         context = {
             'form':form,
             'clientes':clientes,
             'tipos_pago':tipos_pago,
             'monedas':monedas, 
             'prestamos':prestamos,
+            'tasa_cambio': tasa_cambio,
             'user_is_authenticated': request.user.is_authenticated
         }
         return render(request, 'pagos/pago_crear.html', context)

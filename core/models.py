@@ -173,17 +173,24 @@ class Prestamos(models.Model):
         """Cuenta los préstamos activos de un cliente."""
         return cls.objects.filter(cliente=cliente, pagado=False).count()
 
+class TasaCambio(models.Model):
+    fecha = models.DateField(unique=True)
+    tasa_dia = models.DecimalField(max_digits=10, decimal_places=4)
+
+    def __str__(self):
+        return f"Tasa del {self.fecha}: {self.tasa_dia}"
+
 class Pagos(models.Model):
     cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
     fecha_pago = models.DateField()
     moneda = models.ForeignKey(Moneda, on_delete=models.CASCADE)
     tipo_pago = models.ForeignKey(TipodePago, on_delete=models.CASCADE)  # Inicialmente vacío
     referencia = models.CharField(max_length=100)
-    monto = models.DecimalField(max_digits=10, decimal_places=2)
+    monto = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     prestamo = models.ForeignKey(Prestamos, on_delete=models.CASCADE, null=True, blank=True)  # Relación con Prestamos
 
     def __str__(self):
-        return f"Pago de {self.monto} en {self.moneda} el {self.fecha_pago}"
+        return f"Pago de {self.monto_dolares} en {self.moneda} el {self.fecha_pago}"
 
     def save(self, *args, **kwargs):
         # Llamar al método save del modelo base
@@ -192,5 +199,15 @@ class Pagos(models.Model):
         
         # Actualizar el monto pagado del préstamo asociado
         if self.prestamo:
-            self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto
-            self.prestamo.save() 
+            self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto_dolares
+            self.prestamo.save()
+            
+        def calcular_monto_dolares(self):
+            if self.moneda.tipo_moneda == 'bolivares':
+                tasa_cambio = TasaCambio.objects.filter(fecha=self.fecha_pago).first()
+                if tasa_cambio:
+                    self.monto_dolares = self.monto / tasa_cambio.tasa_dia
+                else:
+                    raise ValueError("No hay tasa de cambio registrada para la fecha del pago")
+            else:
+                self.monto_dolares = self.monto

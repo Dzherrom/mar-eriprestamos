@@ -167,6 +167,9 @@
                                     <td>
                                         ${pago.prestamo ? pago.prestamo.id + ' - ' + pago.prestamo.cliente.nombre + ' ' + pago.prestamo.cliente.apellido : 'No tiene préstamo asociado'}
                                     </td>
+                                    <td>
+                                        <a href="${pago.url_editar}">Editar</a> / <a href="${pago.url_borrar}">Borrar</a>
+                                    </td>
                                 </tr>`
                             );
                         });
