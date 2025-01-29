@@ -408,6 +408,7 @@ def pago_crear(request):
         monedas = Moneda.objects.all()
         prestamos = Prestamos.objects.all()
         tasa_cambio = TasaCambio.objects.filter(fecha=date.today()).order_by('-fecha').first().tasa_dia
+
         context = {
             'form':form,
             'clientes':clientes,
