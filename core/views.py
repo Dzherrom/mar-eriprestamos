@@ -467,7 +467,15 @@ def pago_borrar(request, pago_id):
             'error': 'Contraseña incorrecta',
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'pagos/pago_borrar.html', context)
-    
+
+# ---------- Tasas ----------
+def tasas(request):
+    tasas = TasaCambio.objects.all()
+    context = {
+        'tasas': tasas
+    }
+    return render(request, 'tasas/tasas.html', context)
+
 # ---------- Auth ----------
 def login(request):
     return render(request, 'signin.html')

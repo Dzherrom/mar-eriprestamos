@@ -34,6 +34,9 @@ urlpatterns = [
     path('pago_editar/<int:pago_id>', views.pago_editar, name='pago_editar'),
     path('pago_borrar/<int:pago_id>', views.pago_borrar, name='pago_borrar'),
     
+    #tasas
+    path('tasas/', views.tasas, name='tasas'),
+    
     path('obtener-montos-pagos-por-dia/', views.obtener_montos_pagos_por_dia, name='obtener_montos_pagos_por_dia'),
     path('obtener-pagos-cliente/', views.pagos, name='obtener_pagos_cliente'),
     
