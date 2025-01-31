@@ -27,7 +27,7 @@ class PagosForm(forms.ModelForm):
         model = Pagos
         fields = [
             'cliente', 'fecha_pago', 'moneda', 'tipo_pago', 'referencia', 
-            'monto', 'prestamo'
+            'monto', 'prestamo', 'tasa_dia'
         ]
         
         widgets = {

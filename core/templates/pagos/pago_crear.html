@@ -77,15 +77,28 @@
                     <div class="form-group">
                         <div>
                             <label for="id_monto_dolares">Monto:</label> 
-                            <input type="number" name="monto" id="id_monto_dolares" class="form-control" required>  
+                            <input type="number" name="monto_bolivares" id="id_monto_bolivares" class="form-control" required>  
                         </div> 
                     </div> 
 
-                    <div class="form-group">
-                        <div id="valor_ref_div">
-                            <span id="valor_ref_text">REF:</span>
+                    <!-- Campo: Monto en USD (Referencia) -->
+                    <div class="form-group" id="monto_usd_div">
+                        <div>
+                            <label for="id_monto">Monto en USD (Referencia):</label>
+                            <input type="text" name="monto" id="id_monto" class="form-control" readonly>
                         </div>
                     </div>
+
+                    <!-- Campo: Tasa del Día -->
+                    <div class="form-group" id="tasa_dia_div">
+                        <div>
+                            <label for="id_tasa_dia_visible">Tasa del Día:</label>
+                            <input type="text" id="id_tasa_dia_visible" class="form-control" value="{{ tasa_cambio }}" readonly>
+                        </div>
+                    </div>
+
+                     <!-- Campo: Tasa del Día (Oculto) -->
+                     <input type="hidden" name="tasa_dia" id="id_tasa_dia" value="{{ tasa_cambio.id }}">
 
                     <!-- Campo: Préstamo -->
                     <div class="form-group">
@@ -127,9 +140,10 @@
 // Script para calcular el valor de referencia en base al monto y la tasa de cambio 
 document.addEventListener('DOMContentLoaded', function() {
     const monedaSelect = document.getElementById('id_moneda');
-    const montoInput = document.getElementById('id_monto_dolares');
-    const refPepitoContainer = document.getElementById('valor_ref_div');
-    const valorRefText = document.getElementById('valor_ref_text');
+    const montoInputBolivares = document.getElementById('id_monto_bolivares');
+    const montoInputUSD = document.getElementById('id_monto');
+    const montoUSDDiv = document.getElementById('monto_usd_div');
+    const tasaDiaDiv = document.getElementById('tasa_dia_div');
     const tasaCambio = {{ tasa_cambio|default:"null" }}; // Asegúrate de pasar la tasa de cambio desde el backend
 
     console.log('Tasa de cambio:', tasaCambio);
@@ -139,18 +153,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
         console.log('Moneda seleccionada:', selectedOptionText);
         if (selectedOptionText.includes('bolivares')) {
-            refPepitoContainer.style.display = 'block';
+            montoUSDDiv.style.display = 'block';
+            tasaDiaDiv.style.display = 'block';
             calcularValorRef();
         } else {
-            refPepitoContainer.style.display = 'none';
-            valorRefText.textContent = 'REF:';
+            montoUSDDiv.style.display = 'none';
+            tasaDiaDiv.style.display = 'none';
+            montoInputUSD.value = '';
         }
     });
 
     // Evento input en el campo de monto
-    montoInput.addEventListener('input', function() {
+    montoInputBolivares.addEventListener('input', function() {
         const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
-        console.log('Monto ingresado:', montoInput.value);
         if (selectedOptionText.includes('bolivares')) {
             calcularValorRef();
         }
@@ -158,15 +173,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para calcular el valor de referencia
     function calcularValorRef() {
-        const monto = parseFloat(montoInput.value);
-        console.log('Calculando valor de referencia con monto:', monto);
-        if (!isNaN(monto) && tasaCambio) {
-            const valorRef = (monto / tasaCambio).toFixed(2);
-            valorRefText.textContent = `REF: ${valorRef} USD`;
-            console.log('Valor de referencia:', valorRef); // Imprimir el resultado en la consola
+        const montoBolivares = parseFloat(montoInputBolivares.value);
+        if (!isNaN(montoBolivares) && tasaCambio) {
+            const valorRef = (montoBolivares / tasaCambio).toFixed(2);
+            montoInputUSD.value = valorRef;
         } else {
-            valorRefText.textContent = 'REF:';
-            console.log('Valor de referencia vacío'); // Imprimir vacío en la consola si no hay valor
+            montoInputUSD.value = '';
         }
     }
 
@@ -176,52 +188,52 @@ document.addEventListener('DOMContentLoaded', function() {
     // Selecciona el elemento select de cliente
     const clienteSelect = document.getElementById('id_cliente');
 
-// Selecciona el elemento select de prestamo
-const prestamoSelect = document.getElementById('id_prestamo');
+    // Selecciona el elemento select de prestamo
+    const prestamoSelect = document.getElementById('id_prestamo');
 
-// Obtén los datos de prestamos desde el contexto de Django
-const prestamos = JSON.parse('{{ prestamos|safe }}');
+    // Obtén los datos de prestamos desde el contexto de Django
+    const prestamos = JSON.parse('{{ prestamos|safe }}');
 
-// Crea un objeto que almacene los prestamos por cliente
-const prestamosPorCliente = {};
+    // Crea un objeto que almacene los prestamos por cliente
+    const prestamosPorCliente = {};
 
-// Recorre los prestamos y los almacena en el objeto
-prestamos.forEach(prestamo => {
-    const clienteId = prestamo.cliente.id;
-    if (!prestamosPorCliente[clienteId]) {
-        prestamosPorCliente[clienteId] = [];
-    }
-    prestamosPorCliente[clienteId].push({
-        id: prestamo.id,
-        descripcion: prestamo.descripcion
-    });
-});
-
-// Función para filtrar los prestamos por cliente
-function filtrarPrestamos() {
-    const clienteId = clienteSelect.value;
-    const prestamos = prestamosPorCliente[clienteId];
-    if (prestamos) {
-        // Limpia el select de prestamo
-        prestamoSelect.innerHTML = '';
-        // Agrega los prestamos del cliente seleccionado
-        prestamos.forEach(prestamo => {
-            const option = document.createElement('option');
-            option.value = prestamo.id;
-            option.text = prestamo.descripcion;
-            prestamoSelect.appendChild(option);
+    // Recorre los prestamos y los almacena en el objeto
+    prestamos.forEach(prestamo => {
+        const clienteId = prestamo.cliente.id;
+        if (!prestamosPorCliente[clienteId]) {
+            prestamosPorCliente[clienteId] = [];
+        }
+        prestamosPorCliente[clienteId].push({
+            id: prestamo.id,
+            descripcion: prestamo.descripcion
         });
-    } else {
-        // Limpia el select de prestamo
-        prestamoSelect.innerHTML = '';
+    });
+
+    // Función para filtrar los prestamos por cliente
+    function filtrarPrestamos() {
+        const clienteId = clienteSelect.value;
+        const prestamos = prestamosPorCliente[clienteId];
+        if (prestamos) {
+            // Limpia el select de prestamo
+            prestamoSelect.innerHTML = '';
+            // Agrega los prestamos del cliente seleccionado
+            prestamos.forEach(prestamo => {
+                const option = document.createElement('option');
+                option.value = prestamo.id;
+                option.text = prestamo.descripcion;
+                prestamoSelect.appendChild(option);
+            });
+        } else {
+            // Limpia el select de prestamo
+            prestamoSelect.innerHTML = '';
+        }
     }
-}
 
-// Agrega un evento de cambio al select de cliente
-clienteSelect.addEventListener('change', filtrarPrestamos);
+    // Agrega un evento de cambio al select de cliente
+    clienteSelect.addEventListener('change', filtrarPrestamos);
 
-// Llama a la función para filtrar los prestamos al cargar la página
-filtrarPrestamos();
+    // Llama a la función para filtrar los prestamos al cargar la página
+    filtrarPrestamos();
 });
 
 </script>

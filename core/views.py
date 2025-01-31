@@ -401,24 +401,27 @@ def pago_crear(request):
             pago = form.save(commit=False)
             pago.save()
             return redirect('pagos')
+        else:
+            print(form.errors)
     else:
         form = PagosForm()
-        clientes = Clientes.objects.all()
-        tipos_pago = TipodePago.objects.all()
-        monedas = Moneda.objects.all()
-        prestamos = Prestamos.objects.all()
-        tasa_cambio = TasaCambio.objects.filter(fecha=date.today()).order_by('-fecha').first().tasa_dia
+        
+    clientes = Clientes.objects.all()
+    tipos_pago = TipodePago.objects.all()
+    monedas = Moneda.objects.all()
+    prestamos = Prestamos.objects.all()
+    tasa_cambio = TasaCambio.objects.filter(fecha=date.today()).order_by('-fecha').first().tasa_dia
 
-        context = {
-            'form':form,
-            'clientes':clientes,
-            'tipos_pago':tipos_pago,
-            'monedas':monedas, 
-            'prestamos':prestamos,
-            'tasa_cambio': tasa_cambio,
-            'user_is_authenticated': request.user.is_authenticated
-        }
-        return render(request, 'pagos/pago_crear.html', context)
+    context = {
+        'form':form,
+        'clientes':clientes,
+        'tipos_pago':tipos_pago,
+        'monedas':monedas, 
+        'prestamos':prestamos,
+        'tasa_cambio': tasa_cambio,
+        'user_is_authenticated': request.user.is_authenticated
+    }
+    return render(request, 'pagos/pago_crear.html', context)
 
 def pago_editar(request, pago_id):
     pago = get_object_or_404(Pagos, pk=pago_id)

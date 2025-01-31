@@ -175,7 +175,7 @@ class Prestamos(models.Model):
 
 class TasaCambio(models.Model):
     fecha = models.DateField(unique=True)
-    tasa_dia = models.DecimalField(max_digits=10, decimal_places=4)
+    tasa_dia = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"Tasa del {self.fecha}: {self.tasa_dia}"
@@ -188,7 +188,8 @@ class Pagos(models.Model):
     referencia = models.CharField(max_length=100)
     monto = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     prestamo = models.ForeignKey(Prestamos, on_delete=models.CASCADE, null=True, blank=True)  # Relación con Prestamos
-
+    tasa_dia = models.ForeignKey(TasaCambio, on_delete=models.CASCADE, null=True, blank=True)
+    
     def __str__(self):
         return f"Pago de {self.monto_dolares} en {self.moneda} el {self.fecha_pago}"
 
@@ -199,7 +200,7 @@ class Pagos(models.Model):
         
         # Actualizar el monto pagado del préstamo asociado
         if self.prestamo:
-            self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto_dolares
+            self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto
             self.prestamo.save()
             
         def calcular_monto_dolares(self):
