@@ -1,139 +1,128 @@
-{% extends "layouts/base.html" %}
-{% load static %}
+{% extends 'layouts/base.html' %}
+
 {% block content %}
-<div class="main-container">
-    <div class="card-prestamos">
-        <div>
-            <h4 class="mb-4">Editar Préstamo</h4>
-            <form method="post" action="{% url 'prestamo_editar' prestamo.id %}">
-                {% csrf_token %}  <!-- Token CSRF para seguridad en Django -->
-                
-                <!-- Campo: Cliente -->
-                <div class="form-group">
-                    <label for="cliente">Cliente:</label>
-                    <select class="form-control" id="cliente" name="cliente" required>
-                        {% for cliente in clientes %}
-                            <option value="{{ cliente.id }}" {% if cliente.id == prestamo.cliente.id %}selected{% endif %}>
-                                {{ cliente.nombre }} {{ cliente.apellido }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Editar Préstamo</h4>
+        </div>
+        {% if errors %}
+        <div class="alert alert-danger">
+            <strong>Errores:</strong>
+            <ul>
+                {% for field, error_list in errors.items %}
+                    <li>{{ field }}: {{ error_list|join:", " }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="card-body">
+            <div class="cliente-form-container">
+                <form method="post" action="{% url 'prestamo_editar' prestamo.id %}">
+                    {% csrf_token %}
 
-                <!-- Campo: Fecha de Préstamo -->
-                <div class="form-group">
-                    <label for="fecha_prestamo">Fecha de Préstamo:</label>
-                    <input type="date" class="form-control" id="fecha_prestamo" name="fecha_prestamo" value="{{ prestamo.fecha_prestamo|date:'Y-m-d' }}" required>
-                </div>
+                    <!-- Campo: Cliente -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_cliente">Cliente:</label>
+                            <div>
+                                {{ form.cliente }}
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Campo: Fecha de Pago -->
-                <div class="form-group">
-                    <label for="fecha_pago">Fecha de Pago:</label>
-                    <input type="date" class="form-control" id="fecha_pago" name="fecha_pago" value="{{ prestamo.fecha_pago|date:'Y-m-d' }}" required>
-                </div>
+                    <!-- Campo: Fecha de Préstamo -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_fecha_prestamo">Fecha de Préstamo:</label>
+                            <div>
+                                <input type="date" name="fecha_prestamo" value="{{ form.fecha_prestamo.value|date:'Y-m-d' }}" id="id_fecha_prestamo">
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Campo: Monto del Préstamo -->
-                <div class="form-group">
-                    <label for="monto_prestamo">Monto del Préstamo:</label>
-                    <input type="number" class="form-control" id="monto_prestamo" name="monto_prestamo" step="0.01" value="{{ prestamo.monto_prestamo }}" required>
-                </div>
+                    <!-- Campo: Fecha de Pago -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_fecha_pago">Fecha de Pago:</label>
+                            <div>
+                                <input type="date" name="fecha_pago" value="{{ form.fecha_pago.value|date:'Y-m-d' }}" id="id_fecha_pago">
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Campo: Monto Pagado -->
-                <div class="form-group">
-                    <label for="monto_pago">Monto Pagado:</label>
-                    <input type="number" class="form-control" id="monto_pago" name="monto_pago" step="0.01" value="{{ prestamo.monto_pago }}" required>
-                </div>
+                    <!-- Campo: Monto del Préstamo -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_monto_prestamo">Monto del Préstamo:</label>
+                            <div>
+                                {{ form.monto_prestamo }}
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Campo: Monto a Pagar -->
-                <div class="form-group">
-                    <label for="monto_a_pagar">Monto a Pagar:</label>
-                    <input type="number" class="form-control" id="monto_a_pagar" name="monto_a_pagar" step="0.01" value="{{ prestamo.monto_a_pagar }}" required>
-                </div>
+                    <!-- Campo: Monto Pagado -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_monto_pago">Monto Pagado:</label>
+                            <div>
+                                {{ form.monto_pago }}
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Campo: Tasa de Interés -->
-                <div class="form-group">
-                    <label for="tasa_interes">Tasa de Interés (%):</label>
-                    <input type="number" class="form-control" id="tasa_interes" name="tasa_interes" step="0.01" value="{{ prestamo.tasa_interes }}" required>
-                </div>
+                    <!-- Campo: Monto a Pagar -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_monto_a_pagar">Monto a Pagar:</label>
+                            <div>
+                                {{ form.monto_a_pagar }}
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Campo: Pagado -->
-                <div class="form-group">
-                    <label for="id_pagado">Pagado:</label>
-                    <select class="form-control" id="id_pagado" name="pagado">
-                        <option value="False">No</option>
-                        <option value="True">Sí</option>
-                    </select>
-                </div>
+                    <!-- Campo: Tasa de Interés -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_tasa_interes">Tasa de Interés (%):</label>
+                            <div>
+                                {{ form.tasa_interes }}
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Botón de Envío -->
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    <a href="{% url 'prestamos' %}" class="btn btn-secondary">Cancelar</a>
-            </form>
+                    <!-- Campo: Pagado -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_pagado">Pagado:</label>
+                            <div>
+                                {{ form.pagado }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="button-group">
+                        <div class="form-group text-center">
+                            <!-- Botón de Guardar -->
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+
+                            <!-- Botón de Limpiar Campos -->
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i> Limpiar Campos
+                            </button>
+
+                            <!-- Botón de Volver -->
+                            <a href="{% url 'prestamos' %}" class="btn btn-danger">
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-<script>
-// Función para calcular el monto a pagar segun interes
-function calcularMontoAPagar() {
-    // Obtener los valores de los campos
-    const montoPrestamo = parseFloat(document.getElementById('monto_prestamo').value) || 0;
-    const tasaInteres = parseFloat(document.getElementById('tasa_interes').value) || 0;
-
-    // Calcular el monto a pagar
-    const montoAPagar = montoPrestamo * (1 + tasaInteres / 100);
-
-    // Actualizar el campo "monto a pagar"
-    document.getElementById('monto_a_pagar').value = montoAPagar.toFixed(2);
-}
-
-// Asignar eventos a los campos para que se ejecute la función cuando cambien
-document.getElementById('monto_prestamo').addEventListener('input', calcularMontoAPagar);
-document.getElementById('tasa_interes').addEventListener('input', calcularMontoAPagar);
-
-// Variables para almacenar los valores originales
-let fechaPagoOriginal = null;
-let montoAPagarOriginal = null;
-let montoPagoOriginal = null;
-
-// funcion para actualizar fecha de pago al marcar como pagado
-function actualizarFechaPago() {
-    const pagado = document.getElementById('id_pagado');  // Campo "pagado"
-    const fechaPago = document.getElementById('fecha_pago');  // Campo "fecha de pago"
-    const montoPago = document.getElementById('monto_pago');  // Campo "monto pagado"
-    const montoAPagar = document.getElementById('monto_a_pagar');  // Campo "monto a pagar"
-
-    // Verificar si el campo "pagado" está marcado como "Sí" o "True"
-    if (pagado.value === "True" || pagado.value === "true") {
-        if (fechaPagoOriginal === null) {
-            fechaPagoOriginal = fechaPago.value;  // Guardar la fecha de pago original
-        }
-        if (montoAPagarOriginal === null) {
-            montoAPagarOriginal = montoAPagar.value;  // Guardar el monto a pagar original
-        }
-        if (montoPagoOriginal === null) {
-            montoPagoOriginal = montoPago.value;  // Guardar el monto pagado
-        }
-        // Obtener la fecha actual en formato YYYY-MM-DD
-        const fechaActual = new Date().toISOString().split('T')[0];
-        // Actualizar el campo "fecha de pago" con la fecha actual
-        fechaPago.value = fechaActual;
-        // Actualizar el campo "monto pagado" con el valor de "monto a pagar"
-        montoPago.value = montoAPagar.value;
-    } else {
-        // Si no está marcado como "Sí", restaurar los valores originales
-        if (fechaPagoOriginal !== null) {
-            fechaPago.value = fechaPagoOriginal;  // Restaurar la fecha de pago original
-        }
-        if (montoAPagarOriginal !== null) {
-            montoAPagar.value = montoAPagarOriginal;  // Restaurar el monto a pagar original
-        }
-        if (montoPagoOriginal !== null) {
-            montoPago.value = montoPagoOriginal;  // Restaurar el monto pag
-        }
-    }
-}
-
-// Asignar el evento al campo "pagado"
-document.getElementById('id_pagado').addEventListener('change', actualizarFechaPago);
-</script>
-{% endblock content %}
+{% endblock %}

@@ -1,97 +1,178 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 {% block content %}
-<div class="card-general" style="justify-items: center;">
-    <div class="detalles-container" style="display: flex; justify-items: center; flex-wrap: nowrap; flex-direction: column;">
-        <div>
-            <h2>Editar Cliente: {{ cliente.nombre }} {{ cliente.apellido }}</h2>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Editar Cliente</h4>
         </div>
-        <div>
-
-
-            <form method="post">
-                {% csrf_token %}
-                
-                <!-- Mostrar errores del formulario -->
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        {% for field, errors in form.errors.items %}
-                            {% for error in errors %}
-                                {{ error }}
-                            {% endfor %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                
-                <!-- Información Básica -->
-                <div class="card-left" style="display: flex; flex-direction: column; align-items: flex-start; max-width: 100%;">
-                    <h5>Información Básica</h5>
-                    <div class="form-group">
-                        <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
-                        {{ form.nombre }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.apellido.id_for_label }}">Apellido:</label>
-                        {{ form.apellido }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.genero.id_for_label }}">Género:</label>
-                        {{ form.genero }}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>
-                        {{ form.fecha_nacimiento }}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.tipo_persona.id_for_label }}">Tipo de Persona:</label>
-                        {{ form.tipo_persona }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.cedula.id_for_label }}">Cédula:</label>
-                        {{ form.cedula }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.rif.id_for_label }}">RIF:</label>
-                        {{ form.rif }}
-                    </div>
-
-                    <h5>Información de Contacto</h5>
-                    <div class="form-group">
-                        <label for="{{ form.direccion_1.id_for_label }}">Dirección 1:</label>
-                        {{ form.direccion_1 }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.direccion_2.id_for_label }}">Dirección 2:</label>
-                        {{ form.direccion_2 }}
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.email_1.id_for_label }}">Email 1:</label>
-                        {{ form.email_1 }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.email_2.id_for_label }}">Email 2:</label>
-                        {{ form.email_2 }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.numero_telefono.id_for_label }}">Número de Teléfono:</label>
-                        {{ form.numero_telefono }}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.numero_local.id_for_label }}">Número Local:</label>
-                        {{ form.numero_local }}
-                    </div>
-                </div>
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Errores:</strong>
+            <ul>
+                {% for field, error_list in form.errors.items %}
+                    <li>{{ field }}: {{ error_list|join:", " }}</li>
+                {% endfor %}
+            </ul>
         </div>
-            <!-- Botones -->
-            <div class="button-container" style="justify-content: center; display: flex;">
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <a href="{% url 'cliente_detalles' cliente.id %}" class="btn btn-danger">Cancelar</a>
+        {% endif %}
+        <div class="card-body">
+            <div class="cliente-form-container">
+                <form method="post" action="{% url 'cliente_editar' cliente.id %}">
+                    {% csrf_token %}
+
+                    <!-- Campo: Nombre -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_nombre">Nombre:</label>
+                            <div>
+                                {{ form.nombre }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Apellido -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_apellido">Apellido:</label>
+                            <div>
+                                {{ form.apellido }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Género -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_genero">Género:</label>
+                            <div>
+                                {{ form.genero }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Fecha de Nacimiento -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_fecha_nacimiento">Fecha de Nacimiento:</label>
+                            <div>
+                                <input type="date" name="fecha_nacimiento" value="{{ form.fecha_nacimiento.value|date:'Y-m-d' }}" id="id_fecha_nacimiento">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Tipo de Persona -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_tipo_persona">Tipo de Persona:</label>
+                            <div>
+                                {{ form.tipo_persona }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Cédula -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_cedula">Cédula:</label>
+                            <div>
+                                {{ form.cedula }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: RIF -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_rif">RIF:</label>
+                            <div>
+                                {{ form.rif }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Dirección 1 -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_direccion_1">Dirección 1:</label>
+                            <div>
+                                {{ form.direccion_1 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Dirección 2 -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_direccion_2">Dirección 2:</label>
+                            <div>
+                                {{ form.direccion_2 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Email 1 -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_email_1">Email 1:</label>
+                            <div>
+                                {{ form.email_1 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Email 2 -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_email_2">Email 2:</label>
+                            <div>
+                                {{ form.email_2 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Número de Teléfono -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_numero_telefono">Número de Teléfono:</label>
+                            <div>
+                                {{ form.numero_telefono }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Número Local -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_numero_local">Número Local:</label>
+                            <div>
+                                {{ form.numero_local }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="button-group">
+                        <div class="form-group text-center">
+                            <!-- Botón de Guardar -->
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+
+                            <!-- Botón de Limpiar Campos -->
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i> Limpiar Campos
+                            </button>
+
+                            <!-- Botón de Volver -->
+                            <a href="{% url 'cliente_detalles' cliente.id %}" class="btn btn-danger">
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-
-{% endblock content %}
+{% endblock %}
