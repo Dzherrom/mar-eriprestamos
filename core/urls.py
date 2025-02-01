@@ -33,6 +33,7 @@ urlpatterns = [
     path('pago_crear/', views.pago_crear, name='pago_crear'),
     path('pago_editar/<int:pago_id>', views.pago_editar, name='pago_editar'),
     path('pago_borrar/<int:pago_id>', views.pago_borrar, name='pago_borrar'),
+    path('pagos_detalles/<int:pago_id>', views.pago_detalles, name='pago_detalles'),
     
     #tasas
     path('tasas/', views.tasas, name='tasas'),

@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Detalles del Pago</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Cliente</th>
+                        <td>{{ pago.cliente }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Pago</th>
+                        <td>{{ pago.fecha_pago }}</td>
+                    </tr>
+                    <tr>
+                        <th>Moneda</th>
+                        <td>{{ pago.moneda }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tipo de Pago</th>
+                        <td>{{ pago.tipo_pago }}</td>
+                    </tr>
+                    <tr>
+                        <th>Referencia</th>
+                        <td>{{ pago.referencia }}</td>
+                    </tr>
+                    <tr>
+                        <th>Monto</th>
+                        <td>{{ pago.monto }}</td>
+                    </tr>
+                    <tr>
+                        <th>Préstamo</th>
+                        <td>{{ pago.prestamo }} <a href="{% url 'prestamo_detalles' pago.prestamo.id %}">(Detalles)</a></td>
+                    </tr>
+                    <tr>
+                        <th>Tasa del Día</th>
+                        <td>{{ pago.tasa_dia }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group text-center">
+                <a href="{% url 'pagos' %}" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

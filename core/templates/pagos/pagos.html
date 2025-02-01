@@ -26,7 +26,7 @@
                 <tbody id="pagosTbody">
                         {% for pago in pagos %}
                         <tr>
-                            <td>{{ pago.id }}</td>
+                            <td><a href="{% url 'pago_detalles' pago.id %}">{{ pago.id }}</a></td>
                             <td>{{ pago.cliente.nombre }} {{ pago.cliente.apellido }}</td>
                             <td>{{ pago.fecha_pago }}</td>
                             <td>{{ pago.moneda }}</td>

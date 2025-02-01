@@ -90,58 +90,49 @@ def prestamo_detalles_api(request, id):
     }
     return JsonResponse(data)
 
+@login_required
 def cliente_detalles(request, cliente_id):
-    if request.method == 'GET':
-        clientes = Clientes.objects.all()
-        cliente = Clientes.objects.get(id=cliente_id)
-        print(cliente.nombre, cliente.apellido, cliente.cedula)
-        prestamos = cliente.prestamos_set.all()
-        pagos = Pagos.objects.filter(cliente=cliente)
-        ultimo_pago = pagos.first()
-        fecha_ultimo_pago = ultimo_pago.fecha_pago if ultimo_pago else None
-        prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
-        prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
-        balance = Prestamos.calcular_balance_total(cliente)
-        balance_total = Prestamos.suma_total_prestamos(cliente)
-        tasa_interes_total = Prestamos.tasa_interes_total(cliente)
-        form = ClienteForm(instance=cliente)
-        
-        for cliente in clientes:
-            cliente.actualizar_balance()
-        
-        for prestamo in prestamos:
-            Prestamos.calcular_balance_prestamo(prestamo)
-        
-        total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
-        context = {'cliente': cliente,
-                'clientes': clientes,
-                'prestamos':prestamos,
-                'pagos': pagos,
-                'balance': balance,
-                'balance_total': balance_total,
-                'fecha_ultimo_pago': fecha_ultimo_pago,
-                'prestamos_activos': prestamos_activos,
-                'prestamos_pagados': prestamos_pagados,
-                'total_monto_a_pagar': total_monto_a_pagar,
-                'tasa_interes_total': tasa_interes_total,
-                'form': form,
-                'user_is_authenticated': request.user.is_authenticated}
-        return render(request, 'clientes/cliente_detalles.html', context)
+    cliente = get_object_or_404(Clientes, id=cliente_id)
+    clientes = Clientes.objects.all()
     
+    if request.method == 'POST':
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            return redirect('cliente_detalles', cliente_id=cliente.id)
+        else:
+            print(form.errors)
     else:
-        try:
-            clientes = get_object_or_404(Clientes, pk=cliente_id)
-            form = ClienteForm(instance=clientes)
-            if form.is_valid():
-                form.save()
-                print('form guarado correctamente')
-                return redirect('home')
-            
-            else:
-                print('error en try')
-                return redirect('home')
-        except:
-            return render(request, 'cliente/cliente_detalles.html', context)
+        form = ClienteForm(instance=cliente)
+    
+    prestamos = cliente.prestamos_set.all()
+    pagos = Pagos.objects.filter(cliente=cliente)
+    ultimo_pago = pagos.first()
+    fecha_ultimo_pago = ultimo_pago.fecha_pago if ultimo_pago else None
+    prestamos_activos = Prestamos.contar_prestamos_activos(cliente)
+    prestamos_pagados = Prestamos.contar_prestamos_pagados(cliente)
+    balance = Prestamos.calcular_balance_total(cliente)
+    balance_total = Prestamos.suma_total_prestamos(cliente)
+    tasa_interes_total = Prestamos.tasa_interes_total(cliente)
+    total_monto_a_pagar = sum(prestamo.monto_a_pagar for prestamo in prestamos)
+    
+    context = {
+        'cliente': cliente,
+        'clientes': clientes,
+        'prestamos': prestamos,
+        'pagos': pagos,
+        'balance': balance,
+        'balance_total': balance_total,
+        'fecha_ultimo_pago': fecha_ultimo_pago,
+        'prestamos_activos': prestamos_activos,
+        'prestamos_pagados': prestamos_pagados,
+        'total_monto_a_pagar': total_monto_a_pagar,
+        'tasa_interes_total': tasa_interes_total,
+        'form': form,
+        'user_is_authenticated': request.user.is_authenticated
+    }
+    
+    return render(request, 'clientes/cliente_detalles.html', context)
         
 @login_required
 def cliente_editar(request, cliente_id):
@@ -467,6 +458,16 @@ def pago_borrar(request, pago_id):
             'error': 'Contraseña incorrecta',
             'user_is_authenticated': request.user.is_authenticated}
     return render(request, 'pagos/pago_borrar.html', context)
+
+@login_required
+def pago_detalles(request, pago_id):
+    pago = get_object_or_404(Pagos, id=pago_id)
+    
+    context = {
+        'pago': pago,
+        'user_is_authenticated': request.user.is_authenticated
+    }
+    return render(request, 'pagos/pago_detalles.html', context)
 
 # ---------- Tasas ----------
 @login_required

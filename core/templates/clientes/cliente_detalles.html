@@ -42,7 +42,7 @@
                         <tr>
                             <td>{{ pago.fecha_pago }}</td>
                             <td>{{ pago.moneda }}</td>
-                            <td><a href="#">{{ pago.referencia }}</a></td>
+                            <td><a href="{% url 'pago_detalles' pago.id %}">{{ pago.referencia }}</a></td>
                             <td>${{ pago.monto }}</td>
                             <td>{{ pago.prestamo.monto_a_pagar }}</td>
                         </tr>
