@@ -36,6 +36,9 @@ urlpatterns = [
     
     #tasas
     path('tasas/', views.tasas, name='tasas'),
+    path('tasa_crear/', views.tasa_crear, name='tasa_crear'),
+    path('tasa_editar/<int:tasa_id>', views.tasa_editar, name='tasa_editar'),
+    path('tasa_borrar/<int:tasa_id>', views.tasa_borrar, name='tasa_borrar'),
     
     path('obtener-montos-pagos-por-dia/', views.obtener_montos_pagos_por_dia, name='obtener_montos_pagos_por_dia'),
     path('obtener-pagos-cliente/', views.pagos, name='obtener_pagos_cliente'),

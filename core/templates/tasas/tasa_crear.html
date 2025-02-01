@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Registrar Tasa del Día</h4>
+        </div>
+        {% if errors %}
+        <div class="alert alert-danger">
+            <strong>Errores:</strong>
+            <ul>
+                {% for field, error_list in errors.items %}
+                <li>{{ field }}: {{ error_list|join:", " }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="card-body">
+            <div class="tasa-form-container">
+                <form method="post" action="{% url 'tasa_crear' %}">
+                    {% csrf_token %}
+                    <!-- Campo: Fecha -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_fecha">Fecha:</label>
+                            <input type="date" name="fecha" id="id_fecha" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Tasa del Día -->
+                    <div class="form-group">
+                        <div>
+                            <label for="id_tasa_dia">Tasa del Día:</label>
+                            <input type="number" step="0.01" name="tasa_dia" id="id_tasa_dia" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="button-group">
+                        <div class="form-group text-center">
+                            <!-- Botón de Guardar -->
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+
+                            <!-- Botón de Limpiar Campos -->
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i> Limpiar Campos
+                            </button>
+
+                            <!-- Botón de Volver -->
+                            <a type="cancel" href="{% url 'tasas' %}" class="btn btn-danger">
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

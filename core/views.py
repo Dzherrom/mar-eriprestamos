@@ -7,7 +7,7 @@ from django.urls import reverse
 from collections import defaultdict
 from datetime import date
 from .models import Prestamos, Clientes, Pagos, TipodePago, Moneda, TasaCambio
-from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm, PagosForm
+from .forms import ClienteForm, PasswordVerificationForm, PrestamosForm, PagosForm, TasaForm
 import json
 
 @login_required
@@ -469,12 +469,71 @@ def pago_borrar(request, pago_id):
     return render(request, 'pagos/pago_borrar.html', context)
 
 # ---------- Tasas ----------
+@login_required
 def tasas(request):
     tasas = TasaCambio.objects.all()
     context = {
-        'tasas': tasas
+        'tasas': tasas,
+        'user_is_authenticated': request.user.is_authenticated
     }
     return render(request, 'tasas/tasas.html', context)
+
+@login_required
+def tasa_crear(request):
+    if request.method == "POST":
+        form = TasaForm(request.POST)
+        if form.is_valid():
+            tasa = form.save(commit=False)
+            tasa.save()
+            return redirect('tasas')
+        else:
+            print(form.errors)
+    
+    else:
+        form = TasaForm()
+    context = {
+        'tasas': tasas,
+        'form': form,
+        'user_is_authenticated': request.user.is_authenticated
+    }
+    return render(request, 'tasas/tasa_crear.html', context)
+
+@login_required
+def tasa_editar(request,tasa_id):
+    if request.method == 'POST':
+        tasa = get_object_or_404(TasaCambio, pk=tasa_id)
+        form = TasaForm(request.POST, instance=tasa)
+        if form.is_valid():
+            form.save()
+            return redirect('tasas')
+    else:
+        tasa = get_object_or_404(TasaCambio, pk=tasa_id)
+        form = TasaForm(instance=tasa)
+        context = {'form': form,
+                   'tasa': tasa,
+                   'user_is_authenticated': request.user.is_authenticated}
+    return render(request, 'tasas/tasa_editar.html', context)
+
+@login_required
+def tasa_borrar(request, tasa_id):
+    tasa = get_object_or_404(TasaCambio, id=tasa_id)
+    if request.method == "POST":
+        form = PasswordVerificationForm(request.user, request.POST)
+        if form.is_valid():
+            tasa.delete()
+            return redirect('tasas')
+        else:
+            print(form.errors)  # Imprime los errores del formulario en la consola
+    else:
+        form = PasswordVerificationForm(request.user)
+    
+    context = {
+        'form': form,
+        'tasa': tasa,
+        'user_is_authenticated': request.user.is_authenticated
+    }
+    return render(request, 'tasas/tasa_borrar.html', context)
+
 
 # ---------- Auth ----------
 def login(request):

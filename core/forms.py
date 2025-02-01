@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.files.base import File
 from django.db.models.base import Model
-from .models import Clientes, Prestamos, Pagos
+from .models import Clientes, Prestamos, Pagos, TasaCambio
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -49,6 +49,14 @@ class PrestamosForm(forms.ModelForm):
                     attrs={'type': 'date'}),
                 'fecha_pago': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
             }
+        
+class TasaForm(forms.ModelForm):
+    class Meta:
+        model = TasaCambio
+        fields = [
+            'tasa_dia', 'fecha'
+        ]
+        
 class PasswordVerificationForm(forms.Form):
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 

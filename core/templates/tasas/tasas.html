@@ -7,7 +7,7 @@
 
         <div style="display: grid; grid-template-columns: 1fr auto; margin-bottom: 10px;">
             <div class="buttons">
-                <a href="#" class="btn btn-primary">Registrar una tasa</a>
+                <a href="{% url 'tasa_crear' %}" class="btn btn-primary">Registrar una tasa</a>
             </div>
             <input type="text" id="searchInput" placeholder="Buscar por tasa..." class="form-control" style="margin-bottom: 10px; max-width: 100%;">
         </div>
@@ -26,8 +26,8 @@
                     <td>{{ tasa.id }}</td>
                     <td>{{ tasa.tasa_dia }}</td>
                     <td>{{ tasa.fecha }}</td>
-                    <td><a href="#">Editar</a>/
-                    <a href="#">Eliminar</a></td>
+                    <td><a href="{% url 'tasa_editar' tasa.id %}">Editar</a>/
+                    <a href="{% url 'tasa_borrar' tasa.id %}">Eliminar</a></td>
                 </tr>
                 {% empty %}
                 <tr>

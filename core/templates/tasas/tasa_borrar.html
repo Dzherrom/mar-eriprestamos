@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-container">
+    <div class="container"> 
+        <div class="card-body" id="confirm-delete-modal">
+            <div class="body-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirmación de borrado</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Está seguro de querer borrar la tasa del día con fecha {{ tasa.fecha }}?</p>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="th sort-both">Id</th>
+                                    <th class="th sort-both">Fecha</th>
+                                    <th class="th sort-both">Tasa del Día</th>
+                                </tr>
+                            </thead>
+                            <tbody id="TableBody">
+                                <tr>
+                                    <td>{{ tasa.id }}</td>
+                                    <td>{{ tasa.fecha }}</td>
+                                    <td>{{ tasa.tasa_dia }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <form method="POST" style="justify-items: center;">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.password.id_for_label }}">Contraseña: {{ form.password }}</label>
+                            </div>
+                            <div style="margin: 15px;">
+                                {{ error }}
+                            </div>
+                            <div style="justify-items: center; display: flex;">
+                                <div>
+                                    <button type="submit" class="btn btn-danger" data-id="{{ tasa.id }}" name="confirm_delete" value="yes">Borrar</button>
+                                </div>
+                        </form>
+                                <div>
+                                    <a href="{% url 'tasas' %}" class="btn btn-secondary">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
