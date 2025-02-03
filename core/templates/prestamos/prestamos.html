@@ -91,7 +91,7 @@
                     <tbody id="pagadosTableBody">
                         {% for prestamo in prestamos_pagados %}
                         <tr>
-                            <td>{{ prestamo.id }}</td>
+                            <td><a href="{% url 'prestamo_detalles' prestamo.id %}">{{ prestamo.id }}</a></td>
                             <td>{{ prestamo.cliente.nombre }} {{ prestamo.cliente.apellido }}</td>
                             <td>{{ prestamo.fecha_prestamo }}</td>
                             <td>{{ prestamo.fecha_pago }}</td>
