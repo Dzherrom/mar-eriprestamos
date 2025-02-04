@@ -84,6 +84,11 @@ class Prestamos(models.Model):
         return f"Préstamo de {self.cliente} - Monto: {self.monto_prestamo}"
     
     def save(self, *args, **kwargs):
+        if self.monto_pago >= self.monto_a_pagar:
+            self.pagado = True
+        else:
+            self.pagado = False
+            
         # Llamar al método save del modelo base
         super().save(*args, **kwargs)
         self.cliente.actualizar_balance()
@@ -201,6 +206,12 @@ class Pagos(models.Model):
         # Actualizar el monto pagado del préstamo asociado
         if self.prestamo:
             self.prestamo.monto_pago = (self.prestamo.monto_pago or 0) + self.monto
+            self.prestamo.save()
+             # Actualizar el estado pagado del préstamo si corresponde
+            if self.prestamo.monto_pago >= self.prestamo.monto_a_pagar:
+                self.prestamo.pagado = True
+            else:
+                self.prestamo.pagado = False
             self.prestamo.save()
             
         def calcular_monto_dolares(self):
