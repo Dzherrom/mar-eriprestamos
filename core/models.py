@@ -196,7 +196,7 @@ class Pagos(models.Model):
     tasa_dia = models.ForeignKey(TasaCambio, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
-        return f"Pago de {self.monto_dolares} en {self.moneda} el {self.fecha_pago}"
+        return f"Pago de {self.monto} en {self.moneda} el {self.fecha_pago}"
 
     def save(self, *args, **kwargs):
         # Llamar al método save del modelo base
