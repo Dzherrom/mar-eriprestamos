@@ -15,7 +15,7 @@ def home(request):
     context = {'mensaje':'error', 
             'prestamos': prestamos,
             'user_is_authenticated': request.user.is_authenticated}
-    return render(request, 'home.html', context)
+    return redirect('prestamos')
 
 # ---------- Clientes ----------
 @login_required
