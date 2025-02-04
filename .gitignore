@@ -21,4 +21,3 @@ tmp
 .env
 .github/
 SECRETS.PY
-fly.toml

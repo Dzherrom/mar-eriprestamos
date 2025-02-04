@@ -25,13 +25,13 @@
                         </thead>
                         <tbody id="TableBody">
                             <tr>
-                                <td>{{ pago.id }}</td>
-                                <td>{{ pago.nombre }}</td>
-                                <td>{{ pago.apellido }}</td>
-                                <td>{{ pago.cedula }}</td>
-                                <td>{{ pago.prestamos_activos }}</td>
-                                <td>{{ pago.prestamos_pagados }}</td>
-                                <td>${{ pago.balance }}</td>
+                                <td>{{ cliente.id }}</td>
+                                <td>{{ cliente.nombre }}</td>
+                                <td>{{ cliente.apellido }}</td>
+                                <td>{{ cliente.cedula }}</td>
+                                <td>{{ cliente.prestamos_activos }}</td>
+                                <td>{{ cliente.prestamos_pagados }}</td>
+                                <td>${{ cliente.balance }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -49,7 +49,7 @@
 
                         <div style="justify-items: center; display: flex;">
                             <div>
-                                <button type="submit" class="btn btn-danger" data-id="{{ pago_id }}" name="confirm_delete" value="yes">Borrar</button>
+                                <button type="submit" class="btn btn-danger" data-id="{{ cliente_id }}" name="confirm_delete" value="yes">Borrar</button>
                             </div>
                     </form>
                         <div>
