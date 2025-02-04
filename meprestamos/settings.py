@@ -30,10 +30,16 @@ DEBUG = os.environ.get('DEBUG')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'mar-eriprestamos-cold-cherry-2402.fly.dev']
+ALLOWED_HOSTS = ['127.0.0.1',
+                 'localhost',
+                 'mar-eriprestamos-cold-cherry-2402.fly.dev',
+                 'mar-eriprestamos.com',
+                 'www.mar-eriprestamos.com']
+
 CSRF_TRUSTED_ORIGINS = [
     'https://mar-eriprestamos-cold-cherry-2402.fly.dev',
-    'https://mar-eriprestamos-cold-cherry-2402.fly.dev/'
+    'https://mar-eriprestamos.com',
+    'https://www.mar-eriprestamos.com',
                         ]
 
 # Application definition
