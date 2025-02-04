@@ -186,8 +186,8 @@ def obtener_montos_pagados_por_dia():
 @login_required
 def prestamos(request):
     if request.method == 'GET':
-        prestamos_pagados = Prestamos.objects.filter(monto_pago=F('monto_a_pagar'))
-        prestamos_sin_pagar = Prestamos.objects.filter(monto_pago__lt=F('monto_a_pagar'))
+        prestamos_pagados = Prestamos.objects.filter(pagado=True)
+        prestamos_sin_pagar = Prestamos.objects.filter(pagado=False)
         
         #función para obtener los préstamos pagados por día
         data_prestamos_pagados = obtener_prestamos_pagados_por_dia()
