@@ -31,10 +31,13 @@ DEBUG = os.environ.get('DEBUG')
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',
+                 'localhost',
+                 'mar-eriprestamos-cold-cherry-2402.fly.dev',
                  'mar-eriprestamos.com',
                  'www.mar-eriprestamos.com']
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://mar-eriprestamos-cold-cherry-2402.fly.dev',
     'https://mar-eriprestamos.com',
     'https://www.mar-eriprestamos.com',
                         ]
@@ -61,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'meprestamos.middleware.RedirectToCustomDomainMiddleware',
 ]
 
 ROOT_URLCONF = 'meprestamos.urls'
