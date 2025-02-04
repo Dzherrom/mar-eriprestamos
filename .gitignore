@@ -1,6 +1,6 @@
 #virtual env
 .env/
-
+venv
 #cache files
 meprestamos/__pycache__
 core/migrations/
@@ -15,3 +15,10 @@ staticfiles/
 #gunicorn-log
 logs/
 changes.txt
+tmp
+
+.dockerignore
+.env
+.github/
+SECRETS.PY
+fly.toml
