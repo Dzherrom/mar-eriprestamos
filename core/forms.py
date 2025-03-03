@@ -13,7 +13,7 @@ class ClienteForm(forms.ModelForm):
                   'cedula','rif','tipo_persona',
                   'fecha_nacimiento','direccion_1',
                   'direccion_2','email_1','email_2']
-        
+    '''    
     #funcion para validar el rif
     def clean_rif(self):
         rif = self.cleaned_data['rif']
@@ -21,6 +21,7 @@ class ClienteForm(forms.ModelForm):
         if not re.match(pattern, rif):
             raise forms.ValidationError('El RIF debe tener el formato J1234567890')
         return rif
+    '''
     
 class PagosForm(forms.ModelForm):
     class Meta:
