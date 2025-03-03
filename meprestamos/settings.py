@@ -91,14 +91,8 @@ WSGI_APPLICATION = 'meprestamos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join('db.sqlite3')
-        
-    )
-    
-}    
-'''{
+DATABASES ={
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mareprestamos',
         'USER': 'postgres',
@@ -107,7 +101,17 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-'''
+
+'''{
+    'default': dj_database_url.config(
+        default='sqlite:///' + os.path.join('db.sqlite3')
+        
+    )
+    
+}   
+''' 
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
