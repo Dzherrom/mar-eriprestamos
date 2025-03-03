@@ -18,9 +18,13 @@
         </div>
         {% endif %}
         <div class="card-body">
+            <div>
+                <h4>Por favor registre el valor para la tasa del día de hoy</h4>
+            </div>
             <div class="tasa-form-container">
                 <form method="post" action="{% url 'tasa_crear' %}">
                     {% csrf_token %}
+                    
                     <!-- Campo: Fecha -->
                     <div class="form-group">
                         <div>
