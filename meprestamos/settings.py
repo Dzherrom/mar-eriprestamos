@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'meprestamos.middleware.RedirectToCustomDomainMiddleware',
+    'core.middleware.TasaDiaMiddleware',
 ]
 
 ROOT_URLCONF = 'meprestamos.urls'

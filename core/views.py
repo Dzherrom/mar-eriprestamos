@@ -487,7 +487,7 @@ def tasa_crear(request):
         if form.is_valid():
             tasa = form.save(commit=False)
             tasa.save()
-            return redirect('tasas')
+            return redirect('home')
         else:
             print(form.errors)
     
