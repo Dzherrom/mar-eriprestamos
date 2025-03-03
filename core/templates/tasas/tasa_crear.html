@@ -61,4 +61,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el campo de fecha
+        const fechaInput = document.getElementById('id_fecha');
+        // Obtener la fecha actual
+        const today = new Date().toISOString().split('T')[0];
+        // Establecer el valor por defecto del campo de fecha como el día actual
+        fechaInput.value = today;
+    });
+</script>
 {% endblock content %}
