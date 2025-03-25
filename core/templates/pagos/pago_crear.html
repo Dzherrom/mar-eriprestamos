@@ -59,7 +59,7 @@
                             <label for="id_tipo_pago">Tipo de Pago:</label>
                             <select name="tipo_pago" id="id_tipo_pago" class="form-control" required>
                                 {% for tipo_pago in tipos_pago %}
-                                    <option value="{{ tipo_pago.id }}">{{ tipo_pago }}</option>
+                                    <option value="{{ tipo_pago.id }}" data-moneda="{{ tipo_pago.moneda }}">{{ tipo_pago }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -137,19 +137,20 @@
     </div>
 </div>
 <script>
-    // Script para calcular el valor de referencia en base al monto y la tasa de cambio 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const monedaSelect = document.getElementById('id_moneda');
         const montoInputBolivares = document.getElementById('id_monto_bolivares');
         const montoInputUSD = document.getElementById('id_monto');
         const montoUSDDiv = document.getElementById('monto_usd_div');
         const tasaDiaDiv = document.getElementById('tasa_dia_div');
+        const tipoPagoSelect = document.getElementById('id_tipo_pago');
+        const tipoPagoOptions = Array.from(tipoPagoSelect.options);
         const tasaCambio = {{ tasa_cambio|default:"null" }}; // Asegúrate de pasar la tasa de cambio desde el backend
-    
+
         console.log('Tasa de cambio:', tasaCambio);
-    
+
         // Evento change en el campo de selección de moneda
-        monedaSelect.addEventListener('change', function() {
+        monedaSelect.addEventListener('change', function () {
             const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
             console.log('Moneda seleccionada:', selectedOptionText);
             if (selectedOptionText.includes('bolivares')) {
@@ -165,10 +166,13 @@
                 montoInputBolivares.name = 'monto';
                 montoInputUSD.value = montoInputBolivares.value; // Asegúrate de que el campo monto tenga un valor
             }
+
+            // Filtrar los tipos de pago según la moneda seleccionada
+            filtrarTiposPago();
         });
-    
+
         // Evento input en el campo de monto
-        montoInputBolivares.addEventListener('input', function() {
+        montoInputBolivares.addEventListener('input', function () {
             const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
             if (selectedOptionText.includes('bolivares')) {
                 calcularValorRef();
@@ -176,7 +180,7 @@
                 montoInputUSD.value = montoInputBolivares.value; // Actualiza el valor del campo monto
             }
         });
-    
+
         // Función para calcular el valor de referencia
         function calcularValorRef() {
             const montoBolivares = parseFloat(montoInputBolivares.value);
@@ -187,22 +191,22 @@
                 montoInputUSD.value = '';
             }
         }
-    
+
         // Llama a la función cuando la página se haya cargado
         window.onload = calcularValorRef;
-    
+
         // Selecciona el elemento select de cliente
         const clienteSelect = document.getElementById('id_cliente');
-    
+
         // Selecciona el elemento select de prestamo
         const prestamoSelect = document.getElementById('id_prestamo');
-    
+
         // Obtén los datos de prestamos desde el contexto de Django
         const prestamos = JSON.parse('{{ prestamos|safe }}');
-    
+
         // Crea un objeto que almacene los prestamos por cliente
         const prestamosPorCliente = {};
-    
+
         // Recorre los prestamos y los almacena en el objeto
         prestamos.forEach(prestamo => {
             const clienteId = prestamo.cliente.id;
@@ -214,7 +218,7 @@
                 descripcion: prestamo.descripcion
             });
         });
-    
+
         // Función para filtrar los prestamos por cliente
         function filtrarPrestamos() {
             const clienteId = clienteSelect.value;
@@ -234,12 +238,31 @@
                 prestamoSelect.innerHTML = '';
             }
         }
-    
+
         // Agrega un evento de cambio al select de cliente
         clienteSelect.addEventListener('change', filtrarPrestamos);
-    
+
         // Llama a la función para filtrar los prestamos al cargar la página
         filtrarPrestamos();
+
+        // Función para filtrar los tipos de pago según la moneda seleccionada
+        function filtrarTiposPago() {
+            const monedaSeleccionada = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
+
+            // Limpiar las opciones actuales del select de tipo de pago
+            tipoPagoSelect.innerHTML = '';
+
+            // Filtrar y agregar las opciones que coincidan con la moneda seleccionada
+            tipoPagoOptions.forEach(option => {
+                const monedaOption = option.getAttribute('data-moneda').toLowerCase();
+                if (monedaOption.includes(monedaSeleccionada)) {
+                    tipoPagoSelect.appendChild(option);
+                }
+            });
+        }
+
+        // Llamar a la función al cargar la página para establecer el estado inicial
+        filtrarTiposPago();
     });
-    </script>
+</script>
 {% endblock content %}
