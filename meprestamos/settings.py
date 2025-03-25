@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'meprestamos.middleware.RedirectToCustomDomainMiddleware',
+    'core.middleware.TasaDiaMiddleware',
 ]
 
 ROOT_URLCONF = 'meprestamos.urls'
@@ -89,7 +90,7 @@ WSGI_APPLICATION = 'meprestamos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
+DATABASES ={
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mareprestamos',
@@ -99,6 +100,16 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+'''{
+    'default': dj_database_url.config(
+        default='sqlite:///' + os.path.join('db.sqlite3')
+        
+    )
+    
+}   
+''' 
+
 
 
 # Password validation

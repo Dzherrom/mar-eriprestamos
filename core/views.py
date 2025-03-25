@@ -495,7 +495,7 @@ def pago_borrar(request, pago_id):
 @login_required
 def pago_detalles(request, pago_id):
     pago = get_object_or_404(Pagos, id=pago_id)
-    tasa_dia
+    tasa_dia = TasaCambio.objects.filter(fecha=date.today()).order_by('-fecha').first().tasa_dia
     
     context = {
         'pago': pago,
@@ -520,7 +520,7 @@ def tasa_crear(request):
         if form.is_valid():
             tasa = form.save(commit=False)
             tasa.save()
-            return redirect('tasas')
+            return redirect('home')
         else:
             print(form.errors)
     

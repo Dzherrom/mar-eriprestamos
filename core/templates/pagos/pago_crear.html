@@ -137,104 +137,109 @@
     </div>
 </div>
 <script>
-// Script para calcular el valor de referencia en base al monto y la tasa de cambio 
-document.addEventListener('DOMContentLoaded', function() {
-    const monedaSelect = document.getElementById('id_moneda');
-    const montoInputBolivares = document.getElementById('id_monto_bolivares');
-    const montoInputUSD = document.getElementById('id_monto');
-    const montoUSDDiv = document.getElementById('monto_usd_div');
-    const tasaDiaDiv = document.getElementById('tasa_dia_div');
-    const tasaCambio = {{ tasa_cambio|default:"null" }}; // Asegúrate de pasar la tasa de cambio desde el backend
-
-    console.log('Tasa de cambio:', tasaCambio);
-
-    // Evento change en el campo de selección de moneda
-    monedaSelect.addEventListener('change', function() {
-        const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
-        console.log('Moneda seleccionada:', selectedOptionText);
-        if (selectedOptionText.includes('bolivares')) {
-            montoUSDDiv.style.display = 'block';
-            tasaDiaDiv.style.display = 'block';
-            calcularValorRef();
-        } else {
-            montoUSDDiv.style.display = 'none';
-            tasaDiaDiv.style.display = 'none';
-            montoInputUSD.value = '';
-        }
-    });
-
-    // Evento input en el campo de monto
-    montoInputBolivares.addEventListener('input', function() {
-        const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
-        if (selectedOptionText.includes('bolivares')) {
-            calcularValorRef();
-        }
-    });
-
-    // Función para calcular el valor de referencia
-    function calcularValorRef() {
-        const montoBolivares = parseFloat(montoInputBolivares.value);
-        if (!isNaN(montoBolivares) && tasaCambio) {
-            const valorRef = (montoBolivares / tasaCambio).toFixed(2);
-            montoInputUSD.value = valorRef;
-        } else {
-            montoInputUSD.value = '';
-        }
-    }
-
-    // Llama a la función cuando la página se haya cargado
-    window.onload = calcularValorRef;
-
-    // Selecciona el elemento select de cliente
-    const clienteSelect = document.getElementById('id_cliente');
-
-    // Selecciona el elemento select de prestamo
-    const prestamoSelect = document.getElementById('id_prestamo');
-
-    // Obtén los datos de prestamos desde el contexto de Django
-    const prestamos = JSON.parse('{{ prestamos|safe }}');
-
-    // Crea un objeto que almacene los prestamos por cliente
-    const prestamosPorCliente = {};
-
-    // Recorre los prestamos y los almacena en el objeto
-    prestamos.forEach(prestamo => {
-        const clienteId = prestamo.cliente.id;
-        if (!prestamosPorCliente[clienteId]) {
-            prestamosPorCliente[clienteId] = [];
-        }
-        prestamosPorCliente[clienteId].push({
-            id: prestamo.id,
-            descripcion: prestamo.descripcion
+    // Script para calcular el valor de referencia en base al monto y la tasa de cambio 
+    document.addEventListener('DOMContentLoaded', function() {
+        const monedaSelect = document.getElementById('id_moneda');
+        const montoInputBolivares = document.getElementById('id_monto_bolivares');
+        const montoInputUSD = document.getElementById('id_monto');
+        const montoUSDDiv = document.getElementById('monto_usd_div');
+        const tasaDiaDiv = document.getElementById('tasa_dia_div');
+        const tasaCambio = {{ tasa_cambio|default:"null" }}; // Asegúrate de pasar la tasa de cambio desde el backend
+    
+        console.log('Tasa de cambio:', tasaCambio);
+    
+        // Evento change en el campo de selección de moneda
+        monedaSelect.addEventListener('change', function() {
+            const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
+            console.log('Moneda seleccionada:', selectedOptionText);
+            if (selectedOptionText.includes('bolivares')) {
+                montoUSDDiv.style.display = 'block';
+                tasaDiaDiv.style.display = 'block';
+                montoInputBolivares.id = 'id_monto_bolivares';
+                montoInputBolivares.name = 'monto_bolivares';
+                calcularValorRef();
+            } else {
+                montoUSDDiv.style.display = 'none';
+                tasaDiaDiv.style.display = 'none';
+                montoInputBolivares.id = 'id_monto';
+                montoInputBolivares.name = 'monto';
+                montoInputUSD.value = montoInputBolivares.value; // Asegúrate de que el campo monto tenga un valor
+            }
         });
-    });
-
-    // Función para filtrar los prestamos por cliente
-    function filtrarPrestamos() {
-        const clienteId = clienteSelect.value;
-        const prestamos = prestamosPorCliente[clienteId];
-        if (prestamos) {
-            // Limpia el select de prestamo
-            prestamoSelect.innerHTML = '';
-            // Agrega los prestamos del cliente seleccionado
-            prestamos.forEach(prestamo => {
-                const option = document.createElement('option');
-                option.value = prestamo.id;
-                option.text = prestamo.descripcion;
-                prestamoSelect.appendChild(option);
-            });
-        } else {
-            // Limpia el select de prestamo
-            prestamoSelect.innerHTML = '';
+    
+        // Evento input en el campo de monto
+        montoInputBolivares.addEventListener('input', function() {
+            const selectedOptionText = monedaSelect.options[monedaSelect.selectedIndex].text.toLowerCase();
+            if (selectedOptionText.includes('bolivares')) {
+                calcularValorRef();
+            } else {
+                montoInputUSD.value = montoInputBolivares.value; // Actualiza el valor del campo monto
+            }
+        });
+    
+        // Función para calcular el valor de referencia
+        function calcularValorRef() {
+            const montoBolivares = parseFloat(montoInputBolivares.value);
+            if (!isNaN(montoBolivares) && tasaCambio) {
+                const valorRef = (montoBolivares / tasaCambio).toFixed(2);
+                montoInputUSD.value = valorRef;
+            } else {
+                montoInputUSD.value = '';
+            }
         }
-    }
-
-    // Agrega un evento de cambio al select de cliente
-    clienteSelect.addEventListener('change', filtrarPrestamos);
-
-    // Llama a la función para filtrar los prestamos al cargar la página
-    filtrarPrestamos();
-});
-
-</script>
+    
+        // Llama a la función cuando la página se haya cargado
+        window.onload = calcularValorRef;
+    
+        // Selecciona el elemento select de cliente
+        const clienteSelect = document.getElementById('id_cliente');
+    
+        // Selecciona el elemento select de prestamo
+        const prestamoSelect = document.getElementById('id_prestamo');
+    
+        // Obtén los datos de prestamos desde el contexto de Django
+        const prestamos = JSON.parse('{{ prestamos|safe }}');
+    
+        // Crea un objeto que almacene los prestamos por cliente
+        const prestamosPorCliente = {};
+    
+        // Recorre los prestamos y los almacena en el objeto
+        prestamos.forEach(prestamo => {
+            const clienteId = prestamo.cliente.id;
+            if (!prestamosPorCliente[clienteId]) {
+                prestamosPorCliente[clienteId] = [];
+            }
+            prestamosPorCliente[clienteId].push({
+                id: prestamo.id,
+                descripcion: prestamo.descripcion
+            });
+        });
+    
+        // Función para filtrar los prestamos por cliente
+        function filtrarPrestamos() {
+            const clienteId = clienteSelect.value;
+            const prestamos = prestamosPorCliente[clienteId];
+            if (prestamos) {
+                // Limpia el select de prestamo
+                prestamoSelect.innerHTML = '';
+                // Agrega los prestamos del cliente seleccionado
+                prestamos.forEach(prestamo => {
+                    const option = document.createElement('option');
+                    option.value = prestamo.id;
+                    option.text = prestamo.descripcion;
+                    prestamoSelect.appendChild(option);
+                });
+            } else {
+                // Limpia el select de prestamo
+                prestamoSelect.innerHTML = '';
+            }
+        }
+    
+        // Agrega un evento de cambio al select de cliente
+        clienteSelect.addEventListener('change', filtrarPrestamos);
+    
+        // Llama a la función para filtrar los prestamos al cargar la página
+        filtrarPrestamos();
+    });
+    </script>
 {% endblock content %}
