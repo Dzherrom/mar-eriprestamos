@@ -14,7 +14,7 @@ from pathlib import Path
 import dj_database_url
 import os
 
-load_dotenv() #load env variables
+#load_dotenv() #load env variables
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,15 +32,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',
                  'localhost',
-                 'mar-eriprestamos-cold-cherry-2402.fly.dev',
-                 'mar-eriprestamos.com',
-                 'www.mar-eriprestamos.com']
+                ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://mar-eriprestamos-cold-cherry-2402.fly.dev',
-    'https://mar-eriprestamos.com',
-    'https://www.mar-eriprestamos.com',
-                        ]
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://mar-eriprestamos-cold-cherry-2402.fly.dev',
+#     'https://mar-eriprestamos.com',
+#     'https://www.mar-eriprestamos.com',
+#                         ]
 
 # Application definition
 
@@ -92,13 +90,7 @@ WSGI_APPLICATION = 'meprestamos.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join('db.sqlite3')
-        
-    )
-    
-}    
-'''{
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mareprestamos',
         'USER': 'postgres',
@@ -107,7 +99,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-'''
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

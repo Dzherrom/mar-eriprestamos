@@ -2,41 +2,43 @@
 {% load static %}
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center">Resumen Financiero</h1>
-    <div class="row mt-4">
-        <!-- Monto Total Prestado e Interés -->
-        <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">Monto Total Prestado e Interés</div>
-                <div class="card-body">
-                    <h5 class="card-title">Monto Total: ${{ monto_total_prestamos|floatformat:2 }}</h5>
-                    <h5 class="card-title">Interés Total: ${{ interes_total_prestamos|floatformat:2 }}</h5>
-                    <p class="card-text">Este gráfico muestra el monto total prestado y el interés total generado.</p>
-                    <canvas id="chartMontoInteresTotalPrestado"></canvas>
+    <div class="card-general">
+        <h1 class="text-center">Resumen Financiero</h1>
+        <div class="row mt-4">
+            <!-- Monto Total Prestado e Interés -->
+            <div class="col-md-4">
+                <div class="card glass-card mb-3">
+                    <div class="card-header text-white">Monto Total Prestado e Interés</div>
+                    <div class="card-body">
+                        <h5 class="card-title text-white">Monto Total: ${{ monto_total_prestamos|floatformat:2 }}</h5>
+                        <h5 class="card-title text-white">Interés Total: ${{ interes_total_prestamos|floatformat:2 }}</h5>
+                        <p class="card-text text-white">Este gráfico muestra el monto total prestado y el interés total generado.</p>
+                        <canvas id="chartMontoInteresTotalPrestado"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Monto Total Activos e Interés -->
-        <div class="col-md-4">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-header">Monto Total de Prestamos Activos e Interés</div>
-                <div class="card-body">
-                    <h5 class="card-title">Monto Total Activos: ${{ monto_total_activos|floatformat:2 }}</h5>
-                    <h5 class="card-title">Interés Total Activos: ${{ interes_total_activos|floatformat:2 }}</h5>
-                    <p class="card-text">Este gráfico muestra el monto total de préstamos activos y su interés.</p>
-                    <canvas id="chartMontoInteresTotalActivos"></canvas>
+            <!-- Monto Total Activos e Interés -->
+            <div class="col-md-4">
+                <div class="card glass-card mb-3">
+                    <div class="card-header text-white">Monto Total Activos e Interés</div>
+                    <div class="card-body">
+                        <h5 class="card-title text-white">Monto Total Activos: ${{ monto_total_activos|floatformat:2 }}</h5>
+                        <h5 class="card-title text-white">Interés Total Activos: ${{ interes_total_activos|floatformat:2 }}</h5>
+                        <p class="card-text text-white">Este gráfico muestra el monto total de préstamos activos y su interés.</p>
+                        <canvas id="chartMontoInteresTotalActivos"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Monto Total Pagados e Interés -->
-        <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-header">Monto Total de Prestamos Pagados e Interés</div>
-                <div class="card-body">
-                    <h5 class="card-title">Monto Total Pagados: ${{ monto_total_pagados|floatformat:2 }}</h5>
-                    <h5 class="card-title">Interés Total Pagados: ${{ interes_total_pagados|floatformat:2 }}</h5>
-                    <p class="card-text">Este gráfico muestra el monto total de préstamos pagados y su interés.</p>
-                    <canvas id="chartMontoInteresTotalPagados"></canvas>
+            <!-- Monto Total Pagados e Interés -->
+            <div class="col-md-4">
+                <div class="card glass-card mb-3">
+                    <div class="card-header text-white">Monto Total Pagados e Interés</div>
+                    <div class="card-body">
+                        <h5 class="card-title text-white">Monto Total Pagados: ${{ monto_total_pagados|floatformat:2 }}</h5>
+                        <h5 class="card-title text-white">Interés Total Pagados: ${{ interes_total_pagados|floatformat:2 }}</h5>
+                        <p class="card-text text-white">Este gráfico muestra el monto total de préstamos pagados y su interés.</p>
+                        <canvas id="chartMontoInteresTotalPagados"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,13 +62,13 @@
                 legend: {
                     position: 'top',
                     labels: {
-                        color: 'white' // Cambiar el color del texto de la leyenda a blanco
+                        color: '#252525' // Cambiar el color del texto de la leyenda a #252525
                     }
                 },
                 title: {
                     display: true,
                     text: 'Monto Total Prestado e Interés',
-                    color: 'white' // Cambiar el color del texto del título a blanco
+                    color: '#252525' // Cambiar el color del texto del título a #252525
                 }
             }
         }
@@ -89,13 +91,13 @@
                 legend: {
                     position: 'top',
                     labels: {
-                        color: 'white' // Cambiar el color del texto de la leyenda a blanco
+                        color: '#252525' // Cambiar el color del texto de la leyenda a #252525
                     }
                 },
                 title: {
                     display: true,
                     text: 'Monto Total Activos e Interés',
-                    color: 'white' // Cambiar el color del texto del título a blanco
+                    color: '#252525' // Cambiar el color del texto del título a #252525
                 }
             }
         }
@@ -118,13 +120,13 @@
                 legend: {
                     position: 'top',
                     labels: {
-                        color: 'white' // Cambiar el color del texto de la leyenda a blanco
+                        color: '#252525' // Cambiar el color del texto de la leyenda a #252525
                     }
                 },
                 title: {
                     display: true,
                     text: 'Monto Total Pagados e Interés',
-                    color: 'white' // Cambiar el color del texto del título a blanco
+                    color: '#252525' // Cambiar el color del texto del título a #252525
                 }
             }
         }

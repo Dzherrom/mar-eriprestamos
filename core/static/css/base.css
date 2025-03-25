@@ -101,6 +101,23 @@ nav ul li {
     margin-top: 20px;
 }
 
+.glass-card {
+    background-color: rgba(232, 232, 232, 0.675); /* Fondo gris oscuro con transparencia */
+    backdrop-filter: blur(10px); /* Efecto de desenfoque */
+    border: 1px solid rgba(255, 255, 255, 0.107); /* Borde blanco semitransparente */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}
+
+.glass-card .card-header {
+    background-color: rgba(163, 163, 163, 0.3); /* Fondo más oscuro para el encabezado */
+    border-bottom: 1px solid rgba(232, 232, 232, 0.318); /* Borde inferior */
+}
+
+.text-white {
+    color: #252525 !important; /* Asegura que el texto sea blanco */
+}
+
 form{
     justify-items: left;
 }

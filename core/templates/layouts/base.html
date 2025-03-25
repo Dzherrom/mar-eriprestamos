@@ -22,6 +22,8 @@
         <nav>
             <ul class="menu">
                 {% if user_is_authenticated %}
+                <li><a href="{% url 'home' %}">Home</a>
+                </li>
                 <li><a href="#">Préstamos</a>
                     <ul class="submenu">
                         <li><a href="{% url 'prestamos' %}">Prestamos</a></li>
