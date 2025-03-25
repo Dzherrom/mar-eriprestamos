@@ -1,7 +1,133 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 {% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Resumen Financiero</h1>
+    <div class="row mt-4">
+        <!-- Monto Total Prestado e Interés -->
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Monto Total Prestado e Interés</div>
+                <div class="card-body">
+                    <h5 class="card-title">Monto Total: ${{ monto_total_prestamos|floatformat:2 }}</h5>
+                    <h5 class="card-title">Interés Total: ${{ interes_total_prestamos|floatformat:2 }}</h5>
+                    <p class="card-text">Este gráfico muestra el monto total prestado y el interés total generado.</p>
+                    <canvas id="chartMontoInteresTotalPrestado"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Monto Total Activos e Interés -->
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Monto Total de Prestamos Activos e Interés</div>
+                <div class="card-body">
+                    <h5 class="card-title">Monto Total Activos: ${{ monto_total_activos|floatformat:2 }}</h5>
+                    <h5 class="card-title">Interés Total Activos: ${{ interes_total_activos|floatformat:2 }}</h5>
+                    <p class="card-text">Este gráfico muestra el monto total de préstamos activos y su interés.</p>
+                    <canvas id="chartMontoInteresTotalActivos"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Monto Total Pagados e Interés -->
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Monto Total de Prestamos Pagados e Interés</div>
+                <div class="card-body">
+                    <h5 class="card-title">Monto Total Pagados: ${{ monto_total_pagados|floatformat:2 }}</h5>
+                    <h5 class="card-title">Interés Total Pagados: ${{ interes_total_pagados|floatformat:2 }}</h5>
+                    <p class="card-text">Este gráfico muestra el monto total de préstamos pagados y su interés.</p>
+                    <canvas id="chartMontoInteresTotalPagados"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Gráfico: Monto Total Prestado e Interés
+    const ctxMontoInteresTotalPrestado = document.getElementById('chartMontoInteresTotalPrestado').getContext('2d');
+    new Chart(ctxMontoInteresTotalPrestado, {
+        type: 'doughnut',
+        data: {
+            labels: ['Monto Total Prestado', 'Interés Total'],
+            datasets: [{
+                data: [{{ monto_total_prestamos }}, {{ interes_total_prestamos }}],
+                backgroundColor: ['#007bff', '#28a745'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: 'white' // Cambiar el color del texto de la leyenda a blanco
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Monto Total Prestado e Interés',
+                    color: 'white' // Cambiar el color del texto del título a blanco
+                }
+            }
+        }
+    });
 
-THIS IS THE HOME PAGE
+    // Gráfico: Monto Total Activos e Interés
+    const ctxMontoInteresTotalActivos = document.getElementById('chartMontoInteresTotalActivos').getContext('2d');
+    new Chart(ctxMontoInteresTotalActivos, {
+        type: 'doughnut',
+        data: {
+            labels: ['Monto Total Activos', 'Interés Total Activos'],
+            datasets: [{
+                data: [{{ monto_total_activos }}, {{ interes_total_activos }}],
+                backgroundColor: ['#dc3545', '#ffc107'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: 'white' // Cambiar el color del texto de la leyenda a blanco
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Monto Total Activos e Interés',
+                    color: 'white' // Cambiar el color del texto del título a blanco
+                }
+            }
+        }
+    });
 
+    // Gráfico: Monto Total Pagados e Interés
+    const ctxMontoInteresTotalPagados = document.getElementById('chartMontoInteresTotalPagados').getContext('2d');
+    new Chart(ctxMontoInteresTotalPagados, {
+        type: 'doughnut',
+        data: {
+            labels: ['Monto Total Pagados', 'Interés Total Pagados'],
+            datasets: [{
+                data: [{{ monto_total_pagados }}, {{ interes_total_pagados }}],
+                backgroundColor: ['#17a2b8', '#6c757d'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: 'white' // Cambiar el color del texto de la leyenda a blanco
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Monto Total Pagados e Interés',
+                    color: 'white' // Cambiar el color del texto del título a blanco
+                }
+            }
+        }
+    });
+</script>
 {% endblock content %}

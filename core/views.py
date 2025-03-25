@@ -12,10 +12,43 @@ import json
 
 @login_required
 def home(request):
-    context = {'mensaje':'error', 
-            'prestamos': prestamos,
-            'user_is_authenticated': request.user.is_authenticated}
-    return redirect('prestamos')
+    # Calcular el monto total de todos los préstamos hechos
+    monto_total_prestamos = Prestamos.objects.aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
+
+    # Calcular el monto del interés del monto total de préstamos
+    interes_total_prestamos = Prestamos.objects.aggregate(
+        total_interes=Sum(F('monto_prestamo') * F('tasa_interes') / 100)
+    )['total_interes'] or 0
+
+    # Calcular el monto de todos los préstamos activos (sin pagar)
+    prestamos_activos = Prestamos.objects.filter(pagado=False)
+    monto_total_activos = prestamos_activos.aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
+
+    # Calcular el monto del interés de todos los préstamos activos
+    interes_total_activos = prestamos_activos.aggregate(
+        total_interes=Sum(F('monto_prestamo') * F('tasa_interes') / 100)
+    )['total_interes'] or 0
+
+    # Calcular el monto de todos los préstamos pagados
+    prestamos_pagados = Prestamos.objects.filter(pagado=True)
+    monto_total_pagados = prestamos_pagados.aggregate(Sum('monto_prestamo'))['monto_prestamo__sum'] or 0
+
+    # Calcular el monto del interés de todos los préstamos pagados
+    interes_total_pagados = prestamos_pagados.aggregate(
+        total_interes=Sum(F('monto_prestamo') * F('tasa_interes') / 100)
+    )['total_interes'] or 0
+
+    # Contexto para pasar a la plantilla
+    context = {
+        'monto_total_prestamos': monto_total_prestamos,
+        'interes_total_prestamos': interes_total_prestamos,
+        'monto_total_activos': monto_total_activos,
+        'interes_total_activos': interes_total_activos,
+        'monto_total_pagados': monto_total_pagados,
+        'interes_total_pagados': interes_total_pagados,
+        'user_is_authenticated': request.user.is_authenticated
+    }
+    return render(request, 'home.html', context)
 
 # ---------- Clientes ----------
 @login_required
