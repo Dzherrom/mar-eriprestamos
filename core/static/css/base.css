@@ -118,6 +118,33 @@ nav ul li {
     color: #252525 !important; /* Asegura que el texto sea blanco */
 }
 
+.date-range-container {
+    margin-bottom: 20px;
+}
+
+#dateRangeForm {
+    display: flex;
+    justify-content: space-between; /* Espaciado entre los elementos */
+    align-items: center; /* Alinear verticalmente los elementos */
+}
+
+.date-fields {
+    display: flex;
+    align-items: center; /* Alinear verticalmente los campos de fecha */
+}
+
+.date-fields label {
+    margin-right: 10px; /* Espaciado entre el label y el campo */
+}
+
+.date-fields input {
+    margin-right: 15px; /* Espaciado entre los campos de fecha */
+}
+
+#dateRangeForm button {
+    margin-left: auto; /* Empuja el botón al borde derecho */
+}
+
 form{
     justify-items: left;
 }

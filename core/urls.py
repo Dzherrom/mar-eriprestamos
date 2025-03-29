@@ -20,7 +20,8 @@ urlpatterns = [
     path('prestamos_sin_pagar/', views.prestamos_sin_pagar, name='prestamos_sin_pagar'),
     
     path('api/prestamos/<int:id>/', prestamo_detalles_api, name='prestamo_detalles_api'),
-
+    path('api/datos-graficas/', views.datos_graficas, name='datos_graficas'),
+    
     #clientes
     path('clientes/', views.clientes, name='clientes'),
     path('cliente/<int:cliente_id>', views.cliente_detalles, name='cliente_detalles'),

@@ -216,6 +216,38 @@ def obtener_montos_pagados_por_dia():
     }
     
 # ---------- Prestamos ----------
+
+def datos_graficas(request):
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+
+    if not fecha_inicio or not fecha_fin:
+        return JsonResponse({'error': 'Fechas no válidas'}, status=400)
+
+    # Filtrar datos de préstamos por día
+    prestamos_por_dia = Prestamos.objects.filter(
+        fecha_pago__range=[fecha_inicio, fecha_fin]
+    ).values('fecha_pago').annotate(total=Sum('monto_pago')).order_by('fecha_pago')
+
+    # Filtrar datos de montos por día
+    montos_por_dia = Prestamos.objects.filter(
+        fecha_pago__range=[fecha_inicio, fecha_fin]
+    ).values('fecha_pago').annotate(total=Sum('monto_prestamo')).order_by('fecha_pago')
+
+    # Formatear los datos para las gráficas
+    data = {
+        'prestamosPorDia': {
+            'fechas': [p['fecha_pago'] for p in prestamos_por_dia],
+            'totales': [p['total'] for p in prestamos_por_dia],
+        },
+        'montosPorDia': {
+            'fechas': [m['fecha_pago'] for m in montos_por_dia],
+            'totales': [m['total'] for m in montos_por_dia],
+        }
+    }
+
+    return JsonResponse(data)
+
 @login_required
 def prestamos(request):
     if request.method == 'GET':

@@ -50,19 +50,34 @@
             <div class="paginacion" id="sinpagar-paginacion"></div>
         </div>
     </div>
-
-    <div class="container-graficos">
-        <div class="graph-container">
-            <h5>Préstamos Pagados por Día</h5>
-            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-                <canvas id="prestamosPorDia" width="400" height="200"></canvas>
-            </div>
+    <div class="card-general">
+        <div class="date-range-container">
+            <h5>Seleccionar Rango de Fechas</h5>
+            <form id="dateRangeForm" class="form-inline">
+                <div>
+                    <label for="fechaInicio" class="mr-2">Fecha Inicio:</label>
+                    <input type="date" id="fechaInicio" class="form-control mr-3" required>    
+                </div>
+               <div>
+                <label for="fechaFin" class="mr-2">Fecha Fin:</label>
+                <input type="date" id="fechaFin" class="form-control mr-3" required>
+               </div>                
+                <button type="submit" class="btn btn-primary">Actualizar Gráficas</button>
+            </form>
         </div>
+        <div class="container-graficos">
 
-        <div class="graph-container">
-            <h5>Montos Pagados por Día</h5>
-            <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
-                <canvas id="montosPorDia" width="400" height="200"></canvas>
+            <div class="graph-container">
+                <h5>Préstamos Pagados por Día</h5>
+                <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                    <canvas id="prestamosPorDia" width="400" height="200"></canvas>
+                </div>
+            </div>
+            <div class="graph-container">
+                <h5>Montos Pagados por Día</h5>
+                <div id="myGraph" style="width: 500px; height: 250px; background-color: #f2f2f2;">
+                    <canvas id="montosPorDia" width="400" height="200"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -397,6 +412,66 @@ document.addEventListener('DOMContentLoaded', () => {
     generarBotonesPaginacion();
     mostrarPagina(1);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+        const dateRangeForm = document.getElementById('dateRangeForm');
+        const fechaInicioInput = document.getElementById('fechaInicio');
+        const fechaFinInput = document.getElementById('fechaFin');
+        const prestamosPorDiaChart = Chart.getChart('prestamosPorDia'); // Obtén la referencia al gráfico
+        const montosPorDiaChart = Chart.getChart('montosPorDia'); // Obtén la referencia al gráfico
+
+        // Función para calcular la diferencia en días entre dos fechas
+        function calcularDiferenciaDias(fechaInicio, fechaFin) {
+            const inicio = new Date(fechaInicio);
+            const fin = new Date(fechaFin);
+            const diferencia = Math.abs(fin - inicio);
+            return diferencia / (1000 * 60 * 60 * 24); // Convertir de milisegundos a días
+        }
+
+        // Evento submit del formulario
+        dateRangeForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evitar el envío del formulario
+
+            const fechaInicio = fechaInicioInput.value;
+            const fechaFin = fechaFinInput.value;
+
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor, selecciona ambas fechas.');
+                return;
+            }
+
+            const diferenciaDias = calcularDiferenciaDias(fechaInicio, fechaFin);
+
+            if (diferenciaDias > 90) {
+                alert('El rango de fechas no puede exceder los 90 días.');
+                return;
+            }
+
+            // Lógica para actualizar las gráficas con el nuevo rango de fechas
+            actualizarGraficas(fechaInicio, fechaFin);
+        });
+
+        // Función para actualizar las gráficas
+        function actualizarGraficas(fechaInicio, fechaFin) {
+            // Simula una llamada al backend para obtener los datos filtrados
+            fetch(`/api/datos-graficas?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Actualizar datos del gráfico de préstamos por día
+                    prestamosPorDiaChart.data.labels = data.prestamosPorDia.fechas;
+                    prestamosPorDiaChart.data.datasets[0].data = data.prestamosPorDia.totales;
+                    prestamosPorDiaChart.update();
+
+                    // Actualizar datos del gráfico de montos por día
+                    montosPorDiaChart.data.labels = data.montosPorDia.fechas;
+                    montosPorDiaChart.data.datasets[0].data = data.montosPorDia.totales;
+                    montosPorDiaChart.update();
+                })
+                .catch(error => {
+                    console.error('Error al actualizar las gráficas:', error);
+                });
+        }
+    });
 </script>
 
 {% endblock content %}
